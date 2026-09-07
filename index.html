@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LifeOS - Meu Sistema</title>
+    <!-- Fonte Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <!-- Ícones (Font Awesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #e8e9ed; /* Fundo do desktop */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* O "Container App" que fica centralizado no PC e vira tela cheia no celular */
+        .app-container {
+            max-width: 430px;
+            width: 100%;
+            background: #f8f9fc;
+            border-radius: 40px;
+            padding: 24px 20px 80px; /* Espaço embaixo para a bottom nav */
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.10);
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header i {
+            font-size: 22px;
+            color: #1a1a2e;
+            opacity: 0.7;
+            cursor: pointer;
+        }
+
+        /* ========== CARDS DE PROGRESSO (ANÉIS) ========== */
+        .progress-grid {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .progress-item {
+            background: white;
+            border-radius: 20px;
+            padding: 16px 0 12px;
+            flex: 1;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+        .ring {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #1a1a2e;
+            position: relative;
+        }
+        /* Círculos com gradiente cônico (simulando os anéis) */
+        .ring-work {
+            background: conic-gradient(#4f46e5 0% 40%, #e9eaf0 40% 100%);
+        }
+        .ring-heart {
+            background: conic-gradient(#ef4444 0% 25%, #e9eaf0 25% 100%);
+        }
+        .ring-social {
+            background: conic-gradient(#8b5cf6 0% 20%, #e9eaf0 20% 100%);
+        }
+        .ring-inner {
+            width: 46px;
+            height: 46px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .progress-item p {
+            font-size: 13px;
+            font-weight: 500;
+            color: #1f2937;
+            margin-top: 4px;
+        }
+        .progress-item span {
+            font-size: 11px;
+            color: #9ca3af;
+            font-weight: 400;
+        }
+
+        /* ========== CARD DE ALERTA / BEM-ESTAR ========== */
+        .wellness-card {
+            background: #1e1b4b;
+            background-image: radial-gradient(circle at 80% 20%, #312e81, #1e1b4b);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 24px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .wellness-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .wellness-card p {
+            font-size: 14px;
+            opacity: 0.8;
+            line-height: 1.4;
+            max-width: 80%;
+        }
+        .wellness-card .icon-big {
+            position: absolute;
+            right: 16px;
+            bottom: 16px;
+            font-size: 48px;
+            opacity: 0.2;
+        }
+
+        /* ========== ASSISTENTE IA ========== */
+        .ai-section {
+            margin-bottom: 24px;
+        }
+        .ai-section .label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .ai-box {
+            background: white;
+            border-radius: 60px;
+            padding: 6px 6px 6px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .ai-box input {
+            border: none;
+            outline: none;
+            font-size: 14px;
+            background: transparent;
+            width: 100%;
+            color: #1f2937;
+        }
+        .ai-box input::placeholder {
+            color: #9ca3af;
+        }
+        .ai-box .mic {
+            background: #4f46e5;
+            color: white;
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .ai-box .mic:hover {
+            background: #4338ca;
+        }
+
+        /* ========== LISTA DE TAREFAS (MY TASKS) ========== */
+        .tasks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .tasks-header h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .tasks-header a {
+            font-size: 13px;
+            color: #4f46e5;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .task-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border: 1px solid #f1f3f5;
+            transition: 0.2s;
+        }
+        .task-card:hover {
+            border-color: #d1d5db;
+        }
+        .task-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .task-info .emoji-bg {
+            width: 40px;
+            height: 40px;
+            background: #f3f4f6;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .task-info .details h5 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .task-info .details span {
+            font-size: 12px;
+            color: #6b7280;
+        }
+        .task-value {
+            font-weight: 700;
+            font-size: 16px;
+            color: #1f2937;
+        }
+
+        /* ========== BOTTOM NAVIGATION ========== */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 12px 24px 18px;
+            border-radius: 0 0 40px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f1f3f5;
+        }
+        .bottom-nav i {
+            font-size: 22px;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .bottom-nav i.active {
+            color: #4f46e5;
+            font-weight: 900;
+        }
+        .bottom-nav i:hover {
+            color: #1f2937;
+        }
+        .bottom-nav .add-btn {
+            background: #4f46e5;
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: -20px;
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3);
+        }
+        .bottom-nav .add-btn i {
+            color: white;
+            font-size: 20px;
+        }
+        .bottom-nav .add-btn i:hover {
+            color: white;
+        }
+
+        /* Responsivo: no celular, tira o arredondamento e o box-shadow pra virar tela cheia */
+        @media (max-width: 480px) {
+            body {
+                padding: 0;
+                background: #f8f9fc;
+                align-items: flex-start;
+            }
+            .app-container {
+                border-radius: 0;
+                box-shadow: none;
+                padding: 24px 16px 80px;
+                min-height: 100vh;
+            }
+            .bottom-nav {
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>LifeOS</h1>
+            <i class="fas fa-bell"></i>
+        </div>
+
+        <!-- PROGRESSO (ANÉIS) -->
+        <div class="progress-grid">
+            <div class="progress-item">
+                <div class="ring ring-work"><div class="ring-inner">40%</div></div>
+                <p>Work</p>
+                <span>Focus</span>
+            </div>
+            <div class="progress-item">
+                <div class="ring ring-heart"><div class="ring-inner">25%</div></div>
+                <p>Heart</p>
+                <span>Health</span>
+            </div>
+            <div class="progress-item">
+                <div class="ring ring-social"><div class="ring-inner">20%</div></div>
+                <p>Social</p>
+                <span>Connect</span>
+            </div>
+        </div>
+
+        <!-- WELLNESS CARD -->
+        <div class="wellness-card">
+            <h3>🧘 You've been skipping workouts.</h3>
+            <p>A short 15 min walk could be helpful.</p>
+            <div class="icon-big"><i class="fas fa-walking"></i></div>
+        </div>
+
+        <!-- AI ASSISTANT -->
+        <div class="ai-section">
+            <span class="label"><i class="fas fa-robot" style="color:#4f46e5; margin-right: 8px;"></i> AI Assistant</span>
+            <div class="ai-box">
+                <input type="text" placeholder="How can I assist you today?">
+                <div class="mic"><i class="fas fa-microphone"></i></div>
+            </div>
+        </div>
+
+        <!-- MY TASKS -->
+        <div class="tasks-header">
+            <h4>My Tasks</h4>
+            <a href="#">See all</a>
+        </div>
+
+        <div class="task-card">
+            <div class="task-info">
+                <div class="emoji-bg">💰</div>
+                <div class="details">
+                    <h5>Finance</h5>
+                    <span>Budget control</span>
+                </div>
+            </div>
+            <div class="task-value">$2,400</div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-info">
+                <div class="emoji-bg">💼</div>
+                <div class="details">
+                    <h5>Work</h5>
+                    <span>Project delivery</span>
+                </div>
+            </div>
+            <div class="task-value">$2,400</div>
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="bottom-nav">
+            <i class="fas fa-home active"></i>
+            <i class="fas fa-compass"></i>
+            <div class="add-btn"><i class="fas fa-plus"></i></div>
+            <i class="fas fa-heart"></i>
+            <i class="fas fa-user"></i>
+        </div>
+    </div>
+</body>
+</html>
