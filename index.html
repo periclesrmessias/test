@@ -841,6 +841,7 @@ async function verificarSessao() {
     if (!card) return;
 
     if (user) {
+      // Usuário logado – mostra e-mail e botão logout
       card.innerHTML = `
         <p style="color: var(--text-dim); margin-bottom: 8px;">✅ Logado como:</p>
         <p style="font-size: 18px; font-weight: 600; margin-bottom: 20px;">${user.email}</p>
@@ -848,14 +849,18 @@ async function verificarSessao() {
       `;
       document.getElementById('btnLogout').addEventListener('click', fazerLogout);
     } else {
+      // Usuário não logado – mostra campos de login com olhinho
       card.innerHTML = `
         <div class="field">
           <label for="loginEmail">E-mail</label>
           <input type="text" id="loginEmail" placeholder="voce@exemplo.com">
         </div>
-        <div class="field">
+        <div class="field" style="position: relative;">
           <label for="loginSenha">Senha</label>
-          <input type="password" id="loginSenha" placeholder="••••••••">
+          <input type="password" id="loginSenha" placeholder="••••••••" style="padding-right: 40px;">
+          <span class="toggle-password" style="position: absolute; right: 12px; bottom: 10px; cursor: pointer; color: var(--text-faint);">
+            <i class="fas fa-eye"></i>
+          </span>
         </div>
         <div style="display: flex; gap: 10px;">
           <button class="btn-secondary" id="btnLogin" style="flex:1;">Entrar</button>
@@ -863,8 +868,21 @@ async function verificarSessao() {
         </div>
         <p class="stat-note" style="margin-top:12px;">Login via Supabase Auth</p>
       `;
+
+      // Associa eventos de login/cadastro
       document.getElementById('btnLogin').addEventListener('click', fazerLogin);
       document.getElementById('btnCadastro').addEventListener('click', fazerCadastro);
+
+      // Adiciona o evento do olhinho
+      const togglePassword = document.querySelector('.toggle-password');
+      const senhaInput = document.getElementById('loginSenha');
+      if (togglePassword && senhaInput) {
+        togglePassword.addEventListener('click', function() {
+          const isPassword = senhaInput.type === 'password';
+          senhaInput.type = isPassword ? 'text' : 'password';
+          this.innerHTML = isPassword ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+        });
+      }
     }
   } catch (err) {
     console.warn('Erro ao verificar sessão:', err);
