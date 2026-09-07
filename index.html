@@ -697,7 +697,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ===================== SUPABASE ===================== */
 const supabaseUrl = 'https://brzniszvitflytmbhmem.supabase.co';
@@ -776,6 +775,7 @@ function mostrarToast(msg) {
 }
 
 /* ===================== AUTENTICAÇÃO ===================== */
+/* ===================== AUTENTICAÇÃO ===================== */
 async function fazerLogin() {
   const email = document.getElementById('loginEmail').value.trim();
   const senha = document.getElementById('loginSenha').value;
@@ -787,61 +787,11 @@ async function fazerLogin() {
       mostrarToast('Login realizado! ✅');
       // Recarrega os hábitos do dia atual após login
       carregarHabitosDoDia(hojeISO());
+      // Atualiza a tela de perfil
+      verificarSessao();
     }
   } catch (err) {
     mostrarToast('Erro inesperado: ' + err.message);
-  }
-}
-
-async function verificarSessao() {
-  const { data: { user } } = await supabaseClient.auth.getUser();
-  const perfilView = document.getElementById('view-perfil');
-  const card = perfilView.querySelector('.card');
-  
-  if (user) {
-    // Usuário logado – mostra e-mail e botão logout
-    card.innerHTML = `
-      <p style="color: var(--text-dim); margin-bottom: 8px;">✅ Logado como:</p>
-      <p style="font-size: 18px; font-weight: 600; margin-bottom: 20px;">${user.email}</p>
-      <button class="btn-secondary" id="btnLogout" style="background: var(--rose); border-color: var(--rose); color: white;">Sair</button>
-    `;
-    // Adiciona evento de logout
-    document.getElementById('btnLogout').addEventListener('click', fazerLogout);
-  } else {
-    // Usuário não logado – mostra os campos de login
-    card.innerHTML = `
-      <div class="field">
-        <label for="loginEmail">E-mail</label>
-        <input type="text" id="loginEmail" placeholder="voce@exemplo.com">
-      </div>
-      <div class="field">
-        <label for="loginSenha">Senha</label>
-        <input type="password" id="loginSenha" placeholder="••••••••">
-      </div>
-      <div style="display: flex; gap: 10px;">
-        <button class="btn-secondary" id="btnLogin" style="flex:1;">Entrar</button>
-        <button class="btn-secondary" id="btnCadastro" style="flex:1; background: var(--grad); color: #05070d; border-color: transparent;">Cadastrar</button>
-      </div>
-      <p class="stat-note" style="margin-top:12px;">Login via Supabase Auth</p>
-    `;
-    // Reassocia os eventos de login/cadastro
-    document.getElementById('btnLogin').addEventListener('click', fazerLogin);
-    document.getElementById('btnCadastro').addEventListener('click', fazerCadastro);
-  }
-}
-
-async function fazerLogout() {
-  const { error } = await supabaseClient.auth.signOut();
-  if (error) {
-    mostrarToast('Erro ao sair: ' + error.message);
-  } else {
-    mostrarToast('Deslogado com sucesso! 👋');
-    // Atualiza a UI da tela de perfil e hábitos
-    verificarSessao();
-    // Resetar hábitos da tela
-    HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
-    renderHabitChips();
-    atualizarProgressoHabitos();
   }
 }
 
@@ -857,9 +807,67 @@ async function fazerCadastro() {
       options: { data: { nome: email.split('@')[0] } }
     });
     if (error) mostrarToast('Erro: ' + error.message);
-    else mostrarToast('Cadastro realizado! Confirme seu e-mail. 📧');
+    else {
+      mostrarToast('Cadastro realizado! Confirme seu e-mail. 📧');
+      // Atualiza a tela de perfil (já mostra os campos de login novamente)
+      verificarSessao();
+    }
   } catch (err) {
     mostrarToast('Erro inesperado: ' + err.message);
+  }
+}
+
+async function verificarSessao() {
+  try {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    const perfilView = document.getElementById('view-perfil');
+    if (!perfilView) return;
+    const card = perfilView.querySelector('.card');
+    if (!card) return;
+
+    if (user) {
+      card.innerHTML = `
+        <p style="color: var(--text-dim); margin-bottom: 8px;">✅ Logado como:</p>
+        <p style="font-size: 18px; font-weight: 600; margin-bottom: 20px;">${user.email}</p>
+        <button class="btn-secondary" id="btnLogout" style="background: var(--rose); border-color: var(--rose); color: white;">Sair</button>
+      `;
+      document.getElementById('btnLogout').addEventListener('click', fazerLogout);
+    } else {
+      card.innerHTML = `
+        <div class="field">
+          <label for="loginEmail">E-mail</label>
+          <input type="text" id="loginEmail" placeholder="voce@exemplo.com">
+        </div>
+        <div class="field">
+          <label for="loginSenha">Senha</label>
+          <input type="password" id="loginSenha" placeholder="••••••••">
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-secondary" id="btnLogin" style="flex:1;">Entrar</button>
+          <button class="btn-secondary" id="btnCadastro" style="flex:1; background: var(--grad); color: #05070d; border-color: transparent;">Cadastrar</button>
+        </div>
+        <p class="stat-note" style="margin-top:12px;">Login via Supabase Auth</p>
+      `;
+      document.getElementById('btnLogin').addEventListener('click', fazerLogin);
+      document.getElementById('btnCadastro').addEventListener('click', fazerCadastro);
+    }
+  } catch (err) {
+    console.warn('Erro ao verificar sessão:', err);
+  }
+}
+
+async function fazerLogout() {
+  const { error } = await supabaseClient.auth.signOut();
+  if (error) {
+    mostrarToast('Erro ao sair: ' + error.message);
+  } else {
+    mostrarToast('Deslogado com sucesso! 👋');
+    // Atualiza a UI da tela de perfil
+    verificarSessao();
+    // Resetar hábitos da tela
+    HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
+    renderHabitChips();
+    atualizarProgressoHabitos();
   }
 }
 
@@ -1125,6 +1133,7 @@ function hojeISO() {
 }
 
 /* ===================== INIT ===================== */
+/* ===================== INIT ===================== */
 function init() {
   document.getElementById('greetingTime').textContent = saudacaoPorHorario();
   document.getElementById('habitoData').value = hojeISO();
@@ -1139,17 +1148,13 @@ function init() {
   carregarHabitosDoDia(hojeISO());
 }
 
-// Aguarda o DOM carregar para associar eventos
-document.addEventListener('DOMContentLoaded', function() {
-  const loginBtn = document.getElementById('btnLogin');
-  const cadastroBtn = document.getElementById('btnCadastro');
-  if (loginBtn) loginBtn.addEventListener('click', fazerLogin);
-  if (cadastroBtn) cadastroBtn.addEventListener('click', fazerCadastro);
-});
-
 // Inicia o app
 init();
 
-// Verifica sessão ao iniciar
-verificarSessao();
+// Verifica sessão ao iniciar (com try/catch para não quebrar)
+try {
+  verificarSessao();
+} catch (e) {
+  console.warn('Erro ao verificar sessão:', e);
+}
 </script>
