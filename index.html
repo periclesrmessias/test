@@ -373,7 +373,7 @@
   .area-status.ok{ color: var(--cyan); }
   .area-status.externo{ color: var(--text-dim); }
 
-  /* ===== BOTTOM NAV ===== */
+    /* ===== BOTTOM NAV ===== */
   .bottom-nav{
     position: fixed;
     bottom: 18px;
@@ -398,6 +398,17 @@
     display:flex; flex-direction:column; align-items:center; gap:3px;
     font-size: 10px; font-weight:600;
     padding: 6px 10px; border-radius: 14px; cursor:pointer;
+  }
+
+  @media (max-width: 899px) {
+    .bottom-nav{
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 40px);
+      max-width: 420px;
+    }
   }
   .nav-btn svg{ width:21px; height:21px; stroke: currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
   .nav-btn.active{ color: var(--text); }
