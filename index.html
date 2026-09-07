@@ -13,6 +13,87 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ===== RESPONSIVO DESKTOP ===== */
+@media (min-width: 768px) {
+  .app-shell {
+    max-width: 100%;
+    padding: 40px 60px;
+  }
+
+  .bottom-nav {
+    position: static;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 20px;
+    margin-top: 40px;
+    background: rgba(18,23,41,0.85);
+    backdrop-filter: blur(12px);
+    padding: 12px 24px;
+    justify-content: center;
+    gap: 40px;
+  }
+  .nav-btn {
+    flex-direction: row;
+    gap: 10px;
+    font-size: 13px;
+  }
+  .nav-fab {
+    margin-top: 0;
+  }
+
+  .areas-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .stats-row {
+    flex-direction: row;
+  }
+
+  .balance-card {
+    flex-direction: row;
+  }
+
+  /* Ajuste de tamanhos de fonte */
+  .priority-heading {
+    font-size: 34px;
+  }
+  .view-title {
+    font-size: 30px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .areas-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .app-shell {
+    padding: 50px 80px;
+  }
+}
+  :root{
+    --bg: #080b14;
+    --surface: #121729;
+    --surface-2: #1a2038;
+    --border: #232a42;
+    --text: #f4f6fb;
+    --text-dim: #8b92ab;
+    --text-faint: #565d78;
+    --violet: #8b7cf6;
+    --cyan: #4fd8e8;
+    --rose: #f2789f;
+    --grad: linear-gradient(135deg, var(--violet), var(--cyan));
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
+    --shadow: 0 16px 40px rgba(0,0,0,0.45);
+  }
+
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body{ margin:0; padding:0; background: var(--bg)
   :root{
     --bg: #080b14;
     --surface: #121729;
