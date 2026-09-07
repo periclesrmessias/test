@@ -727,15 +727,31 @@ let lancamentosSessao = [];
 
 /* ===================== NAVEGAÇÃO ===================== */
 function mostrarView(nome) {
+  console.log('Navegando para:', nome);
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById('view-' + nome).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.gotoView === nome));
-  
-  // Se for a tela de perfil, atualiza o estado de login
-  if (nome === 'perfil') {
-    verificarSessao();
-  }
+  const target = document.getElementById('view-' + nome);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.gotoView === nome);
+  });
+  if (nome === 'perfil') verificarSessao();
 }
+
+// Adiciona eventos de clique a TODOS os botões com data-goto-view
+// Usamos setTimeout para garantir que o DOM já esteja pronto
+setTimeout(function() {
+  document.querySelectorAll('[data-goto-view]').forEach(el => {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      const view = this.dataset.gotoView;
+      if (view) {
+        console.log('Clique no botão:', view);
+        mostrarView(view);
+      }
+    });
+  });
+  console.log('✅ Eventos de navegação atribuídos a', document.querySelectorAll('[data-goto-view]').length, 'botões');
+}, 100);
 
 /* ===================== SHEETS ===================== */
 function abrirSheet(id) {
@@ -774,7 +790,6 @@ function mostrarToast(msg) {
   toastTimer = setTimeout(() => toast.classList.remove('visible'), 2600);
 }
 
-/* ===================== AUTENTICAÇÃO ===================== */
 /* ===================== AUTENTICAÇÃO ===================== */
 async function fazerLogin() {
   const email = document.getElementById('loginEmail').value.trim();
@@ -1132,7 +1147,6 @@ function hojeISO() {
   return d.getFullYear() + '-' + mes + '-' + dia;
 }
 
-/* ===================== INIT ===================== */
 /* ===================== INIT ===================== */
 function init() {
   document.getElementById('greetingTime').textContent = saudacaoPorHorario();
