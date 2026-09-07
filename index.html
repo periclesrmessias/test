@@ -396,8 +396,8 @@
         <div class="login-box">
             <input type="email" id="loginEmail" placeholder="E-mail" autocomplete="email">
             <input type="password" id="loginSenha" placeholder="Senha" autocomplete="current-password">
-            <button class="btn-login" id="loginBtn">Entrar</button>
-            <button class="btn-signup" id="cadastroBtn">Cadastrar</button>
+            <button class="btn-login" onclick="fazerLogin()">Entrar</button>
+            <button class="btn-signup" onclick="fazerCadastro()">Cadastrar</button>
         </div>
 
         <!-- ===== PROGRESSO ===== -->
@@ -476,65 +476,52 @@
 
     <!-- ===== SUPABASE ===== -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        // 🔑 Suas credenciais
-const supabaseUrl = 'https://brzniszvitflytmbhmem.supabase.co';
-const supabaseAnonKey = 'sb_publishable_oKgZMFQdmG97woNq73Mr6A_TlNai-_C';
+<script>
+    // 🔑 Credenciais
+    const supabaseUrl = 'https://brzniszvitflytmbhmem.supabase.co';
+    const supabaseAnonKey = 'sb_publishable_oKgZMFQdmG97woNq73Mr6A_TlNai-_C';
 
-// Cria o cliente com um nome diferente para evitar conflito com a variável global
-const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
-console.log('✅ Supabase conectado!');
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
+    console.log('✅ Supabase conectado!');
 
-// ===== AUTENTICAÇÃO =====
-async function fazerLogin() {
-    console.log('🔵 Clique no botão Entrar');
-    try {
+    // ===== AUTENTICAÇÃO =====
+    async function fazerLogin() {
+        console.log('🔵 Login chamado');
         const email = document.getElementById('loginEmail').value;
         const senha = document.getElementById('loginSenha').value;
         if (!email || !senha) {
             alert('Preencha e-mail e senha.');
             return;
         }
-        // Agora usando supabaseClient em vez de supabase
-        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password: senha });
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password: senha });
         if (error) {
             alert('Erro: ' + error.message);
         } else {
             alert('Login realizado! ✅');
             carregarAnotacoes();
         }
-    } catch (err) {
-        console.error('💥 Erro inesperado no login:', err);
-        alert('Erro inesperado: ' + err.message);
     }
-}
 
-async function fazerCadastro() {
-    console.log('🟢 Clique no botão Cadastrar');
-    try {
+    async function fazerCadastro() {
+        console.log('🟢 Cadastro chamado');
         const email = document.getElementById('loginEmail').value;
         const senha = document.getElementById('loginSenha').value;
         if (!email || !senha) {
             alert('Preencha e-mail e senha.');
             return;
         }
-        const { data, error } = await supabaseClient.auth.signUp({ email, password: senha });
+        const { error } = await supabaseClient.auth.signUp({ email, password: senha });
         if (error) {
             alert('Erro: ' + error.message);
         } else {
             alert('Cadastro realizado! Verifique seu e-mail para confirmar. 📧');
         }
-    } catch (err) {
-        console.error('💥 Erro inesperado no cadastro:', err);
-        alert('Erro inesperado: ' + err.message);
     }
-}
 
-// ===== ANOTAÇÕES =====
-async function salvarAnotacao() {
-    console.log('➕ Botão + clicado');
-    try {
-        const titulo = prompt('Título da anotação:');
+    // ===== ANOTAÇÕES =====
+    async function salvarAnotacao() {
+        console.log('➕ Salvar anotação');
+        const titulo = prompt('Título:');
         if (!titulo) return;
         const conteudo = prompt('Conteúdo:');
         const { data: { user } } = await supabaseClient.auth.getUser();
@@ -551,14 +538,9 @@ async function salvarAnotacao() {
             alert('Salvo com sucesso! ✅');
             carregarAnotacoes();
         }
-    } catch (err) {
-        console.error('💥 Erro ao salvar anotação:', err);
-        alert('Erro inesperado: ' + err.message);
     }
-}
 
-async function carregarAnotacoes() {
-    try {
+    async function carregarAnotacoes() {
         const { data: { user } } = await supabaseClient.auth.getUser();
         if (!user) {
             console.log('Não logado');
@@ -569,27 +551,15 @@ async function carregarAnotacoes() {
             .select('*')
             .eq('user_id', user.id)
             .order('created_at', { ascending: false });
-        if (error) {
-            console.error('Erro ao carregar:', error);
-        } else {
-            console.log('📝 Minhas anotações:', data);
-        }
-    } catch (err) {
-        console.error('💥 Erro ao carregar anotações:', err);
+        if (error) console.error('Erro ao carregar:', error);
+        else console.log('📝 Anotações:', data);
     }
-}
 
-// ===== EVENTOS =====
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ DOM totalmente carregado');
-    
-    const addBtn = document.querySelector('.add-btn');
-    if (addBtn) addBtn.addEventListener('click', salvarAnotacao);
+    // ===== EVENTO DO BOTÃO "+" =====
+    document.addEventListener('DOMContentLoaded', function() {
+        const addBtn = document.querySelector('.add-btn');
+        if (addBtn) addBtn.addEventListener('click', salvarAnotacao);
+    });
 
-    const loginBtn = document.getElementById('loginBtn');
-    const cadastroBtn = document.getElementById('cadastroBtn');
-    if (loginBtn) loginBtn.addEventListener('click', fazerLogin);
-    if (cadastroBtn) cadastroBtn.addEventListener('click', fazerCadastro);
-});
-
-carregarAnotacoes();
+    carregarAnotacoes();
+</script>
