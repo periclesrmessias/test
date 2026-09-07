@@ -697,6 +697,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ===================== SUPABASE ===================== */
 const supabaseUrl = 'https://brzniszvitflytmbhmem.supabase.co';
@@ -723,7 +724,7 @@ const DOMINIOS = [
 const HABITOS_CAMPOS = ['Estudar', 'Atividade Física', 'Dormir bem', 'Leitura', 'Hidratação', 'Meditação', 'Sexo', 'Trabalhar', 'Pant', 'Interação Social', 'Algo Incomum', 'Cagar', 'Fio Dental', 'Protetor Solar', 'Doente', 'Herpes'];
 const estadoHabitosHoje = {};
 HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
-const lancamentosSessao = [];
+let lancamentosSessao = [];
 
 /* ===================== NAVEGAÇÃO ===================== */
 function mostrarView(nome) {
@@ -741,6 +742,12 @@ function abrirSheet(id) {
   document.getElementById('sheetBackdrop').classList.add('visible');
   document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open'));
   document.getElementById(id).classList.add('open');
+
+  // Carrega os hábitos do dia quando a sheet de hábitos é aberta
+  if (id === 'sheetHabitos') {
+    const data = document.getElementById('habitoData').value;
+    carregarHabitosDoDia(data);
+  }
 }
 
 function fecharSheets() {
@@ -775,7 +782,11 @@ async function fazerLogin() {
   try {
     const { error } = await supabaseClient.auth.signInWithPassword({ email, password: senha });
     if (error) mostrarToast('Erro: ' + error.message);
-    else mostrarToast('Login realizado! ✅');
+    else {
+      mostrarToast('Login realizado! ✅');
+      // Recarrega os hábitos do dia atual após login
+      carregarHabitosDoDia(hojeISO());
+    }
   } catch (err) {
     mostrarToast('Erro inesperado: ' + err.message);
   }
@@ -799,14 +810,7 @@ async function fazerCadastro() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  const loginBtn = document.getElementById('btnLogin');
-  const cadastroBtn = document.getElementById('btnCadastro');
-  if (loginBtn) loginBtn.addEventListener('click', fazerLogin);
-  if (cadastroBtn) cadastroBtn.addEventListener('click', fazerCadastro);
-});
-
-/* ===================== HÁBITOS ===================== */
+/* ===================== HÁBITOS (NÚCLEO) ===================== */
 function renderHabitChips() {
   const el = document.getElementById('habitChips');
   el.innerHTML = HABITOS_CAMPOS.map(h =>
@@ -833,9 +837,132 @@ function atualizarProgressoHabitos() {
   document.getElementById('habitProgressBarSheet').style.width = pct;
 }
 
-document.getElementById('btnSalvarHabitos').addEventListener('click', function() {
-  mostrarToast('Dia salvo nesta sessão (conexão com Supabase em breve)');
-  fecharSheets();
+async function carregarHabitosDoDia(data) {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) {
+    // Se não estiver logado, reseta os hábitos (desmarca todos)
+    HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
+    renderHabitChips();
+    atualizarProgressoHabitos();
+    return;
+  }
+
+  try {
+    // Busca os IDs dos hábitos do usuário
+    const { data: opcoes, error: erroOpcoes } = await supabaseClient
+      .from('opcoes')
+      .select('id, valor')
+      .eq('user_id', user.id)
+      .eq('grupo', 'habitos');
+
+    if (erroOpcoes) throw erroOpcoes;
+
+    // Busca os registros do dia
+    const { data: registros, error: erroRegistros } = await supabaseClient
+      .from('habitos_registros')
+      .select('habito_id')
+      .eq('user_id', user.id)
+      .eq('data', data);
+
+    if (erroRegistros) throw erroRegistros;
+
+    const idsRegistrados = registros.map(r => r.habito_id);
+
+    // Reseta o estado
+    HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
+
+    // Marca os que estão registrados
+    opcoes.forEach(o => {
+      if (idsRegistrados.includes(o.id)) {
+        estadoHabitosHoje[o.valor] = true;
+      }
+    });
+
+    // Busca a descrição do dia (opcional)
+    const { data: dia, error: erroDia } = await supabaseClient
+      .from('dias')
+      .select('descricao')
+      .eq('user_id', user.id)
+      .eq('data', data)
+      .maybeSingle();
+
+    if (erroDia && erroDia.code !== 'PGRST116') throw erroDia;
+    if (dia && dia.descricao) {
+      document.getElementById('habitoDescricao').value = dia.descricao;
+    } else {
+      document.getElementById('habitoDescricao').value = '';
+    }
+
+    renderHabitChips();
+    atualizarProgressoHabitos();
+  } catch (err) {
+    console.error('Erro ao carregar hábitos do dia:', err);
+    mostrarToast('Erro ao carregar hábitos: ' + err.message);
+  }
+}
+
+document.getElementById('btnSalvarHabitos').addEventListener('click', async function() {
+  const data = document.getElementById('habitoData').value;
+  const descricao = document.getElementById('habitoDescricao').value.trim();
+
+  // Verifica se o usuário está logado
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) {
+    mostrarToast('Faça login primeiro!');
+    return;
+  }
+
+  try {
+    // 1. Salva a nota do dia na tabela `dias`
+    const { error: erroDia } = await supabaseClient
+      .from('dias')
+      .upsert({
+        user_id: user.id,
+        data: data,
+        descricao: descricao || null
+      }, { onConflict: 'user_id, data' });
+
+    if (erroDia) throw erroDia;
+
+    // 2. Para cada hábito marcado, insere em `habitos_registros`
+    const habitosMarcados = Object.keys(estadoHabitosHoje).filter(h => estadoHabitosHoje[h]);
+
+    // Busca os IDs dos hábitos do usuário
+    const { data: opcoes, error: erroOpcoes } = await supabaseClient
+      .from('opcoes')
+      .select('id, valor')
+      .eq('user_id', user.id)
+      .eq('grupo', 'habitos');
+
+    if (erroOpcoes) throw erroOpcoes;
+
+    const mapaHabitos = {};
+    opcoes.forEach(o => { mapaHabitos[o.valor] = o.id; });
+
+    // Insere cada hábito marcado
+    for (const habito of habitosMarcados) {
+      const habitoId = mapaHabitos[habito];
+      if (!habitoId) continue;
+
+      const { error: erroRegistro } = await supabaseClient
+        .from('habitos_registros')
+        .upsert({
+          user_id: user.id,
+          habito_id: habitoId,
+          data: data
+        }, { onConflict: 'user_id, habito_id, data' });
+
+      if (erroRegistro) throw erroRegistro;
+    }
+
+    mostrarToast('Dia salvo com sucesso! ✅');
+    fecharSheets();
+    // Recarrega os hábitos do dia para atualizar os chips
+    await carregarHabitosDoDia(data);
+  } catch (err) {
+    console.error(err);
+    mostrarToast('Erro ao salvar: ' + err.message);
+  }
 });
 
 /* ===================== FINANÇAS ===================== */
@@ -944,6 +1071,7 @@ function hojeISO() {
   return d.getFullYear() + '-' + mes + '-' + dia;
 }
 
+/* ===================== INIT ===================== */
 function init() {
   document.getElementById('greetingTime').textContent = saudacaoPorHorario();
   document.getElementById('habitoData').value = hojeISO();
@@ -953,7 +1081,19 @@ function init() {
   renderAreasGrid();
   renderAreasPreview();
   renderAnelMes();
+
+  // Carrega os hábitos do dia atual (se estiver logado)
+  carregarHabitosDoDia(hojeISO());
 }
 
+// Aguarda o DOM carregar para associar eventos
+document.addEventListener('DOMContentLoaded', function() {
+  const loginBtn = document.getElementById('btnLogin');
+  const cadastroBtn = document.getElementById('btnCadastro');
+  if (loginBtn) loginBtn.addEventListener('click', fazerLogin);
+  if (cadastroBtn) cadastroBtn.addEventListener('click', fazerCadastro);
+});
+
+// Inicia o app
 init();
 </script>
