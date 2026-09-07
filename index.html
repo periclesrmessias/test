@@ -696,16 +696,15 @@
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ===================== SUPABASE ===================== */
 const supabaseUrl = 'https://brzniszvitflytmbhmem.supabase.co';
 const supabaseAnonKey = 'sb_publishable_oKgZMFQdmG97woNq73Mr6A_TlNai-_C';
-
-// Cria o cliente com nome diferente para evitar conflito
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
 console.log('✅ Supabase conectado!');
 
-/* ===================== DOMÍNIOS (áreas da vida) ===================== */
+/* ===================== DOMÍNIOS ===================== */
 const DOMINIOS = [
   { id: 'habitos', nome: 'Hábitos', categoria: 'corpo', pronto: true },
   { id: 'financas', nome: 'Finanças', categoria: 'carreira', pronto: true },
@@ -723,72 +722,60 @@ const DOMINIOS = [
 
 const HABITOS_CAMPOS = ['Estudar', 'Atividade Física', 'Dormir bem', 'Leitura', 'Hidratação', 'Meditação', 'Sexo', 'Trabalhar', 'Pant', 'Interação Social', 'Algo Incomum', 'Cagar', 'Fio Dental', 'Protetor Solar', 'Doente', 'Herpes'];
 const estadoHabitosHoje = {};
-HABITOS_CAMPOS.forEach(function (h) { estadoHabitosHoje[h] = false; });
+HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
 const lancamentosSessao = [];
 
 /* ===================== NAVEGAÇÃO ===================== */
-function mostrarView(nome){
-  document.querySelectorAll('.view').forEach(function (v) { v.classList.remove('active'); });
+function mostrarView(nome) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-' + nome).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(function (b) {
-    b.classList.toggle('active', b.dataset.gotoView === nome);
-  });
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.gotoView === nome));
 }
 
-document.querySelectorAll('[data-goto-view]').forEach(function (el) {
-  el.addEventListener('click', function () { mostrarView(el.dataset.gotoView); });
+document.querySelectorAll('[data-goto-view]').forEach(el => {
+  el.addEventListener('click', () => mostrarView(el.dataset.gotoView));
 });
 
 /* ===================== SHEETS ===================== */
-function abrirSheet(id){
+function abrirSheet(id) {
   document.getElementById('sheetBackdrop').classList.add('visible');
-  document.querySelectorAll('.sheet').forEach(function (s) { s.classList.remove('open'); });
+  document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open'));
   document.getElementById(id).classList.add('open');
 }
 
-function fecharSheets(){
+function fecharSheets() {
   document.getElementById('sheetBackdrop').classList.remove('visible');
-  document.querySelectorAll('.sheet').forEach(function (s) { s.classList.remove('open'); });
+  document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open'));
 }
 
-document.querySelectorAll('[data-open-sheet]').forEach(function (el) {
-  el.addEventListener('click', function () { abrirSheet(el.dataset.openSheet); });
+document.querySelectorAll('[data-open-sheet]').forEach(el => {
+  el.addEventListener('click', () => abrirSheet(el.dataset.openSheet));
 });
-document.querySelectorAll('[data-close-sheet]').forEach(function (el) {
+document.querySelectorAll('[data-close-sheet]').forEach(el => {
   el.addEventListener('click', fecharSheets);
 });
 document.getElementById('sheetBackdrop').addEventListener('click', fecharSheets);
-
-document.getElementById('btnFab').addEventListener('click', function () {
-  abrirSheet('sheetHabitos');
-});
+document.getElementById('btnFab').addEventListener('click', () => abrirSheet('sheetHabitos'));
 
 /* ===================== TOAST ===================== */
 let toastTimer = null;
-function mostrarToast(mensagem){
+function mostrarToast(msg) {
   const toast = document.getElementById('toast');
-  toast.textContent = mensagem;
+  toast.textContent = msg;
   toast.classList.add('visible');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(function () { toast.classList.remove('visible'); }, 2600);
+  toastTimer = setTimeout(() => toast.classList.remove('visible'), 2600);
 }
 
 /* ===================== AUTENTICAÇÃO ===================== */
 async function fazerLogin() {
   const email = document.getElementById('loginEmail').value.trim();
   const senha = document.getElementById('loginSenha').value;
-  if (!email || !senha) {
-    mostrarToast('Preencha e-mail e senha.');
-    return;
-  }
+  if (!email || !senha) { mostrarToast('Preencha e-mail e senha.'); return; }
   try {
-    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password: senha });
-    if (error) {
-      mostrarToast('Erro: ' + error.message);
-    } else {
-      mostrarToast('Login realizado! ✅');
-      // Opcional: guardar sessão e atualizar UI
-    }
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password: senha });
+    if (error) mostrarToast('Erro: ' + error.message);
+    else mostrarToast('Login realizado! ✅');
   } catch (err) {
     mostrarToast('Erro inesperado: ' + err.message);
   }
@@ -797,33 +784,21 @@ async function fazerLogin() {
 async function fazerCadastro() {
   const email = document.getElementById('loginEmail').value.trim();
   const senha = document.getElementById('loginSenha').value;
-  if (!email || !senha) {
-    mostrarToast('Preencha e-mail e senha.');
-    return;
-  }
-  if (senha.length < 6) {
-    mostrarToast('A senha deve ter pelo menos 6 caracteres.');
-    return;
-  }
+  if (!email || !senha) { mostrarToast('Preencha e-mail e senha.'); return; }
+  if (senha.length < 6) { mostrarToast('A senha deve ter pelo menos 6 caracteres.'); return; }
   try {
-    const { data, error } = await supabaseClient.auth.signUp({
-      email: email,
+    const { error } = await supabaseClient.auth.signUp({
+      email,
       password: senha,
-      options: {
-        data: { nome: email.split('@')[0] } // nome temporário
-      }
+      options: { data: { nome: email.split('@')[0] } }
     });
-    if (error) {
-      mostrarToast('Erro: ' + error.message);
-    } else {
-      mostrarToast('Cadastro realizado! Verifique seu e-mail para confirmar. 📧');
-    }
+    if (error) mostrarToast('Erro: ' + error.message);
+    else mostrarToast('Cadastro realizado! Confirme seu e-mail. 📧');
   } catch (err) {
     mostrarToast('Erro inesperado: ' + err.message);
   }
 }
 
-// Associar os botões
 document.addEventListener('DOMContentLoaded', function() {
   const loginBtn = document.getElementById('btnLogin');
   const cadastroBtn = document.getElementById('btnCadastro');
@@ -832,22 +807,22 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /* ===================== HÁBITOS ===================== */
-function renderHabitChips(){
+function renderHabitChips() {
   const el = document.getElementById('habitChips');
-  el.innerHTML = HABITOS_CAMPOS.map(function (h) {
-    return '<button type="button" class="habit-chip' + (estadoHabitosHoje[h] ? ' on' : '') + '" data-habito="' + h + '">' + h + '</button>';
-  }).join('');
-  el.querySelectorAll('.habit-chip').forEach(function (chip) {
-    chip.addEventListener('click', function () {
-      const h = chip.dataset.habito;
+  el.innerHTML = HABITOS_CAMPOS.map(h =>
+    `<button type="button" class="habit-chip${estadoHabitosHoje[h] ? ' on' : ''}" data-habito="${h}">${h}</button>`
+  ).join('');
+  el.querySelectorAll('.habit-chip').forEach(chip => {
+    chip.addEventListener('click', function() {
+      const h = this.dataset.habito;
       estadoHabitosHoje[h] = !estadoHabitosHoje[h];
-      chip.classList.toggle('on');
+      this.classList.toggle('on');
       atualizarProgressoHabitos();
     });
   });
 }
 
-function atualizarProgressoHabitos(){
+function atualizarProgressoHabitos() {
   const total = HABITOS_CAMPOS.length;
   const feitos = Object.values(estadoHabitosHoje).filter(Boolean).length;
   const texto = feitos + ' de ' + total + ' hábitos concluídos' + (feitos === total ? '' : ' hoje');
@@ -858,13 +833,13 @@ function atualizarProgressoHabitos(){
   document.getElementById('habitProgressBarSheet').style.width = pct;
 }
 
-document.getElementById('btnSalvarHabitos').addEventListener('click', function () {
-  mostrarToast('Dia salvo nesta sessão (ainda não conectado ao Supabase)');
+document.getElementById('btnSalvarHabitos').addEventListener('click', function() {
+  mostrarToast('Dia salvo nesta sessão (conexão com Supabase em breve)');
   fecharSheets();
 });
 
 /* ===================== FINANÇAS ===================== */
-document.getElementById('formFinancas').addEventListener('submit', function (e) {
+document.getElementById('formFinancas').addEventListener('submit', function(e) {
   e.preventDefault();
   const form = e.target;
   const dado = {
@@ -885,97 +860,91 @@ document.getElementById('formFinancas').addEventListener('submit', function (e) 
   mostrarToast('Lançamento salvo nesta sessão');
 });
 
-function renderLancamentosSessao(){
+function renderLancamentosSessao() {
   const el = document.getElementById('listaLancamentosSessao');
-  el.innerHTML = lancamentosSessao.map(function (l) {
-    const classeValor = l.tipo === 'Receita' ? 'valor-receita' : 'valor-despesa';
+  el.innerHTML = lancamentosSessao.map(l => {
+    const classe = l.tipo === 'Receita' ? 'valor-receita' : 'valor-despesa';
     const sinal = l.tipo === 'Receita' ? '+' : '-';
-    return '<div class="mini-list-item"><span>' + (l.categoria || l.descricao || 'Lançamento') + '</span><span class="' + classeValor + '">' + sinal + ' R$ ' + l.valor.toFixed(2).replace('.', ',') + '</span></div>';
+    return `<div class="mini-list-item"><span>${l.categoria || l.descricao || 'Lançamento'}</span><span class="${classe}">${sinal} R$ ${l.valor.toFixed(2).replace('.', ',')}</span></div>`;
   }).join('');
 }
 
 /* ===================== ÁREAS ===================== */
-const CATEGORIA_LABEL = { corpo: 'Corpo e mente', carreira: 'Carreira e dinheiro', lazer: 'Vida e lazer' };
-
-function statusLabel(dominio){
+function statusLabel(dominio) {
   if (dominio.pronto === true) return 'Pronto';
   if (dominio.pronto === 'externo') return 'App próprio';
   return 'Em breve';
 }
 
-function renderAreasGrid(){
+function renderAreasGrid() {
   const grid = document.getElementById('areasGrid');
-  grid.innerHTML = DOMINIOS.map(function (d) {
-    const statusClasse = d.pronto === true ? 'ok' : (d.pronto === 'externo' ? 'externo' : '');
-    return '<button class="area-card" data-open-dominio="' + d.id + '">' +
-      '<span class="dot ' + d.categoria + '"></span>' +
-      '<span class="area-nome">' + d.nome + '</span>' +
-      '<span class="area-status ' + statusClasse + '">' + statusLabel(d) + '</span>' +
-      '</button>';
-  }).join('');
-  grid.querySelectorAll('[data-open-dominio]').forEach(function (el) {
-    el.addEventListener('click', function () { abrirDominio(el.dataset.openDominio); });
+  grid.innerHTML = DOMINIOS.map(d =>
+    `<button class="area-card" data-open-dominio="${d.id}">
+      <span class="dot ${d.categoria}"></span>
+      <span class="area-nome">${d.nome}</span>
+      <span class="area-status ${d.pronto === true ? 'ok' : (d.pronto === 'externo' ? 'externo' : '')}">${statusLabel(d)}</span>
+    </button>`
+  ).join('');
+  grid.querySelectorAll('[data-open-dominio]').forEach(el => {
+    el.addEventListener('click', () => abrirDominio(el.dataset.openDominio));
   });
 }
 
-function renderAreasPreview(){
+function renderAreasPreview() {
   const scroll = document.getElementById('areasScrollPreview');
-  scroll.innerHTML = DOMINIOS.map(function (d) {
-    return '<button class="chip-area" data-open-dominio="' + d.id + '"><span class="dot ' + d.categoria + '"></span>' + d.nome + '</button>';
-  }).join('');
-  scroll.querySelectorAll('[data-open-dominio]').forEach(function (el) {
-    el.addEventListener('click', function () { abrirDominio(el.dataset.openDominio); });
+  scroll.innerHTML = DOMINIOS.map(d =>
+    `<button class="chip-area" data-open-dominio="${d.id}"><span class="dot ${d.categoria}"></span>${d.nome}</button>`
+  ).join('');
+  scroll.querySelectorAll('[data-open-dominio]').forEach(el => {
+    el.addEventListener('click', () => abrirDominio(el.dataset.openDominio));
   });
 }
 
-function abrirDominio(id){
+function abrirDominio(id) {
   if (id === 'habitos') { abrirSheet('sheetHabitos'); return; }
   if (id === 'financas') { abrirSheet('sheetFinancas'); return; }
-  const dominio = DOMINIOS.find(function (d) { return d.id === id; });
+  const dominio = DOMINIOS.find(d => d.id === id);
   if (dominio.pronto === 'externo') {
-    mostrarToast(dominio.nome + ' já tem um app dedicado, o link entra aqui em breve');
+    mostrarToast(dominio.nome + ' já tem um app dedicado, em breve o link aqui');
     return;
   }
   document.getElementById('genericoTitulo').textContent = dominio.nome;
-  document.getElementById('genericoCampos').innerHTML = dominio.campos.map(function (c) {
-    return '<li>' + c + '</li>';
-  }).join('');
+  document.getElementById('genericoCampos').innerHTML = dominio.campos.map(c => `<li>${c}</li>`).join('');
   abrirSheet('sheetGenerico');
 }
 
-/* ===================== ANEL "SEU MÊS" ===================== */
-function renderAnelMes(){
+/* ===================== ANEL ===================== */
+function renderAnelMes() {
   const dados = { corpo: 45, carreira: 35, lazer: 20 };
   const cores = { corpo: 'var(--cyan)', carreira: 'var(--violet)', lazer: 'var(--rose)' };
   const r = 50;
   const circ = 2 * Math.PI * r;
   let acumulado = 0;
   const svg = document.getElementById('anelMes');
-  svg.innerHTML = Object.keys(dados).map(function (chave) {
+  svg.innerHTML = Object.keys(dados).map(chave => {
     const comprimento = (dados[chave] / 100) * circ;
     const offset = -acumulado;
     acumulado += comprimento;
-    return '<circle cx="60" cy="60" r="' + r + '" fill="none" stroke="' + cores[chave] + '" stroke-width="11" stroke-linecap="round" stroke-dasharray="' + comprimento + ' ' + (circ - comprimento) + '" stroke-dashoffset="' + offset + '" transform="rotate(-90 60 60)"/>';
+    return `<circle cx="60" cy="60" r="${r}" fill="none" stroke="${cores[chave]}" stroke-width="11" stroke-linecap="round" stroke-dasharray="${comprimento} ${circ - comprimento}" stroke-dashoffset="${offset}" transform="rotate(-90 60 60)"/>`;
   }).join('');
 }
 
-/* ===================== SAUDAÇÃO E DATAS ===================== */
-function saudacaoPorHorario(){
+/* ===================== UTIL ===================== */
+function saudacaoPorHorario() {
   const hora = new Date().getHours();
   if (hora < 12) return 'Bom dia';
   if (hora < 18) return 'Boa tarde';
   return 'Boa noite';
 }
 
-function hojeISO(){
+function hojeISO() {
   const d = new Date();
   const mes = String(d.getMonth() + 1).padStart(2, '0');
   const dia = String(d.getDate()).padStart(2, '0');
   return d.getFullYear() + '-' + mes + '-' + dia;
 }
 
-/* ===================== INIT ===================== */
-function init(){
+function init() {
   document.getElementById('greetingTime').textContent = saudacaoPorHorario();
   document.getElementById('habitoData').value = hojeISO();
   document.getElementById('financaData').value = hojeISO();
@@ -988,5 +957,3 @@ function init(){
 
 init();
 </script>
-</body>
-</html>
