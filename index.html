@@ -478,88 +478,118 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         // 🔑 Suas credenciais
-        const supabaseUrl = 'https://brzniszvitflytmbhmem.supabase.co';
-        const supabaseAnonKey = 'sb_publishable_oKgZMFQdmG97woNq73Mr6A_TlNai-_C';
+const supabaseUrl = 'https://brzniszvitflytmbhmem.supabase.co';
+const supabaseAnonKey = 'sb_publishable_oKgZMFQdmG97woNq73Mr6A_TlNai-_C';
 
-        const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
-        console.log('✅ Supabase conectado!');
+// Cria o cliente com um nome diferente para evitar conflito com a variável global
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
+console.log('✅ Supabase conectado!');
 
-        // ===== AUTENTICAÇÃO =====
-        async function fazerLogin() {
-            const email = document.getElementById('loginEmail').value;
-            const senha = document.getElementById('loginSenha').value;
-            if (!email || !senha) {
-                alert('Preencha e-mail e senha.');
-                return;
-            }
-            const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
-            if (error) alert('Erro: ' + error.message);
-            else {
-                alert('Login realizado! ✅');
-                carregarAnotacoes();
-            }
+// ===== AUTENTICAÇÃO =====
+async function fazerLogin() {
+    console.log('🔵 Clique no botão Entrar');
+    try {
+        const email = document.getElementById('loginEmail').value;
+        const senha = document.getElementById('loginSenha').value;
+        if (!email || !senha) {
+            alert('Preencha e-mail e senha.');
+            return;
         }
-
-        async function fazerCadastro() {
-            const email = document.getElementById('loginEmail').value;
-            const senha = document.getElementById('loginSenha').value;
-            if (!email || !senha) {
-                alert('Preencha e-mail e senha.');
-                return;
-            }
-            const { error } = await supabase.auth.signUp({ email, password: senha });
-            if (error) alert('Erro: ' + error.message);
-            else alert('Cadastro realizado! Verifique seu e-mail para confirmar. 📧');
+        // Agora usando supabaseClient em vez de supabase
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password: senha });
+        if (error) {
+            alert('Erro: ' + error.message);
+        } else {
+            alert('Login realizado! ✅');
+            carregarAnotacoes();
         }
+    } catch (err) {
+        console.error('💥 Erro inesperado no login:', err);
+        alert('Erro inesperado: ' + err.message);
+    }
+}
 
-        // ===== ANOTAÇÕES =====
-        async function salvarAnotacao() {
-            const titulo = prompt('Título da anotação:');
-            if (!titulo) return;
-            const conteudo = prompt('Conteúdo:');
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
-                alert('Faça login primeiro!');
-                return;
-            }
-            const { error } = await supabase
-                .from('anotacoes')
-                .insert([{ titulo, conteudo, user_id: user.id }]);
-            if (error) alert('Erro ao salvar: ' + error.message);
-            else {
-                alert('Salvo com sucesso! ✅');
-                carregarAnotacoes();
-            }
+async function fazerCadastro() {
+    console.log('🟢 Clique no botão Cadastrar');
+    try {
+        const email = document.getElementById('loginEmail').value;
+        const senha = document.getElementById('loginSenha').value;
+        if (!email || !senha) {
+            alert('Preencha e-mail e senha.');
+            return;
         }
-
-        async function carregarAnotacoes() {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
-                console.log('Não logado');
-                return;
-            }
-            const { data, error } = await supabase
-                .from('anotacoes')
-                .select('*')
-                .eq('user_id', user.id)
-                .order('created_at', { ascending: false });
-            if (error) console.error('Erro ao carregar:', error);
-            else console.log('📝 Minhas anotações:', data);
+        const { data, error } = await supabaseClient.auth.signUp({ email, password: senha });
+        if (error) {
+            alert('Erro: ' + error.message);
+        } else {
+            alert('Cadastro realizado! Verifique seu e-mail para confirmar. 📧');
         }
+    } catch (err) {
+        console.error('💥 Erro inesperado no cadastro:', err);
+        alert('Erro inesperado: ' + err.message);
+    }
+}
 
-        // ===== EVENTOS =====
-        document.addEventListener('DOMContentLoaded', function() {
-            const addBtn = document.querySelector('.add-btn');
-            if (addBtn) addBtn.addEventListener('click', salvarAnotacao);
+// ===== ANOTAÇÕES =====
+async function salvarAnotacao() {
+    console.log('➕ Botão + clicado');
+    try {
+        const titulo = prompt('Título da anotação:');
+        if (!titulo) return;
+        const conteudo = prompt('Conteúdo:');
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) {
+            alert('Faça login primeiro!');
+            return;
+        }
+        const { error } = await supabaseClient
+            .from('anotacoes')
+            .insert([{ titulo, conteudo, user_id: user.id }]);
+        if (error) {
+            alert('Erro ao salvar: ' + error.message);
+        } else {
+            alert('Salvo com sucesso! ✅');
+            carregarAnotacoes();
+        }
+    } catch (err) {
+        console.error('💥 Erro ao salvar anotação:', err);
+        alert('Erro inesperado: ' + err.message);
+    }
+}
 
-            const loginBtn = document.getElementById('loginBtn');
-            const cadastroBtn = document.getElementById('cadastroBtn');
-            if (loginBtn) loginBtn.addEventListener('click', fazerLogin);
-            if (cadastroBtn) cadastroBtn.addEventListener('click', fazerCadastro);
-        });
+async function carregarAnotacoes() {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) {
+            console.log('Não logado');
+            return;
+        }
+        const { data, error } = await supabaseClient
+            .from('anotacoes')
+            .select('*')
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: false });
+        if (error) {
+            console.error('Erro ao carregar:', error);
+        } else {
+            console.log('📝 Minhas anotações:', data);
+        }
+    } catch (err) {
+        console.error('💥 Erro ao carregar anotações:', err);
+    }
+}
 
-        // Carrega anotações se já estiver logado
-        carregarAnotacoes();
-    </script>
-</body>
-</html>
+// ===== EVENTOS =====
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('✅ DOM totalmente carregado');
+    
+    const addBtn = document.querySelector('.add-btn');
+    if (addBtn) addBtn.addEventListener('click', salvarAnotacao);
+
+    const loginBtn = document.getElementById('loginBtn');
+    const cadastroBtn = document.getElementById('cadastroBtn');
+    if (loginBtn) loginBtn.addEventListener('click', fazerLogin);
+    if (cadastroBtn) cadastroBtn.addEventListener('click', fazerCadastro);
+});
+
+carregarAnotacoes();
