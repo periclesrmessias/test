@@ -29,13 +29,17 @@
     --radius-md: 16px;
     --radius-sm: 12px;
     --shadow: 0 16px 40px rgba(0,0,0,0.45);
+    --sidebar-w: 220px;
   }
 
   *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
   html, body{ margin:0; padding:0; background: var(--bg); color: var(--text); }
 
+  html{ height: 100%; }
+
   body{
+    min-height: 100%;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 15px;
     line-height: 1.5;
@@ -49,120 +53,26 @@
 
   :focus-visible{ outline: 2px solid var(--cyan); outline-offset: 2px; }
 
-  /* ===== RESPONSIVO DESKTOP ===== */
-@media (min-width: 900px) {
-  body{
-    display: flex;
-    justify-content: center;
-  }
-
-    .app-shell{
-    max-width: 1180px;
-    width: 100%;
-    padding: 32px 40px 60px;
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    grid-template-areas:
-      "sidebar content";
-    align-items: start;
-    gap: 32px;
-    min-height: 100vh;
-  }
-
-  /* nav vira sidebar fixa à esquerda */
-  .bottom-nav{
-    grid-area: sidebar;
-    position: sticky;
-    top: 32px;
-    bottom: auto;
-    left: auto;
-    transform: none;
-    width: 100%;
-    max-width: none;
-    height: fit-content;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 6px;
-    padding: 16px 12px;
-    border-radius: var(--radius-lg);
-    z-index: 1;
-  }
-  .nav-btn{
-    flex-direction: row;
-    justify-content: flex-start;
-    gap: 12px;
-    font-size: 13px;
-    padding: 11px 14px;
-    border-radius: var(--radius-sm);
-    width: 100%;
-  }
-  .nav-btn.active{ background: var(--surface-2); }
-  .nav-fab{
-    margin: 8px 0 4px;
-    width: 100%;
-    height: 44px;
-    border-radius: var(--radius-sm);
-    border: none;
-  }
-
-  main.view{ grid-area: content; }
-
-  .priority-heading{ font-size: 34px; }
-  .view-title{ font-size: 30px; }
-
-  /* dashboard em duas colunas */
-  #view-dashboard{
-    display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    grid-template-areas:
-      "header header"
-      "habitos mes"
-      "assistente stats"
-      "areas areas";
-    gap: 22px;
-  }
-  #view-dashboard .dash-header{ grid-area: header; margin-bottom: 0; }
-  #view-dashboard .section:nth-of-type(1){ grid-area: habitos; margin-bottom: 0; }
-  #view-dashboard .section:nth-of-type(2){ grid-area: mes; margin-bottom: 0; }
-  #view-dashboard .section:nth-of-type(3){ grid-area: assistente; margin-bottom: 0; }
-  #view-dashboard .stats-row{ grid-area: stats; margin-bottom: 0; }
-  #view-dashboard .section:last-of-type{ grid-area: areas; margin-bottom: 0; }
-
-  .stats-row{ flex-direction: column; }
-  .balance-card{ flex-direction: column; align-items: flex-start; gap: 20px; }
-  .ring-wrap{ align-self: center; }
-
-  .areas-grid{
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-  }
-}
-
-@media (min-width: 1280px) {
-  .app-shell{ grid-template-columns: 240px 1fr; }
-}
-
   @media (prefers-reduced-motion: reduce){
     *{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   }
 
+  /* ========================================================
+     APP SHELL — base compartilhada (mobile-first)
+     ======================================================== */
   .app-shell{
+    width: 100%;
+    max-width: 460px;
     margin: 0 auto;
     min-height: 100vh;
     position: relative;
+    padding: 28px 20px 130px;
     background:
       radial-gradient(circle at 12% 0%, rgba(139,124,246,0.10), transparent 45%),
       radial-gradient(circle at 90% 12%, rgba(79,216,232,0.09), transparent 40%),
       var(--bg);
   }
 
-  @media (max-width: 899px) {
-    .app-shell{
-      max-width: 460px;
-      padding: 28px 20px 130px;
-    }
-  }
-  
   /* ===== VIEWS ===== */
   .view{ display:none; }
   .view.active{ display:block; animation: fadeIn .25s ease; }
@@ -373,8 +283,14 @@
   .area-status.ok{ color: var(--cyan); }
   .area-status.externo{ color: var(--text-dim); }
 
-      /* ===== BOTTOM NAV ===== */
+  /* ===== BOTTOM NAV (mobile: pílula flutuante) ===== */
   .bottom-nav{
+    position: fixed;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    max-width: 420px;
     background: rgba(18,23,41,0.9);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
@@ -393,17 +309,6 @@
     font-size: 10px; font-weight:600;
     padding: 6px 10px; border-radius: 14px; cursor:pointer;
   }
-
-  @media (max-width: 899px) {
-    .bottom-nav{
-      position: fixed;
-      bottom: 18px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: calc(100% - 40px);
-      max-width: 420px;
-    }
-  }
   .nav-btn svg{ width:21px; height:21px; stroke: currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
   .nav-btn.active{ color: var(--text); }
   .nav-fab{
@@ -414,6 +319,7 @@
     border: 4px solid var(--bg);
     box-shadow: 0 10px 22px rgba(139,124,246,0.4);
     cursor:pointer;
+    flex-shrink: 0;
   }
   .nav-fab svg{ width:20px; height:20px; stroke:#05070d; stroke-width:2.3; }
 
@@ -549,11 +455,180 @@
     text-align:center;
   }
   .toast.visible{ opacity:1; transform: translateX(-50%) translateY(0); }
+
+  /* ========================================================
+     DESKTOP (>= 900px) — layout com sidebar fixa + grid
+     Tudo aqui dentro SOBRESCREVE o mobile. Nada de posicionamento
+     mobile (fixed/pílula) vaza para este breakpoint.
+     ======================================================== */
+  @media (min-width: 900px){
+
+    html, body{ height: 100%; }
+
+    body{
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .app-shell{
+      max-width: none;
+      width: 100%;
+      min-height: 100vh;
+      margin: 0;
+      padding: 40px 48px 48px;
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      align-items: start;
+      gap: 40px;
+    }
+
+    /* --- Sidebar --- */
+    .bottom-nav{
+      position: sticky;
+      top: 40px;
+      left: auto;
+      bottom: auto;
+      transform: none;
+      width: 100%;
+      max-width: none;
+      height: fit-content;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      gap: 4px;
+      padding: 18px 14px;
+      border-radius: var(--radius-lg);
+      order: -1; /* garante que a sidebar sempre é o primeiro item do fluxo do grid */
+    }
+
+    .nav-btn{
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: 12px;
+      font-size: 13.5px;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      width: 100%;
+    }
+    .nav-btn svg{ width:19px; height:19px; flex-shrink:0; }
+    .nav-btn.active{ background: var(--surface-2); }
+
+    .nav-fab{
+      order: 2;
+      width: 100%;
+      height: 46px;
+      border-radius: var(--radius-sm);
+      margin: 10px 0 4px;
+      border: none;
+    }
+
+    /* reordena visualmente: Dashboard, Áreas, +, Resumo, Perfil */
+    .bottom-nav .nav-btn:nth-child(1){ order: 0; }
+    .bottom-nav .nav-btn:nth-child(2){ order: 1; }
+    .bottom-nav .nav-fab{ order: 2; }
+    .bottom-nav .nav-btn:nth-child(4){ order: 3; }
+    .bottom-nav .nav-btn:nth-child(5){ order: 4; }
+
+    /* --- Área de conteúdo --- */
+    main.view{ min-width: 0; }
+
+    .priority-heading{ font-size: 32px; }
+    .view-title{ font-size: 28px; }
+
+    /* --- Dashboard em grid de 2 colunas --- */
+    #view-dashboard{
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      grid-template-areas:
+        "header header"
+        "habitos mes"
+        "assistente stats"
+        "areas   areas";
+      gap: 24px;
+    }
+    #view-dashboard .dash-header{ grid-area: header; margin-bottom: 0; }
+    #view-dashboard .section:nth-of-type(1){ grid-area: habitos; margin-bottom: 0; }
+    #view-dashboard .section:nth-of-type(2){ grid-area: mes; margin-bottom: 0; }
+    #view-dashboard .section:nth-of-type(3){ grid-area: assistente; margin-bottom: 0; }
+    #view-dashboard .stats-row{ grid-area: stats; margin-bottom: 0; }
+    #view-dashboard .section:last-of-type{ grid-area: areas; margin-bottom: 0; }
+
+    .stats-row{ flex-direction: column; height: 100%; }
+    .stat-card{ display:flex; flex-direction:column; justify-content:center; }
+
+    .balance-card{ flex-direction: row; align-items: center; }
+
+    .areas-scroll{ margin: 0; padding: 0; flex-wrap: wrap; overflow: visible; }
+
+    /* --- Grid de áreas (view Áreas) --- */
+    .areas-grid{
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    /* --- Sheets viram modais centrados, não bottom-sheets --- */
+    .sheet{
+      left: 50%;
+      right: auto;
+      bottom: auto;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0.97);
+      width: 100%;
+      max-width: 480px;
+      max-height: 80vh;
+      border-radius: var(--radius-lg);
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .22s ease, opacity .22s ease;
+    }
+    .sheet.open{
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* --- Toast reposicionado (sem bottom-nav flutuante embaixo) --- */
+    .toast{ bottom: 32px; }
+  }
+
+  @media (min-width: 1200px){
+    :root{ --sidebar-w: 240px; }
+    .app-shell{ padding: 48px 64px; }
+  }
+
+  @media (min-width: 1440px){
+    .app-shell{ max-width: 1400px; margin: 0 auto; }
+  }
 </style>
 </head>
 <body>
 
 <div class="app-shell">
+
+  <!-- ===================== NAV ===================== -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-goto-view="dashboard">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-btn" data-goto-view="areas">
+      <svg viewBox="0 0 24 24"><path d="M12 3 L21 8.5 L12 14 L3 8.5 Z"/><path d="M3 14.5 L12 20 L21 14.5"/></svg>
+      Áreas
+    </button>
+    <button class="nav-fab" id="btnFab">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+    <button class="nav-btn" data-goto-view="insights">
+      <svg viewBox="0 0 24 24"><line x1="5" y1="20" x2="5" y2="12"/><line x1="12" y1="20" x2="12" y2="7"/><line x1="19" y1="20" x2="19" y2="14"/></svg>
+      Resumo
+    </button>
+    <button class="nav-btn" data-goto-view="perfil">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+      Perfil
+    </button>
+  </nav>
 
   <!-- ===================== DASHBOARD ===================== -->
   <main id="view-dashboard" class="view active">
@@ -654,29 +729,6 @@
       <p class="stat-note" style="margin-top:12px;">Login via Supabase Auth</p>
     </div>
   </main>
-
-  <!-- ===================== NAV ===================== -->
-  <nav class="bottom-nav">
-    <button class="nav-btn active" data-goto-view="dashboard">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>
-      Dashboard
-    </button>
-    <button class="nav-btn" data-goto-view="areas">
-      <svg viewBox="0 0 24 24"><path d="M12 3 L21 8.5 L12 14 L3 8.5 Z"/><path d="M3 14.5 L12 20 L21 14.5"/></svg>
-      Áreas
-    </button>
-    <button class="nav-fab" id="btnFab">
-      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-    </button>
-    <button class="nav-btn" data-goto-view="insights">
-      <svg viewBox="0 0 24 24"><line x1="5" y1="20" x2="5" y2="12"/><line x1="12" y1="20" x2="12" y2="7"/><line x1="19" y1="20" x2="19" y2="14"/></svg>
-      Resumo
-    </button>
-    <button class="nav-btn" data-goto-view="perfil">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
-      Perfil
-    </button>
-  </nav>
 
   <!-- ===================== SHEET: HÁBITOS ===================== -->
   <div class="sheet" id="sheetHabitos">
@@ -830,7 +882,6 @@ let lancamentosSessao = [];
 
 /* ===================== NAVEGAÇÃO ===================== */
 function mostrarView(nome) {
-  console.log('Navegando para:', nome);
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   const target = document.getElementById('view-' + nome);
   if (target) target.classList.add('active');
@@ -840,21 +891,13 @@ function mostrarView(nome) {
   if (nome === 'perfil') verificarSessao();
 }
 
-// Adiciona eventos de clique a TODOS os botões com data-goto-view
-// Usamos setTimeout para garantir que o DOM já esteja pronto
-setTimeout(function() {
-  document.querySelectorAll('[data-goto-view]').forEach(el => {
-    el.addEventListener('click', function(e) {
-      e.preventDefault();
-      const view = this.dataset.gotoView;
-      if (view) {
-        console.log('Clique no botão:', view);
-        mostrarView(view);
-      }
-    });
+document.querySelectorAll('[data-goto-view]').forEach(el => {
+  el.addEventListener('click', function(e) {
+    e.preventDefault();
+    const view = this.dataset.gotoView;
+    if (view) mostrarView(view);
   });
-  console.log('✅ Eventos de navegação atribuídos a', document.querySelectorAll('[data-goto-view]').length, 'botões');
-}, 100);
+});
 
 /* ===================== SHEETS ===================== */
 function abrirSheet(id) {
@@ -862,7 +905,6 @@ function abrirSheet(id) {
   document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open'));
   document.getElementById(id).classList.add('open');
 
-  // Carrega os hábitos do dia quando a sheet de hábitos é aberta
   if (id === 'sheetHabitos') {
     const data = document.getElementById('habitoData').value;
     carregarHabitosDoDia(data);
@@ -898,7 +940,6 @@ function toggleSenha() {
   if (!input) return;
   const isPassword = input.type === 'password';
   input.type = isPassword ? 'text' : 'password';
-  // Troca o ícone
   const icon = document.querySelector('.toggle-icon');
   if (icon) {
     icon.className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
@@ -915,9 +956,7 @@ async function fazerLogin() {
     if (error) mostrarToast('Erro: ' + error.message);
     else {
       mostrarToast('Login realizado! ✅');
-      // Recarrega os hábitos do dia atual após login
       carregarHabitosDoDia(hojeISO());
-      // Atualiza a tela de perfil
       verificarSessao();
     }
   } catch (err) {
@@ -939,7 +978,6 @@ async function fazerCadastro() {
     if (error) mostrarToast('Erro: ' + error.message);
     else {
       mostrarToast('Cadastro realizado! Confirme seu e-mail. 📧');
-      // Atualiza a tela de perfil (já mostra os campos de login novamente)
       verificarSessao();
     }
   } catch (err) {
@@ -996,9 +1034,7 @@ async function fazerLogout() {
     mostrarToast('Erro ao sair: ' + error.message);
   } else {
     mostrarToast('Deslogado com sucesso! 👋');
-    // Atualiza a UI da tela de perfil
     verificarSessao();
-    // Resetar hábitos da tela
     HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
     renderHabitChips();
     atualizarProgressoHabitos();
@@ -1035,7 +1071,6 @@ function atualizarProgressoHabitos() {
 async function carregarHabitosDoDia(data) {
   const { data: { user } } = await supabaseClient.auth.getUser();
   if (!user) {
-    // Se não estiver logado, reseta os hábitos (desmarca todos)
     HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
     renderHabitChips();
     atualizarProgressoHabitos();
@@ -1043,7 +1078,6 @@ async function carregarHabitosDoDia(data) {
   }
 
   try {
-    // Busca os IDs dos hábitos do usuário
     const { data: opcoes, error: erroOpcoes } = await supabaseClient
       .from('opcoes')
       .select('id, valor')
@@ -1052,7 +1086,6 @@ async function carregarHabitosDoDia(data) {
 
     if (erroOpcoes) throw erroOpcoes;
 
-    // Busca os registros do dia
     const { data: registros, error: erroRegistros } = await supabaseClient
       .from('habitos_registros')
       .select('habito_id')
@@ -1063,17 +1096,14 @@ async function carregarHabitosDoDia(data) {
 
     const idsRegistrados = registros.map(r => r.habito_id);
 
-    // Reseta o estado
     HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
 
-    // Marca os que estão registrados
     opcoes.forEach(o => {
       if (idsRegistrados.includes(o.id)) {
         estadoHabitosHoje[o.valor] = true;
       }
     });
 
-    // Busca a descrição do dia (opcional)
     const { data: dia, error: erroDia } = await supabaseClient
       .from('dias')
       .select('descricao')
@@ -1100,7 +1130,6 @@ document.getElementById('btnSalvarHabitos').addEventListener('click', async func
   const data = document.getElementById('habitoData').value;
   const descricao = document.getElementById('habitoDescricao').value.trim();
 
-  // Verifica se o usuário está logado
   const { data: { user } } = await supabaseClient.auth.getUser();
   if (!user) {
     mostrarToast('Faça login primeiro!');
@@ -1108,7 +1137,6 @@ document.getElementById('btnSalvarHabitos').addEventListener('click', async func
   }
 
   try {
-    // 1. Salva a nota do dia na tabela `dias`
     const { error: erroDia } = await supabaseClient
       .from('dias')
       .upsert({
@@ -1119,10 +1147,8 @@ document.getElementById('btnSalvarHabitos').addEventListener('click', async func
 
     if (erroDia) throw erroDia;
 
-    // 2. Para cada hábito marcado, insere em `habitos_registros`
     const habitosMarcados = Object.keys(estadoHabitosHoje).filter(h => estadoHabitosHoje[h]);
 
-    // Busca os IDs dos hábitos do usuário
     const { data: opcoes, error: erroOpcoes } = await supabaseClient
       .from('opcoes')
       .select('id, valor')
@@ -1134,7 +1160,6 @@ document.getElementById('btnSalvarHabitos').addEventListener('click', async func
     const mapaHabitos = {};
     opcoes.forEach(o => { mapaHabitos[o.valor] = o.id; });
 
-    // Insere cada hábito marcado
     for (const habito of habitosMarcados) {
       const habitoId = mapaHabitos[habito];
       if (!habitoId) continue;
@@ -1152,7 +1177,6 @@ document.getElementById('btnSalvarHabitos').addEventListener('click', async func
 
     mostrarToast('Dia salvo com sucesso! ✅');
     fecharSheets();
-    // Recarrega os hábitos do dia para atualizar os chips
     await carregarHabitosDoDia(data);
   } catch (err) {
     console.error(err);
@@ -1276,18 +1300,16 @@ function init() {
   renderAreasGrid();
   renderAreasPreview();
   renderAnelMes();
-
-  // Carrega os hábitos do dia atual (se estiver logado)
   carregarHabitosDoDia(hojeISO());
 }
 
-// Inicia o app
 init();
 
-// Verifica sessão ao iniciar (com try/catch para não quebrar)
 try {
   verificarSessao();
 } catch (e) {
   console.warn('Erro ao verificar sessão:', e);
 }
 </script>
+</body>
+</html>
