@@ -476,7 +476,7 @@
 
     <!-- ===== SUPABASE ===== -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
+    <script>
     // 🔑 Credenciais
     const supabaseUrl = 'https://brzniszvitflytmbhmem.supabase.co';
     const supabaseAnonKey = 'sb_publishable_oKgZMFQdmG97woNq73Mr6A_TlNai-_C';
@@ -484,8 +484,8 @@
     const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
     console.log('✅ Supabase conectado!');
 
-    // ===== AUTENTICAÇÃO =====
-    async function fazerLogin() {
+    // ===== AUTENTICAÇÃO (definidas globalmente via window) =====
+    window.fazerLogin = async function() {
         console.log('🔵 Login chamado');
         const email = document.getElementById('loginEmail').value;
         const senha = document.getElementById('loginSenha').value;
@@ -500,9 +500,9 @@
             alert('Login realizado! ✅');
             carregarAnotacoes();
         }
-    }
+    };
 
-    async function fazerCadastro() {
+    window.fazerCadastro = async function() {
         console.log('🟢 Cadastro chamado');
         const email = document.getElementById('loginEmail').value;
         const senha = document.getElementById('loginSenha').value;
@@ -516,10 +516,10 @@
         } else {
             alert('Cadastro realizado! Verifique seu e-mail para confirmar. 📧');
         }
-    }
+    };
 
     // ===== ANOTAÇÕES =====
-    async function salvarAnotacao() {
+    window.salvarAnotacao = async function() {
         console.log('➕ Salvar anotação');
         const titulo = prompt('Título:');
         if (!titulo) return;
@@ -538,7 +538,7 @@
             alert('Salvo com sucesso! ✅');
             carregarAnotacoes();
         }
-    }
+    };
 
     async function carregarAnotacoes() {
         const { data: { user } } = await supabaseClient.auth.getUser();
@@ -558,8 +558,11 @@
     // ===== EVENTO DO BOTÃO "+" =====
     document.addEventListener('DOMContentLoaded', function() {
         const addBtn = document.querySelector('.add-btn');
-        if (addBtn) addBtn.addEventListener('click', salvarAnotacao);
+        if (addBtn) {
+            addBtn.addEventListener('click', window.salvarAnotacao);
+        }
     });
 
+    // Carrega anotações se já estiver logado
     carregarAnotacoes();
 </script>
