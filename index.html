@@ -545,10 +545,10 @@
         <input type="text" id="loginSenha" placeholder="••••••••">
       </div>
       <div style="display: flex; gap: 10px;">
-  <button class="btn-secondary" id="btnLogin" style="flex:1;">Entrar</button>
-  <button class="btn-secondary" id="btnCadastro" style="flex:1; background: var(--grad); color: #05070d; border-color: transparent;">Cadastrar</button>
-</div>
-      <p class="stat-note" style="margin-top:12px;">Login via Supabase Auth, em construção.</p>
+        <button class="btn-secondary" id="btnLogin" style="flex:1;">Entrar</button>
+        <button class="btn-secondary" id="btnCadastro" style="flex:1; background: var(--grad); color: #05070d; border-color: transparent;">Cadastrar</button>
+      </div>
+      <p class="stat-note" style="margin-top:12px;">Login via Supabase Auth</p>
     </div>
   </main>
 
@@ -697,44 +697,6 @@
 </div>
 
 <script>
-/* ===================== DOMÍNIOS (áreas da vida) ===================== */
-const DOMINIOS = [
-  { id: 'habitos', nome: 'Hábitos', categoria: 'corpo', pronto: true },
-  { id: 'financas', nome: 'Finanças', categoria: 'carreira', pronto: true },
-  { id: 'humor', nome: 'Humor', categoria: 'corpo', pronto: false, campos: ['Data', 'Nota (1 a 5)', 'Tags', 'Observações'] },
-  { id: 'treinos', nome: 'Treinos', categoria: 'corpo', pronto: false, campos: ['Data', 'Tipo de treino', 'Exercício', 'Carga (kg)', 'Séries', 'Repetições', 'Observações'] },
-  { id: 'candidaturas', nome: 'Candidaturas', categoria: 'carreira', pronto: false, campos: ['Empresa', 'Cargo', 'Data', 'Plataforma', 'Remota', 'Selecionado'] },
-  { id: 'processos', nome: 'Processos Seletivos', categoria: 'carreira', pronto: false, campos: ['Vaga', 'Empresa', 'Entrevista RH', 'Entrevista Técnica', 'Aprovação'] },
-  { id: 'filmes', nome: 'Filmes', categoria: 'lazer', pronto: 'externo' },
-  { id: 'series', nome: 'Séries', categoria: 'lazer', pronto: false, campos: ['Série', 'Vista', 'Data Início', 'Data Fim', 'Streaming', 'Notas'] },
-  { id: 'comer', nome: 'Comer', categoria: 'lazer', pronto: false, campos: ['Nome', 'Tipo de lugar', 'Endereço', 'Já fomos?', 'Nota', 'Comentário'] },
-  { id: 'visitar', nome: 'Visitar', categoria: 'lazer', pronto: false, campos: ['Nome', 'Tipo de passeio', 'Endereço', 'Valor estimado', 'Nota'] },
-  { id: 'receitas', nome: 'Receitas', categoria: 'lazer', pronto: false, campos: ['Nome', 'Ingredientes', 'Modo de preparo', 'Tempo', 'Porções'] },
-  { id: 'atividades', nome: 'Atividades', categoria: 'lazer', pronto: false, campos: ['Atividade', 'Proposta por', 'Categoria', 'Feita?', 'Data'] }
-];
-
-const HABITOS_CAMPOS = ['Estudar', 'Atividade Física', 'Dormir bem', 'Leitura', 'Hidratação', 'Meditação', 'Sexo', 'Trabalhar', 'Pant', 'Interação Social', 'Algo Incomum', 'Cagar', 'Fio Dental', 'Protetor Solar', 'Doente', 'Herpes'];
-// WOOP existe no histórico da planilha, mas não é mais registrado por aqui.
-
-const estadoHabitosHoje = {};
-HABITOS_CAMPOS.forEach(function (h) { estadoHabitosHoje[h] = false; });
-
-const lancamentosSessao = [];
-
-/* ===================== NAVEGAÇÃO ===================== */
-function mostrarView(nome){
-  document.querySelectorAll('.view').forEach(function (v) { v.classList.remove('active'); });
-  document.getElementById('view-' + nome).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(function (b) {
-    b.classList.toggle('active', b.dataset.gotoView === nome);
-  });
-}
-
-document.querySelectorAll('[data-goto-view]').forEach(function (el) {
-  el.addEventListener('click', function () { mostrarView(el.dataset.gotoView); });
-});
-
-<script>
 /* ===================== SUPABASE ===================== */
 const supabaseUrl = 'https://brzniszvitflytmbhmem.supabase.co';
 const supabaseAnonKey = 'sb_publishable_oKgZMFQdmG97woNq73Mr6A_TlNai-_C';
@@ -855,7 +817,6 @@ async function fazerCadastro() {
       mostrarToast('Erro: ' + error.message);
     } else {
       mostrarToast('Cadastro realizado! Verifique seu e-mail para confirmar. 📧');
-      // Após o cadastro, o trigger `adicionar_membro` (que você criou) adicionará automaticamente à tabela membros.
     }
   } catch (err) {
     mostrarToast('Erro inesperado: ' + err.message);
@@ -1027,3 +988,5 @@ function init(){
 
 init();
 </script>
+</body>
+</html>
