@@ -790,6 +790,18 @@ function mostrarToast(msg) {
   toastTimer = setTimeout(() => toast.classList.remove('visible'), 2600);
 }
 
+function toggleSenha() {
+  const input = document.getElementById('loginSenha');
+  if (!input) return;
+  const isPassword = input.type === 'password';
+  input.type = isPassword ? 'text' : 'password';
+  // Troca o ícone
+  const icon = document.querySelector('.toggle-icon');
+  if (icon) {
+    icon.className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
+  }
+}
+
 /* ===================== AUTENTICAÇÃO ===================== */
 async function fazerLogin() {
   const email = document.getElementById('loginEmail').value.trim();
@@ -856,8 +868,8 @@ async function verificarSessao() {
         <div class="field" style="position: relative;">
           <label for="loginSenha">Senha</label>
           <input type="password" id="loginSenha" placeholder="••••••••" style="padding-right: 40px;">
-          <span class="toggle-password" style="position: absolute; right: 12px; bottom: 10px; cursor: pointer; color: var(--text-faint);">
-            <i class="fas fa-eye"></i>
+          <span class="toggle-password" style="position: absolute; right: 12px; bottom: 10px; cursor: pointer; color: var(--text-faint);" onclick="toggleSenha()">
+            <i class="fas fa-eye toggle-icon"></i>
           </span>
         </div>
         <div style="display: flex; gap: 10px;">
@@ -869,21 +881,6 @@ async function verificarSessao() {
 
       document.getElementById('btnLogin').addEventListener('click', fazerLogin);
       document.getElementById('btnCadastro').addEventListener('click', fazerCadastro);
-
-      // 🔧 Configura o olhinho com um pequeno atraso
-      setTimeout(() => {
-        const togglePassword = document.querySelector('.toggle-password');
-        const senhaInput = document.getElementById('loginSenha');
-        if (togglePassword && senhaInput) {
-          togglePassword.addEventListener('click', function() {
-            const isPassword = senhaInput.type === 'password';
-            senhaInput.type = isPassword ? 'text' : 'password';
-            this.innerHTML = isPassword ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
-          });
-        } else {
-          console.warn('⚠️ Elementos do olhinho não encontrados');
-        }
-      }, 100);
     }
   } catch (err) {
     console.warn('Erro ao verificar sessão:', err);
