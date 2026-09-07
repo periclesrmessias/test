@@ -731,11 +731,12 @@ function mostrarView(nome) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-' + nome).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.gotoView === nome));
+  
+  // Se for a tela de perfil, atualiza o estado de login
+  if (nome === 'perfil') {
+    verificarSessao();
+  }
 }
-
-document.querySelectorAll('[data-goto-view]').forEach(el => {
-  el.addEventListener('click', () => mostrarView(el.dataset.gotoView));
-});
 
 /* ===================== SHEETS ===================== */
 function abrirSheet(id) {
@@ -789,6 +790,58 @@ async function fazerLogin() {
     }
   } catch (err) {
     mostrarToast('Erro inesperado: ' + err.message);
+  }
+}
+
+async function verificarSessao() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  const perfilView = document.getElementById('view-perfil');
+  const card = perfilView.querySelector('.card');
+  
+  if (user) {
+    // Usuário logado – mostra e-mail e botão logout
+    card.innerHTML = `
+      <p style="color: var(--text-dim); margin-bottom: 8px;">✅ Logado como:</p>
+      <p style="font-size: 18px; font-weight: 600; margin-bottom: 20px;">${user.email}</p>
+      <button class="btn-secondary" id="btnLogout" style="background: var(--rose); border-color: var(--rose); color: white;">Sair</button>
+    `;
+    // Adiciona evento de logout
+    document.getElementById('btnLogout').addEventListener('click', fazerLogout);
+  } else {
+    // Usuário não logado – mostra os campos de login
+    card.innerHTML = `
+      <div class="field">
+        <label for="loginEmail">E-mail</label>
+        <input type="text" id="loginEmail" placeholder="voce@exemplo.com">
+      </div>
+      <div class="field">
+        <label for="loginSenha">Senha</label>
+        <input type="password" id="loginSenha" placeholder="••••••••">
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn-secondary" id="btnLogin" style="flex:1;">Entrar</button>
+        <button class="btn-secondary" id="btnCadastro" style="flex:1; background: var(--grad); color: #05070d; border-color: transparent;">Cadastrar</button>
+      </div>
+      <p class="stat-note" style="margin-top:12px;">Login via Supabase Auth</p>
+    `;
+    // Reassocia os eventos de login/cadastro
+    document.getElementById('btnLogin').addEventListener('click', fazerLogin);
+    document.getElementById('btnCadastro').addEventListener('click', fazerCadastro);
+  }
+}
+
+async function fazerLogout() {
+  const { error } = await supabaseClient.auth.signOut();
+  if (error) {
+    mostrarToast('Erro ao sair: ' + error.message);
+  } else {
+    mostrarToast('Deslogado com sucesso! 👋');
+    // Atualiza a UI da tela de perfil e hábitos
+    verificarSessao();
+    // Resetar hábitos da tela
+    HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
+    renderHabitChips();
+    atualizarProgressoHabitos();
   }
 }
 
@@ -1096,4 +1149,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Inicia o app
 init();
+
+// Verifica sessão ao iniciar
+verificarSessao();
 </script>
