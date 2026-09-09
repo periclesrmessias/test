@@ -632,8 +632,8 @@
     .priority-heading{ font-size: 32px; }
     .view-title{ font-size: 28px; }
 
-    /* dashboard grid */
-    #view-dashboard{
+    /* dashboard grid — só ativo quando a view está visível */
+    #view-dashboard.active{
       display: grid;
       grid-template-columns: 1.35fr 1fr;
       grid-template-areas:
