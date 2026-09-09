@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
   :root{
     --bg: #080b14;
@@ -24,7 +25,11 @@
     --violet: #8b7cf6;
     --cyan: #4fd8e8;
     --rose: #f2789f;
-    --grad: linear-gradient(135deg, var(--violet), var(--cyan));
+    --ok: #3ecf8e;
+    --warn: #f5b955;
+    --danger: #f2647a;
+    --ghost: #7c85a8;
+    --grad: linear-gradient(135deg, #8b7cf6, #5ab8d4);
     --radius-lg: 24px;
     --radius-md: 16px;
     --radius-sm: 12px;
@@ -33,32 +38,93 @@
   }
 
   *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
   html, body{ margin:0; padding:0; background: var(--bg); color: var(--text); }
-
   html{ height: 100%; }
-
   body{
     min-height: 100%;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 15px;
     line-height: 1.5;
   }
-
   h1, h2, .display, .stat-value, .wordmark, .ring-center strong{
     font-family: 'Manrope', 'Inter', sans-serif;
   }
-
   button, input, select, textarea{ font-family: inherit; }
-
   :focus-visible{ outline: 2px solid var(--cyan); outline-offset: 2px; }
-
   @media (prefers-reduced-motion: reduce){
     *{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   }
 
   /* ========================================================
-     APP SHELL — base compartilhada (mobile-first)
+     TELA DE LOGIN
+     ======================================================== */
+  #loginScreen{
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 15% 0%, rgba(139,124,246,0.13), transparent 45%),
+      radial-gradient(circle at 88% 10%, rgba(79,216,232,0.10), transparent 40%),
+      var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: 24px;
+  }
+  #loginScreen.hidden{ display: none; }
+  .login-box{
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+  }
+  .login-wordmark{
+    font-family: 'Manrope', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0 0 6px;
+    letter-spacing: -0.02em;
+  }
+  .login-wordmark span{ font-weight: 500; color: var(--text-dim); }
+  .login-subtitle{ font-size: 13.5px; color: var(--text-faint); margin: 0 0 28px; }
+  .login-card{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  .login-card .field{ margin-bottom: 14px; }
+  .login-card .field label{
+    display: block;
+    font-size: 11.5px;
+    color: var(--text-faint);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .login-card .field input{
+    width: 100%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 11px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+  .login-btns{ display: flex; gap: 10px; margin-top: 18px; }
+  .login-btns button{
+    flex: 1; padding: 13px; border-radius: var(--radius-sm);
+    font-size: 14.5px; font-weight: 700; cursor: pointer;
+    border: none; font-family: inherit;
+  }
+  .btn-login-entrar{ background: var(--surface-2); color: var(--text); border: 1px solid var(--border) !important; }
+  .btn-login-cadastrar{ background: var(--grad); color: #05070d; }
+  .login-note{ font-size: 11.5px; color: var(--text-faint); margin-top: 12px; text-align: center; }
+
+  /* ========================================================
+     APP SHELL
      ======================================================== */
   .app-shell{
     width: 100%;
@@ -77,119 +143,44 @@
   .view{ display:none; }
   .view.active{ display:block; animation: fadeIn .25s ease; }
   @keyframes fadeIn{ from{ opacity:0; transform: translateY(6px);} to{ opacity:1; transform:none; } }
-
-  .view-title{
-    font-size: 24px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin: 0 0 20px;
-  }
+  .view-title{ font-size: 24px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 20px; }
 
   .section{ margin-bottom: 22px; }
-  .section-head{
-    display:flex;
-    align-items:center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-  }
-  .section-title{
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-dim);
-    margin: 0;
-  }
+  .section-head{ display:flex; align-items:center; justify-content: space-between; margin-bottom: 12px; }
+  .section-title{ font-size: 13px; font-weight: 600; color: var(--text-dim); margin: 0; }
   .badge-exemplo{
-    font-size: 10.5px;
-    color: var(--text-faint);
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    padding: 3px 9px;
-    border-radius: 999px;
+    font-size: 10.5px; color: var(--text-faint);
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    padding: 3px 9px; border-radius: 999px;
   }
 
-  /* ===== HEADER / DASHBOARD ===== */
   .dash-header{ margin-bottom: 26px; }
-  .greeting-line{
-    font-size: 15px;
-    color: var(--text-dim);
-    margin: 0 0 2px;
-  }
+  .greeting-line{ font-size: 15px; color: var(--text-dim); margin: 0 0 2px; }
   .greeting-line strong{ color: var(--text); font-weight: 600; }
-
-  .priority-heading{
-    font-size: 27px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    margin: 4px 0 0;
-  }
+  .priority-heading{ font-size: 27px; font-weight: 800; letter-spacing: -0.02em; margin: 4px 0 0; }
 
   .card{
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 20px;
-    box-shadow: var(--shadow);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow);
   }
-
-  .habit-progress-text{
-    font-size: 14.5px;
-    font-weight: 600;
-    margin-bottom: 10px;
-  }
-  .progress-track{
-    height: 8px;
-    background: var(--surface-2);
-    border-radius: 999px;
-    overflow: hidden;
-    margin-bottom: 16px;
-  }
-  .progress-fill{
-    height: 100%;
-    background: var(--grad);
-    border-radius: 999px;
-    transition: width .3s ease;
-    width: 0%;
-  }
+  .habit-progress-text{ font-size: 14.5px; font-weight: 600; margin-bottom: 10px; }
+  .progress-track{ height: 8px; background: var(--surface-2); border-radius: 999px; overflow: hidden; margin-bottom: 16px; }
+  .progress-fill{ height: 100%; background: var(--grad); border-radius: 999px; transition: width .3s ease; width: 0%; }
 
   .btn-primary{
-    display:block;
-    width: 100%;
-    background: var(--grad);
-    color: #05070d;
-    font-weight: 700;
-    font-size: 14.5px;
-    border: none;
-    padding: 13px 16px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
+    display:block; width: 100%; background: var(--grad); color: #05070d;
+    font-weight: 700; font-size: 14.5px; border: none;
+    padding: 13px 16px; border-radius: var(--radius-sm); cursor: pointer;
   }
   .btn-secondary{
-    display:block;
-    width: 100%;
-    background: var(--surface-2);
-    color: var(--text);
-    font-weight: 600;
-    font-size: 14.5px;
-    border: 1px solid var(--border);
-    padding: 13px 16px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
+    display:block; width: 100%; background: var(--surface-2); color: var(--text);
+    font-weight: 600; font-size: 14.5px; border: 1px solid var(--border);
+    padding: 13px 16px; border-radius: var(--radius-sm); cursor: pointer;
   }
 
-  /* ===== BALANCE CARD ===== */
-  .balance-card{
-    display:flex;
-    align-items:center;
-    gap: 18px;
-  }
+  .balance-card{ display:flex; align-items:center; gap: 18px; }
   .balance-legend{ flex:1; display:flex; flex-direction:column; gap:10px; }
-  .balance-row{
-    display:flex;
-    align-items:center;
-    gap: 9px;
-    font-size: 13px;
-    color: var(--text-dim);
-  }
+  .balance-row{ display:flex; align-items:center; gap: 9px; font-size: 13px; color: var(--text-dim); }
   .balance-row .pct{ margin-left:auto; color: var(--text); font-weight:600; }
   .dot{ width:9px; height:9px; border-radius:50%; flex-shrink:0; }
   .dot.corpo{ background: var(--cyan); }
@@ -198,166 +189,88 @@
 
   .ring-wrap{ position:relative; width:112px; height:112px; flex-shrink:0; }
   .ring-wrap svg{ width:100%; height:100%; }
-  .ring-center{
-    position:absolute; inset:0;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-  }
+  .ring-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
   .ring-center strong{ font-size: 14px; font-weight:700; }
   .ring-center span{ font-size: 10px; color: var(--text-faint); }
 
-  /* ===== ASSISTANT CARD ===== */
-  .assistant-hint{
-    font-size: 12.5px;
-    color: var(--text-faint);
-    margin: 0 0 12px;
-  }
+  .assistant-hint{ font-size: 12.5px; color: var(--text-faint); margin: 0 0 12px; }
   .assistant-fake-input{
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px 14px;
-    font-size: 13.5px;
-    color: var(--text-faint);
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px 14px;
+    font-size: 13.5px; color: var(--text-faint);
   }
 
-  /* ===== STATS ROW ===== */
   .stats-row{ display:flex; gap: 12px; }
   .stat-card{ flex:1; padding: 16px; }
   .stat-label{ font-size: 11.5px; color: var(--text-faint); display:block; margin-bottom:6px; }
   .stat-value{ font-size: 20px; font-weight: 700; }
   .stat-note{ font-size: 10.5px; color: var(--text-faint); display:block; margin-top:4px; }
 
-  /* ===== AREAS PREVIEW (scroll) ===== */
   .areas-scroll{
-    display:flex;
-    gap: 10px;
-    overflow-x: auto;
-    padding-bottom: 2px;
-    margin: 0 -20px;
-    padding-left: 20px;
-    padding-right: 20px;
+    display:flex; gap: 10px; overflow-x: auto; padding-bottom: 2px;
+    margin: 0 -20px; padding-left: 20px; padding-right: 20px;
   }
   .areas-scroll::-webkit-scrollbar{ display:none; }
   .chip-area{
-    flex: 0 0 auto;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 9px 14px;
-    font-size: 12.5px;
-    color: var(--text-dim);
-    display:flex;
-    align-items:center;
-    gap: 7px;
-    cursor:pointer;
+    flex: 0 0 auto; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 999px; padding: 9px 14px; font-size: 12.5px; color: var(--text-dim);
+    display:flex; align-items:center; gap: 7px; cursor:pointer;
   }
-  .link-quiet{
-    background:none; border:none; color: var(--text-dim);
-    font-size: 12.5px; font-weight:600; cursor:pointer; padding: 4px 0;
-  }
+  .link-quiet{ background:none; border:none; color: var(--text-dim); font-size: 12.5px; font-weight:600; cursor:pointer; padding: 4px 0; }
 
-  /* ===== AREAS GRID (view) ===== */
-  .areas-grid{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
+  .areas-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .area-card{
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 16px;
-    text-align:left;
-    cursor:pointer;
-    display:flex;
-    flex-direction:column;
-    gap: 10px;
-    min-height: 88px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 16px; text-align:left; cursor:pointer;
+    display:flex; flex-direction:column; gap: 10px; min-height: 88px;
   }
   .area-nome{ font-size: 14px; font-weight:600; color: var(--text); }
-  .area-status{
-    font-size: 10.5px;
-    color: var(--text-faint);
-    margin-top: auto;
-  }
+  .area-status{ font-size: 10.5px; color: var(--text-faint); margin-top: auto; }
   .area-status.ok{ color: var(--cyan); }
   .area-status.externo{ color: var(--text-dim); }
 
-  /* ===== BOTTOM NAV (mobile: pílula flutuante) ===== */
+  /* ===== BOTTOM NAV (mobile) ===== */
   .bottom-nav{
-    position: fixed;
-    bottom: 18px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100% - 40px);
-    max-width: 420px;
-    background: rgba(18,23,41,0.9);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    display:flex;
-    align-items:center;
-    justify-content: space-around;
-    padding: 8px;
-    box-shadow: var(--shadow);
-    z-index: 60;
+    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+    width: calc(100% - 40px); max-width: 420px;
+    background: rgba(18,23,41,0.9); backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px); border: 1px solid var(--border);
+    border-radius: 999px; display:flex; align-items:center;
+    justify-content: space-around; padding: 8px;
+    box-shadow: var(--shadow); z-index: 60;
   }
   .nav-btn{
     background:none; border:none; color: var(--text-faint);
     display:flex; flex-direction:column; align-items:center; gap:3px;
-    font-size: 10px; font-weight:600;
-    padding: 6px 10px; border-radius: 14px; cursor:pointer;
+    font-size: 10px; font-weight:600; padding: 6px 10px; border-radius: 14px; cursor:pointer;
   }
   .nav-btn svg{ width:21px; height:21px; stroke: currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
   .nav-btn.active{ color: var(--text); }
   .nav-fab{
-    width: 50px; height: 50px; border-radius: 50%;
-    background: var(--grad);
+    width: 50px; height: 50px; border-radius: 50%; background: var(--grad);
     display:flex; align-items:center; justify-content:center;
-    margin-top: -26px;
-    border: 4px solid var(--bg);
-    box-shadow: 0 10px 22px rgba(139,124,246,0.4);
-    cursor:pointer;
-    flex-shrink: 0;
+    margin-top: -26px; border: 4px solid var(--bg);
+    box-shadow: 0 10px 22px rgba(139,124,246,0.4); cursor:pointer; flex-shrink: 0;
   }
   .nav-fab svg{ width:20px; height:20px; stroke:#05070d; stroke-width:2.3; }
 
-  /* ===== SHEETS (bottom modals) ===== */
+  /* ===== SHEETS ===== */
   .sheet-backdrop{
-    position: fixed; inset:0;
-    background: rgba(3,5,10,0.6);
-    opacity:0; pointer-events:none;
-    transition: opacity .2s ease;
-    z-index: 70;
+    position: fixed; inset:0; background: rgba(3,5,10,0.6);
+    opacity:0; pointer-events:none; transition: opacity .2s ease; z-index: 70;
   }
   .sheet-backdrop.visible{ opacity:1; pointer-events:auto; }
-
   .sheet{
-    position: fixed;
-    left:0; right:0; bottom:0;
-    max-width: 460px;
-    margin: 0 auto;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-bottom: none;
+    position: fixed; left:0; right:0; bottom:0; max-width: 460px; margin: 0 auto;
+    background: var(--surface); border: 1px solid var(--border); border-bottom: none;
     border-radius: 28px 28px 0 0;
     padding: 18px 20px calc(24px + env(safe-area-inset-bottom));
-    max-height: 86vh;
-    overflow-y: auto;
-    transform: translateY(100%);
-    transition: transform .28s ease;
-    z-index: 80;
+    max-height: 86vh; overflow-y: auto;
+    transform: translateY(100%); transition: transform .28s ease; z-index: 80;
   }
   .sheet.open{ transform: translateY(0); }
-  .sheet-handle{
-    width: 36px; height:4px; background: var(--border);
-    border-radius: 999px; margin: 0 auto 14px;
-  }
-  .sheet-header{
-    display:flex; align-items:center; justify-content:space-between;
-    margin-bottom: 16px;
-  }
+  .sheet-handle{ width: 36px; height:4px; background: var(--border); border-radius: 999px; margin: 0 auto 14px; }
+  .sheet-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom: 16px; }
   .sheet-title{ font-size: 18px; font-weight:700; margin:0; }
   .sheet-close{
     background: var(--surface-2); border:1px solid var(--border);
@@ -369,27 +282,19 @@
 
   /* ===== FORM ELEMENTS ===== */
   .field{ margin-bottom: 14px; }
-  .field label{
-    display:block; font-size: 11.5px; color: var(--text-faint);
-    margin-bottom: 6px; font-weight:600;
-  }
+  .field label{ display:block; font-size: 11.5px; color: var(--text-faint); margin-bottom: 6px; font-weight:600; }
   .field input[type="text"],
+  .field input[type="password"],
   .field input[type="number"],
   .field input[type="date"],
   .field select,
   .field textarea{
-    width:100%;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 11px 12px;
-    border-radius: var(--radius-sm);
-    font-size: 14px;
+    width:100%; background: var(--surface-2); border: 1px solid var(--border);
+    color: var(--text); padding: 11px 12px; border-radius: var(--radius-sm); font-size: 14px;
   }
   .field textarea{ resize: vertical; min-height: 60px; }
   .row-2{ display:flex; gap: 10px; }
   .row-2 .field{ flex:1; }
-
   .segmented{
     display:flex; background: var(--surface-2); border:1px solid var(--border);
     border-radius: var(--radius-sm); padding: 3px; margin-bottom:14px;
@@ -397,15 +302,12 @@
   .segmented input{ display:none; }
   .segmented label{
     flex:1; text-align:center; padding: 9px; border-radius: 9px;
-    font-size: 13px; font-weight:600; color: var(--text-dim); cursor:pointer;
-    margin:0;
+    font-size: 13px; font-weight:600; color: var(--text-dim); cursor:pointer; margin:0;
   }
   .segmented input:checked + label{ background: var(--surface); color: var(--text); }
-
   .checkbox-row{ display:flex; align-items:center; gap:9px; margin-bottom:16px; }
   .checkbox-row input{ width:17px; height:17px; accent-color: var(--violet); }
   .checkbox-row label{ font-size:13px; color: var(--text-dim); margin:0; }
-
   .habit-chips{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
   .habit-chip{
     background: var(--surface-2); border:1px solid var(--border);
@@ -413,7 +315,6 @@
     padding: 9px 13px; border-radius:999px; cursor:pointer;
   }
   .habit-chip.on{ background: var(--grad); color:#05070d; border-color: transparent; }
-
   .mini-list{ margin-top:16px; display:flex; flex-direction:column; gap:8px; }
   .mini-list-item{
     display:flex; justify-content:space-between; align-items:center;
@@ -422,121 +323,280 @@
   }
   .mini-list-item .valor-despesa{ color: var(--rose); font-weight:700; }
   .mini-list-item .valor-receita{ color: var(--cyan); font-weight:700; }
-
   .campos-planejados{ list-style:none; padding:0; margin: 0 0 18px; display:flex; flex-direction:column; gap:8px; }
   .campos-planejados li{
     background: var(--surface-2); border:1px solid var(--border);
     border-radius: var(--radius-sm); padding: 10px 12px; font-size:13px; color: var(--text-dim);
   }
   .em-construcao-msg{ font-size:13px; color: var(--text-faint); margin-bottom:16px; }
-
-  /* ===== PERFIL / INSIGHTS placeholders ===== */
-  .placeholder-card{
-    text-align:center;
-    color: var(--text-faint);
-    font-size: 13.5px;
-    padding: 40px 16px;
-  }
+  .placeholder-card{ text-align:center; color: var(--text-faint); font-size: 13.5px; padding: 40px 16px; }
   .wordmark{ font-size: 20px; font-weight:800; margin-bottom: 20px; }
   .wordmark span{ font-weight:500; color: var(--text-dim); }
 
-  /* ===== TOAST ===== */
   .toast{
-    position: fixed;
-    bottom: 92px; left:50%; transform: translateX(-50%) translateY(10px);
+    position: fixed; bottom: 92px; left:50%; transform: translateX(-50%) translateY(10px);
     background: var(--surface-2); border:1px solid var(--border);
     color: var(--text); font-size:13px; font-weight:600;
-    padding: 11px 18px; border-radius: 999px;
-    box-shadow: var(--shadow);
-    opacity:0; pointer-events:none;
-    transition: opacity .2s ease, transform .2s ease;
-    z-index: 90;
-    max-width: 80%;
-    text-align:center;
+    padding: 11px 18px; border-radius: 999px; box-shadow: var(--shadow);
+    opacity:0; pointer-events:none; transition: opacity .2s ease, transform .2s ease;
+    z-index: 90; max-width: 80%; text-align:center;
   }
   .toast.visible{ opacity:1; transform: translateX(-50%) translateY(0); }
 
   /* ========================================================
-     DESKTOP (>= 900px) — layout com sidebar fixa + grid
-     Tudo aqui dentro SOBRESCREVE o mobile. Nada de posicionamento
-     mobile (fixed/pílula) vaza para este breakpoint.
+     PROCESSOS SELETIVOS — view interna
+     ======================================================== */
+  #view-processos{ padding-bottom: 40px; }
+
+  .ps-header{
+    display:flex; align-items:flex-start; justify-content:space-between;
+    gap:16px; margin-bottom:24px;
+  }
+  .ps-header h1{ font-size:22px; font-weight:700; margin:0 0 4px; letter-spacing:-0.01em; }
+  .ps-header p{ margin:0; color:var(--text-dim); font-size:14px; }
+  .ps-new-btn{
+    display:flex; align-items:center; gap:8px; background:var(--grad);
+    color:#0a0d18; border:none; padding:11px 18px; border-radius:var(--radius-sm);
+    font-weight:600; font-size:14px; cursor:pointer; white-space:nowrap;
+    transition:opacity .15s ease, transform .15s ease;
+  }
+  .ps-new-btn:hover{ opacity:.9; }
+  .ps-new-btn:active{ transform:scale(0.98); }
+
+  .ps-summary{
+    display:grid; grid-template-columns:repeat(2,1fr);
+    gap:12px; margin-bottom:28px;
+  }
+  .ps-summary-card{
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius-md); padding:16px;
+  }
+  .ps-summary-card .num{
+    font-family:'Manrope',sans-serif; font-size:26px;
+    font-weight:800; line-height:1; margin-bottom:6px;
+  }
+  .ps-summary-card .lbl{ font-size:12.5px; color:var(--text-dim); }
+  .ps-summary-card.active .num{ color:var(--cyan); }
+  .ps-summary-card.approved .num{ color:var(--ok); }
+  .ps-summary-card.ghost-card .num{ color:var(--ghost); }
+
+  .ps-tabs{ display:flex; gap:4px; border-bottom:1px solid var(--border); margin-bottom:20px; }
+  .ps-tab{
+    background:none; border:none; color:var(--text-dim); font-size:14px;
+    font-weight:500; padding:10px 4px; margin-right:20px; cursor:pointer;
+    border-bottom:2px solid transparent; transition:color .15s, border-color .15s;
+  }
+  .ps-tab.on{ color:var(--text); border-bottom-color:var(--cyan); }
+
+  .ps-list{ display:flex; flex-direction:column; gap:10px; }
+  .ps-empty{ text-align:center; padding:60px 20px; color:var(--text-dim); }
+  .ps-empty i{ font-size:32px; color:var(--text-faint); margin-bottom:12px; display:block; }
+  .ps-empty p{ margin:0 0 16px; }
+
+  .ps-card{
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius-md); padding:16px 18px; cursor:pointer;
+    transition:border-color .15s, background .15s;
+  }
+  .ps-card:hover{ border-color:#39406a; background:var(--surface-2); }
+  .ps-card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:8px; }
+  .ps-card-title{ font-weight:600; font-size:15px; margin:0 0 2px; }
+  .ps-card-sub{ font-size:13px; color:var(--text-dim); margin:0; }
+  .ps-status-pill{
+    flex-shrink:0; font-size:11.5px; font-weight:600;
+    padding:4px 10px; border-radius:100px; white-space:nowrap;
+  }
+  .pill-em_andamento{ background:rgba(77,217,232,.14); color:var(--cyan); }
+  .pill-aprovado{ background:rgba(62,207,142,.14); color:var(--ok); }
+  .pill-rejeitado{ background:rgba(242,100,122,.12); color:var(--danger); }
+  .pill-descontinuada_empresa{ background:rgba(245,185,85,.14); color:var(--warn); }
+  .pill-desisti{ background:rgba(154,163,192,.14); color:var(--text-dim); }
+  .pill-ghost{ background:rgba(124,133,168,.16); color:var(--ghost); }
+  .ps-card-meta{ display:flex; flex-wrap:wrap; gap:8px; font-size:12px; color:var(--text-faint); }
+  .ps-card-meta span{
+    display:flex; align-items:center; gap:5px;
+    background:var(--bg); border:1px solid var(--border);
+    padding:3px 9px; border-radius:100px;
+  }
+  .ps-card-meta i{ font-size:10px; }
+
+  /* modal de processos */
+  .ps-backdrop{
+    position:fixed; inset:0; background:rgba(4,6,12,.75);
+    display:none; align-items:flex-start; justify-content:center;
+    z-index:150; overflow-y:auto; padding:32px 16px;
+  }
+  .ps-backdrop.open{ display:flex; }
+  .ps-modal{
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius-lg); width:100%; max-width:640px; padding:24px;
+  }
+  .ps-modal-head{
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;
+  }
+  .ps-modal-head h2{ font-size:18px; margin:0; }
+  .ps-close-btn{
+    background:var(--surface-2); border:1px solid var(--border); color:var(--text-dim);
+    width:32px; height:32px; border-radius:10px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .ps-field{ margin-bottom:16px; }
+  .ps-field label{ display:block; font-size:12.5px; font-weight:600; color:var(--text-dim); margin-bottom:6px; }
+  .ps-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .ps-field input,
+  .ps-field select,
+  .ps-field textarea{
+    width:100%; background:var(--bg); border:1px solid var(--border);
+    color:var(--text); padding:10px 12px; border-radius:var(--radius-sm);
+    font-family:inherit; font-size:14px;
+  }
+  .ps-field textarea{ resize:vertical; min-height:64px; line-height:1.5; }
+  .ps-field input:focus,
+  .ps-field select:focus,
+  .ps-field textarea:focus{ outline:none; border-color:var(--cyan); }
+  .ps-section-label{
+    font-size:12px; color:var(--text-faint); margin:22px 0 10px;
+    padding-top:14px; border-top:1px solid var(--border);
+  }
+  .ps-etapa-row{
+    display:grid; grid-template-columns:1fr 1fr 90px 32px;
+    gap:8px; align-items:center; margin-bottom:8px;
+  }
+  .ps-etapa-row select,
+  .ps-etapa-row input{
+    background:var(--bg); border:1px solid var(--border);
+    color:var(--text); padding:8px 10px; border-radius:8px;
+    font-size:13px; font-family:inherit;
+  }
+  .ps-check-wrap{ display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-dim); justify-content:center; }
+  .ps-etapa-remove{
+    background:none; border:none; color:var(--text-faint); cursor:pointer;
+    width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:8px;
+  }
+  .ps-etapa-remove:hover{ color:var(--danger); background:rgba(242,100,122,.1); }
+  .ps-add-etapa{
+    background:none; border:1px dashed var(--border); color:var(--text-dim);
+    font-size:13px; padding:9px 12px; border-radius:9px; cursor:pointer; width:100%;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .ps-add-etapa:hover{ border-color:var(--cyan); color:var(--cyan); }
+  .ps-modal-actions{ display:flex; gap:10px; margin-top:24px; }
+  .ps-btn-primary{
+    flex:1; background:var(--grad); color:#0a0d18; border:none;
+    padding:12px; border-radius:var(--radius-sm); font-weight:700; font-size:14px; cursor:pointer;
+  }
+  .ps-btn-secondary{
+    background:var(--surface-2); border:1px solid var(--border); color:var(--text-dim);
+    padding:12px 18px; border-radius:var(--radius-sm); font-weight:600; font-size:14px; cursor:pointer;
+  }
+  .ps-btn-danger-ghost{
+    background:none; border:1px solid rgba(242,100,122,.35); color:var(--danger);
+    padding:12px 18px; border-radius:var(--radius-sm); font-weight:600; font-size:14px; cursor:pointer;
+  }
+
+  /* insights processos */
+  .ps-insights-grid{ display:flex; flex-direction:column; gap:16px; }
+  .ps-chart-card{
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius-md); padding:20px;
+  }
+  .ps-chart-head{ margin-bottom:18px; }
+  .ps-chart-head h3{ font-size:14.5px; font-weight:600; margin:0 0 3px; }
+  .ps-chart-head p{ font-size:12.5px; color:var(--text-faint); margin:0; }
+  .ps-chart-empty{ text-align:center; color:var(--text-faint); font-size:13px; padding:24px 0; }
+  .ps-funnel{ display:flex; flex-direction:column; gap:10px; }
+  .ps-funnel-row{ display:flex; align-items:center; gap:12px; }
+  .ps-funnel-label{ width:132px; flex-shrink:0; font-size:12.5px; color:var(--text-dim); text-align:right; }
+  .ps-funnel-track{ flex:1; background:var(--bg); border-radius:8px; height:30px; position:relative; overflow:hidden; }
+  .ps-funnel-fill{
+    height:100%; border-radius:8px; background:var(--grad);
+    display:flex; align-items:center; justify-content:flex-end;
+    padding-right:10px; transition:width .5s ease; min-width:2px;
+  }
+  .ps-funnel-fill span{ font-size:12px; font-weight:700; color:#0a0d18; white-space:nowrap; }
+  .ps-funnel-fill.zero{ background:var(--surface-2); }
+  .ps-funnel-fill.zero span{ color:var(--text-faint); }
+  .ps-funnel-pct{ width:44px; flex-shrink:0; font-size:11.5px; color:var(--text-faint); }
+  .ps-hbar-group{ display:flex; flex-direction:column; gap:14px; }
+  .ps-hbar-row{ display:flex; align-items:center; gap:12px; }
+  .ps-hbar-label{ width:110px; flex-shrink:0; font-size:12.5px; color:var(--text-dim); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .ps-hbar-track{ flex:1; background:var(--bg); border-radius:6px; height:22px; }
+  .ps-hbar-fill{ height:100%; border-radius:6px; background:var(--surface-2); border:1px solid var(--border); }
+  .ps-hbar-fill.highlight{ background:linear-gradient(90deg, rgba(139,124,246,.35), rgba(77,217,232,.35)); border-color:var(--cyan); }
+  .ps-hbar-value{ width:96px; flex-shrink:0; font-size:12px; color:var(--text-dim); }
+  .ps-hbar-value b{ color:var(--text); font-weight:600; }
+  .ps-timeline{ display:flex; flex-direction:column; gap:16px; }
+  .ps-timeline-row{ display:flex; align-items:center; gap:14px; }
+  .ps-timeline-icon{
+    width:34px; height:34px; flex-shrink:0; border-radius:10px;
+    background:var(--bg); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--cyan); font-size:13px;
+  }
+  .ps-timeline-body{ flex:1; }
+  .ps-timeline-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px; }
+  .ps-timeline-top span:first-child{ font-size:13px; color:var(--text); font-weight:500; }
+  .ps-timeline-top span:last-child{ font-size:13px; color:var(--cyan); font-weight:700; }
+  .ps-timeline-track{ background:var(--bg); height:6px; border-radius:4px; overflow:hidden; }
+  .ps-timeline-fill{ height:100%; background:var(--violet); border-radius:4px; }
+  .ps-note{
+    font-size:12px; color:var(--text-faint); line-height:1.6;
+    margin-top:14px; padding-top:14px; border-top:1px solid var(--border);
+  }
+
+  /* ========================================================
+     DESKTOP (>= 900px)
      ======================================================== */
   @media (min-width: 900px){
-
     html, body{ height: 100%; }
-
-    body{
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-    }
-
+    body{ display: flex; justify-content: center; align-items: flex-start; }
     .app-shell{
-      max-width: none;
-      width: 100%;
-      min-height: 100vh;
-      margin: 0;
+      max-width: none; width: 100%; min-height: 100vh; margin: 0;
       padding: 40px 48px 48px;
-      display: grid;
-      grid-template-columns: var(--sidebar-w) 1fr;
-      align-items: start;
-      gap: 40px;
+      display: grid; grid-template-columns: var(--sidebar-w) 1fr;
+      align-items: start; gap: 40px;
     }
 
-    /* --- Sidebar --- */
+    /* sidebar */
     .bottom-nav{
-      position: sticky;
-      top: 40px;
-      left: auto;
-      bottom: auto;
-      transform: none;
-      width: 100%;
-      max-width: none;
-      height: fit-content;
-      flex-direction: column;
-      align-items: stretch;
-      justify-content: flex-start;
-      gap: 4px;
-      padding: 18px 14px;
-      border-radius: var(--radius-lg);
-      order: -1; /* garante que a sidebar sempre é o primeiro item do fluxo do grid */
+      position: sticky; top: 40px; left: auto; bottom: auto; transform: none;
+      width: 100%; max-width: none; height: fit-content;
+      flex-direction: column; align-items: stretch; justify-content: flex-start;
+      gap: 2px; padding: 16px 12px; border-radius: var(--radius-lg); order: -1;
     }
-
+    .nav-separator{ height: 1px; background: var(--border); margin: 8px 2px; display: none; }
+    .nav-group-label{
+      font-size: 10px; font-weight: 700; color: var(--text-faint);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 8px 14px 4px; display: none;
+    }
     .nav-btn{
-      flex-direction: row;
-      justify-content: flex-start;
-      gap: 12px;
-      font-size: 13.5px;
-      padding: 12px 14px;
-      border-radius: var(--radius-sm);
-      width: 100%;
+      flex-direction: row; justify-content: flex-start; gap: 10px;
+      font-size: 13px; padding: 10px 12px; border-radius: var(--radius-sm); width: 100%;
     }
-    .nav-btn svg{ width:19px; height:19px; flex-shrink:0; }
+    .nav-btn svg{ width:17px; height:17px; flex-shrink:0; }
     .nav-btn.active{ background: var(--surface-2); }
-
-    .nav-fab{
-      order: 2;
-      width: 100%;
-      height: 46px;
-      border-radius: var(--radius-sm);
-      margin: 10px 0 4px;
-      border: none;
+    .nav-btn-area{
+      background: none; border: none; color: var(--text-faint);
+      display: flex; flex-direction: row; align-items: center; gap: 9px;
+      font-size: 12.5px; font-weight: 500; padding: 8px 12px;
+      border-radius: var(--radius-sm); width: 100%; cursor: pointer;
+      font-family: inherit; text-align: left;
     }
+    .nav-btn-area:hover{ background: var(--surface-2); color: var(--text); }
+    .nav-btn-area svg{
+      width: 14px; height: 14px; stroke: currentColor; fill: none;
+      stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+    }
+    .nav-btn-area .dot{ flex-shrink: 0; }
+    .nav-fab{ display: none; }
+    .nav-separator, .nav-group-label{ display: block; }
 
-    /* reordena visualmente: Dashboard, Áreas, +, Resumo, Perfil */
-    .bottom-nav .nav-btn:nth-child(1){ order: 0; }
-    .bottom-nav .nav-btn:nth-child(2){ order: 1; }
-    .bottom-nav .nav-fab{ order: 2; }
-    .bottom-nav .nav-btn:nth-child(4){ order: 3; }
-    .bottom-nav .nav-btn:nth-child(5){ order: 4; }
-
-    /* --- Área de conteúdo --- */
     main.view{ min-width: 0; }
-
     .priority-heading{ font-size: 32px; }
     .view-title{ font-size: 28px; }
 
-    /* --- Dashboard em grid de 2 colunas --- */
+    /* dashboard grid */
     #view-dashboard{
       display: grid;
       grid-template-columns: 1.35fr 1fr;
@@ -544,7 +604,7 @@
         "header header"
         "habitos mes"
         "assistente stats"
-        "areas   areas";
+        "areas areas";
       gap: 24px;
     }
     #view-dashboard .dash-header{ grid-area: header; margin-bottom: 0; }
@@ -553,43 +613,27 @@
     #view-dashboard .section:nth-of-type(3){ grid-area: assistente; margin-bottom: 0; }
     #view-dashboard .stats-row{ grid-area: stats; margin-bottom: 0; }
     #view-dashboard .section:last-of-type{ grid-area: areas; margin-bottom: 0; }
-
     .stats-row{ flex-direction: column; height: 100%; }
     .stat-card{ display:flex; flex-direction:column; justify-content:center; }
-
     .balance-card{ flex-direction: row; align-items: center; }
-
     .areas-scroll{ margin: 0; padding: 0; flex-wrap: wrap; overflow: visible; }
+    .areas-grid{ grid-template-columns: repeat(3, 1fr); gap: 16px; }
 
-    /* --- Grid de áreas (view Áreas) --- */
-    .areas-grid{
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
+    /* processos grid de 4 no desktop */
+    .ps-summary{ grid-template-columns: repeat(4,1fr); }
+    .ps-row{ grid-template-columns:1fr 1fr; }
+    .ps-etapa-row{ grid-template-columns:1fr 1fr 90px 32px; }
 
-    /* --- Sheets viram modais centrados, não bottom-sheets --- */
+    /* sheets viram modais centrados */
     .sheet{
-      left: 50%;
-      right: auto;
-      bottom: auto;
-      top: 50%;
+      left: 50%; right: auto; bottom: auto; top: 50%;
       transform: translate(-50%, -50%) scale(0.97);
-      width: 100%;
-      max-width: 480px;
-      max-height: 80vh;
-      border-radius: var(--radius-lg);
-      border-bottom: 1px solid var(--border);
-      opacity: 0;
-      pointer-events: none;
+      width: 100%; max-width: 480px; max-height: 80vh;
+      border-radius: var(--radius-lg); border-bottom: 1px solid var(--border);
+      opacity: 0; pointer-events: none;
       transition: transform .22s ease, opacity .22s ease;
     }
-    .sheet.open{
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    /* --- Toast reposicionado (sem bottom-nav flutuante embaixo) --- */
+    .sheet.open{ transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
     .toast{ bottom: 32px; }
   }
 
@@ -597,13 +641,42 @@
     :root{ --sidebar-w: 240px; }
     .app-shell{ padding: 48px 64px; }
   }
-
   @media (min-width: 1440px){
     .app-shell{ max-width: 1400px; margin: 0 auto; }
+  }
+  @media (max-width: 640px){
+    .ps-summary{ grid-template-columns: repeat(2,1fr); }
+    .ps-row{ grid-template-columns:1fr; }
+    .ps-etapa-row{ grid-template-columns:1fr 1fr; }
+    .ps-funnel-label{ width:96px; font-size:11.5px; }
+    .ps-hbar-label{ width:82px; }
   }
 </style>
 </head>
 <body>
+
+<!-- ===================== TELA DE LOGIN ===================== -->
+<div id="loginScreen">
+  <div class="login-box">
+    <h1 class="login-wordmark">Life<span>OS</span></h1>
+    <p class="login-subtitle">Faça login para acessar seu painel pessoal.</p>
+    <div class="login-card">
+      <div class="field">
+        <label for="loginScreenEmail">E-mail</label>
+        <input type="text" id="loginScreenEmail" placeholder="voce@exemplo.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="loginScreenSenha">Senha</label>
+        <input type="password" id="loginScreenSenha" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <div class="login-btns">
+        <button class="btn-login-entrar" id="btnLoginScreen">Entrar</button>
+        <button class="btn-login-cadastrar" id="btnCadastroScreen">Cadastrar</button>
+      </div>
+      <p class="login-note">Login via Supabase Auth</p>
+    </div>
+  </div>
+</div>
 
 <div class="app-shell">
 
@@ -628,6 +701,64 @@
       <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
       Perfil
     </button>
+
+    <!-- Sidebar desktop: grupos de áreas -->
+    <div class="nav-separator"></div>
+    <span class="nav-group-label">Corpo e mente</span>
+    <button class="nav-btn-area" data-open-dominio="habitos">
+      <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      <span class="dot corpo"></span>Hábitos
+    </button>
+    <button class="nav-btn-area" data-open-dominio="humor">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+      <span class="dot corpo"></span>Humor
+    </button>
+    <button class="nav-btn-area" data-open-dominio="treinos">
+      <svg viewBox="0 0 24 24"><path d="M6 4v16M18 4v16M3 8h4M17 8h4M3 16h4M17 16h4"/></svg>
+      <span class="dot corpo"></span>Treinos
+    </button>
+
+    <div class="nav-separator"></div>
+    <span class="nav-group-label">Carreira e dinheiro</span>
+    <button class="nav-btn-area" data-open-dominio="financas">
+      <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      <span class="dot carreira"></span>Finanças
+    </button>
+    <button class="nav-btn-area" data-open-dominio="candidaturas">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <span class="dot carreira"></span>Candidaturas
+    </button>
+    <button class="nav-btn-area" data-open-dominio="processos">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span class="dot carreira"></span>Processos Seletivos
+    </button>
+
+    <div class="nav-separator"></div>
+    <span class="nav-group-label">Vida e lazer</span>
+    <button class="nav-btn-area" data-open-dominio="filmes">
+      <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 7h5M17 17h5"/></svg>
+      <span class="dot lazer"></span>Filmes
+    </button>
+    <button class="nav-btn-area" data-open-dominio="series">
+      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      <span class="dot lazer"></span>Séries
+    </button>
+    <button class="nav-btn-area" data-open-dominio="comer">
+      <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+      <span class="dot lazer"></span>Comer
+    </button>
+    <button class="nav-btn-area" data-open-dominio="visitar">
+      <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span class="dot lazer"></span>Visitar
+    </button>
+    <button class="nav-btn-area" data-open-dominio="receitas">
+      <svg viewBox="0 0 24 24"><path d="M15 11h.01M11 15h.01M16 16l-5-5M9.5 3A6.5 6.5 0 003 9.5c0 3.59 2.91 6.5 6.5 6.5S16 13.09 16 9.5A6.5 6.5 0 009.5 3z"/><path d="M21 21l-4.35-4.35"/></svg>
+      <span class="dot lazer"></span>Receitas
+    </button>
+    <button class="nav-btn-area" data-open-dominio="atividades">
+      <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span class="dot lazer"></span>Atividades
+    </button>
   </nav>
 
   <!-- ===================== DASHBOARD ===================== -->
@@ -636,7 +767,6 @@
       <p class="greeting-line"><span id="greetingTime">Bom dia</span>, <strong>Péricles</strong></p>
       <h1 class="priority-heading">Hábitos de hoje</h1>
     </header>
-
     <section class="section">
       <div class="card">
         <p class="habit-progress-text" id="habitProgressTextDash">0 de 16 hábitos concluídos hoje</p>
@@ -644,7 +774,6 @@
         <button class="btn-primary" data-open-sheet="sheetHabitos">Registrar o dia</button>
       </div>
     </section>
-
     <section class="section">
       <div class="section-head">
         <h2 class="section-title">Seu mês</h2>
@@ -662,17 +791,13 @@
         </div>
       </div>
     </section>
-
     <section class="section">
-      <div class="section-head">
-        <h2 class="section-title">Assistente</h2>
-      </div>
+      <div class="section-head"><h2 class="section-title">Assistente</h2></div>
       <div class="card">
         <p class="assistant-hint">Em breve, um assistente vai ajudar a organizar seus registros por aqui.</p>
         <div class="assistant-fake-input">Como posso te ajudar hoje?</div>
       </div>
     </section>
-
     <section class="section stats-row">
       <div class="card stat-card">
         <span class="stat-label">Saldo do mês</span>
@@ -685,7 +810,6 @@
         <span class="stat-note">Conecta o Supabase para calcular</span>
       </div>
     </section>
-
     <section class="section">
       <div class="section-head">
         <h2 class="section-title">Áreas</h2>
@@ -713,20 +837,81 @@
   <main id="view-perfil" class="view">
     <h1 class="view-title">Perfil</h1>
     <div class="wordmark">Life<span>OS</span></div>
-    <div class="card">
-      <div class="field">
-        <label for="loginEmail">E-mail</label>
-        <input type="text" id="loginEmail" placeholder="voce@exemplo.com">
+    <div class="card" id="perfilCard"></div>
+  </main>
+
+  <!-- ===================== PROCESSOS SELETIVOS ===================== -->
+  <main id="view-processos" class="view">
+    <div class="ps-header">
+      <div>
+        <h1>Processos seletivos</h1>
+        <p>Acompanhamento das suas candidaturas, etapas e aprendizados</p>
       </div>
-      <div class="field">
-        <label for="loginSenha">Senha</label>
-        <input type="text" id="loginSenha" placeholder="••••••••">
+      <button class="ps-new-btn" id="ps-btn-novo">
+        <i class="fa-solid fa-plus"></i> Novo processo
+      </button>
+    </div>
+
+    <div class="ps-summary">
+      <div class="ps-summary-card active">
+        <div class="num" id="ps-sum-andamento">0</div>
+        <div class="lbl">Em andamento</div>
       </div>
-      <div style="display: flex; gap: 10px;">
-        <button class="btn-secondary" id="btnLogin" style="flex:1;">Entrar</button>
-        <button class="btn-secondary" id="btnCadastro" style="flex:1; background: var(--grad); color: #05070d; border-color: transparent;">Cadastrar</button>
+      <div class="ps-summary-card approved">
+        <div class="num" id="ps-sum-aprovado">0</div>
+        <div class="lbl">Aprovados</div>
       </div>
-      <p class="stat-note" style="margin-top:12px;">Login via Supabase Auth</p>
+      <div class="ps-summary-card">
+        <div class="num" id="ps-sum-total">0</div>
+        <div class="lbl">Total no período</div>
+      </div>
+      <div class="ps-summary-card ghost-card">
+        <div class="num" id="ps-sum-ghost">0</div>
+        <div class="lbl">Ghost</div>
+      </div>
+    </div>
+
+    <div class="ps-tabs">
+      <button class="ps-tab on" data-tab="lista">Lista</button>
+      <button class="ps-tab" data-tab="insights">Insights</button>
+    </div>
+
+    <div id="ps-tab-lista">
+      <div class="ps-list" id="ps-list"></div>
+    </div>
+
+    <div id="ps-tab-insights" style="display:none;">
+      <div class="ps-insights-grid">
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Funil de etapas</h3>
+            <p>Quantos processos alcançaram cada etapa, do primeiro contato em diante</p>
+          </div>
+          <div class="ps-funnel" id="ps-chart-funil"></div>
+        </div>
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Taxa de aprovação por modalidade</h3>
+            <p>Proporção de processos aprovados em cada modalidade de trabalho</p>
+          </div>
+          <div class="ps-hbar-group" id="ps-chart-modalidade"></div>
+        </div>
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Taxa de aprovação por canal de origem</h3>
+            <p>Onde as candidaturas com melhor retorno tendem a começar</p>
+          </div>
+          <div class="ps-hbar-group" id="ps-chart-canal"></div>
+        </div>
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Tempo médio entre etapas</h3>
+            <p>Dias corridos, em média, entre o primeiro contato e cada etapa seguinte</p>
+          </div>
+          <div class="ps-timeline" id="ps-chart-tempo"></div>
+          <div class="ps-note" id="ps-chart-tempo-note"></div>
+        </div>
+      </div>
     </div>
   </main>
 
@@ -778,43 +963,25 @@
       <div class="field">
         <label for="financaCategoria">Categoria</label>
         <select id="financaCategoria" name="categoria">
-          <option>Alimentação</option>
-          <option>Saúde</option>
-          <option>Renda</option>
-          <option>Transporte</option>
-          <option>Presente</option>
-          <option>Essenciais</option>
-          <option>Pagamento</option>
-          <option>Lazer</option>
-          <option>Educação</option>
-          <option>Investimentos</option>
-          <option>Entretenimento</option>
-          <option>Casa</option>
-          <option>Higiene Pessoal</option>
-          <option>Pet</option>
-          <option>Doações</option>
-          <option>Outros</option>
+          <option>Alimentação</option><option>Saúde</option><option>Renda</option>
+          <option>Transporte</option><option>Presente</option><option>Essenciais</option>
+          <option>Pagamento</option><option>Lazer</option><option>Educação</option>
+          <option>Investimentos</option><option>Entretenimento</option><option>Casa</option>
+          <option>Higiene Pessoal</option><option>Pet</option><option>Doações</option><option>Outros</option>
         </select>
       </div>
       <div class="row-2">
         <div class="field">
           <label for="financaConta">Conta</label>
           <select id="financaConta" name="conta">
-            <option>Nubank</option>
-            <option>Inter</option>
-            <option>Flash</option>
-            <option>Mercado Pago</option>
-            <option>Mentore Bank</option>
-            <option>Outro</option>
+            <option>Nubank</option><option>Inter</option><option>Flash</option>
+            <option>Mercado Pago</option><option>Mentore Bank</option><option>Outro</option>
           </select>
         </div>
         <div class="field">
           <label for="financaMetodo">Método</label>
           <select id="financaMetodo" name="metodo">
-            <option>Pix</option>
-            <option>Crédito</option>
-            <option>Débito</option>
-            <option>Dinheiro</option>
+            <option>Pix</option><option>Crédito</option><option>Débito</option><option>Dinheiro</option>
           </select>
         </div>
       </div>
@@ -835,7 +1002,7 @@
     <div class="mini-list" id="listaLancamentosSessao"></div>
   </div>
 
-  <!-- ===================== SHEET: ÁREA GENÉRICA (em construção) ===================== -->
+  <!-- ===================== SHEET: GENÉRICO ===================== -->
   <div class="sheet" id="sheetGenerico">
     <div class="sheet-handle"></div>
     <div class="sheet-header">
@@ -848,7 +1015,114 @@
 
   <div class="sheet-backdrop" id="sheetBackdrop"></div>
   <div class="toast" id="toast"></div>
+</div>
 
+<!-- ===================== MODAL: PROCESSOS SELETIVOS ===================== -->
+<div class="ps-backdrop" id="ps-backdrop">
+  <div class="ps-modal">
+    <div class="ps-modal-head">
+      <h2 id="ps-modal-title">Novo processo</h2>
+      <button class="ps-close-btn" id="ps-btn-fechar"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form id="ps-form">
+      <input type="hidden" id="ps-f-id">
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="ps-f-vaga">Vaga</label>
+          <input type="text" id="ps-f-vaga" required placeholder="Ex: Analista de Dados Pleno">
+        </div>
+        <div class="ps-field">
+          <label for="ps-f-empresa">Empresa</label>
+          <input type="text" id="ps-f-empresa" required placeholder="Ex: Nome da empresa">
+        </div>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="ps-f-modalidade">Modalidade</label>
+          <select id="ps-f-modalidade">
+            <option value="">Não informado</option>
+            <option value="presencial">Presencial</option>
+            <option value="remota">Remota</option>
+            <option value="hibrida">Híbrida</option>
+          </select>
+        </div>
+        <div class="ps-field">
+          <label for="ps-f-status">Status</label>
+          <select id="ps-f-status">
+            <option value="em_andamento">Em andamento</option>
+            <option value="aprovado">Aprovado</option>
+            <option value="rejeitado">Rejeitado</option>
+            <option value="descontinuada_empresa">Descontinuada pela empresa</option>
+            <option value="desisti">Desisti</option>
+            <option value="ghost">Ghost</option>
+          </select>
+        </div>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="ps-f-encontrado">Encontrado por</label>
+          <input type="text" id="ps-f-encontrado" placeholder="LinkedIn, indicação, Gupy...">
+        </div>
+        <div class="ps-field">
+          <label for="ps-f-canal">Canal do 1º contato</label>
+          <input type="text" id="ps-f-canal" placeholder="WhatsApp, e-mail, LinkedIn...">
+        </div>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="ps-f-data-contato">Data do 1º contato</label>
+          <input type="date" id="ps-f-data-contato">
+        </div>
+        <div class="ps-field">
+          <label for="ps-f-pretensao">Pretensão salarial (R$)</label>
+          <input type="number" id="ps-f-pretensao" placeholder="Ex: 7500" step="0.01">
+        </div>
+      </div>
+      <div class="ps-field">
+        <label for="ps-f-narrativa">Narrativa (o que aconteceu)</label>
+        <textarea id="ps-f-narrativa" placeholder="Relato livre do andamento do processo..."></textarea>
+      </div>
+      <div class="ps-field">
+        <label for="ps-f-descricao-vaga">Descrição da vaga</label>
+        <textarea id="ps-f-descricao-vaga" placeholder="Cole aqui a descrição/requisitos da vaga..."></textarea>
+      </div>
+      <div class="ps-section-label">Feedback e melhoria</div>
+      <div class="ps-field">
+        <label for="ps-f-feedback">Feedback recebido</label>
+        <textarea id="ps-f-feedback" placeholder="O que o recrutador ou gestor disse sobre seu desempenho..."></textarea>
+      </div>
+      <div class="ps-field">
+        <label for="ps-f-melhoria">Pontos de melhoria / ações tomadas</label>
+        <textarea id="ps-f-melhoria" placeholder="O que ajustar em processos futuros..."></textarea>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="ps-f-nota">Nota de autoavaliação (0-100)</label>
+          <input type="number" id="ps-f-nota" min="0" max="100" placeholder="Ex: 70">
+        </div>
+        <div class="ps-field">
+          <label for="ps-f-fonte">Fonte da avaliação</label>
+          <select id="ps-f-fonte">
+            <option value="">Não informado</option>
+            <option value="recrutador">Recrutador</option>
+            <option value="gestor">Gestor</option>
+            <option value="autoanalise_ia">Autoanálise (IA)</option>
+            <option value="autoanalise_propria">Autoanálise própria</option>
+          </select>
+        </div>
+      </div>
+      <div class="ps-section-label">Etapas do processo</div>
+      <div id="ps-etapas-container"></div>
+      <button type="button" class="ps-add-etapa" id="ps-btn-add-etapa">
+        <i class="fa-solid fa-plus"></i> Adicionar etapa
+      </button>
+      <div class="ps-modal-actions">
+        <button type="button" class="ps-btn-danger-ghost" id="ps-btn-excluir" style="display:none;">Excluir</button>
+        <button type="button" class="ps-btn-secondary" id="ps-btn-cancelar">Cancelar</button>
+        <button type="submit" class="ps-btn-primary">Salvar processo</button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -857,7 +1131,6 @@
 const supabaseUrl = 'https://brzniszvitflytmbhmem.supabase.co';
 const supabaseAnonKey = 'sb_publishable_oKgZMFQdmG97woNq73Mr6A_TlNai-_C';
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
-console.log('✅ Supabase conectado!');
 
 /* ===================== DOMÍNIOS ===================== */
 const DOMINIOS = [
@@ -866,7 +1139,7 @@ const DOMINIOS = [
   { id: 'humor', nome: 'Humor', categoria: 'corpo', pronto: false, campos: ['Data', 'Nota (1 a 5)', 'Tags', 'Observações'] },
   { id: 'treinos', nome: 'Treinos', categoria: 'corpo', pronto: false, campos: ['Data', 'Tipo de treino', 'Exercício', 'Carga (kg)', 'Séries', 'Repetições', 'Observações'] },
   { id: 'candidaturas', nome: 'Candidaturas', categoria: 'carreira', pronto: false, campos: ['Empresa', 'Cargo', 'Data', 'Plataforma', 'Remota', 'Selecionado'] },
-  { id: 'processos', nome: 'Processos Seletivos', categoria: 'carreira', pronto: false, campos: ['Vaga', 'Empresa', 'Entrevista RH', 'Entrevista Técnica', 'Aprovação'] },
+  { id: 'processos', nome: 'Processos Seletivos', categoria: 'carreira', pronto: true },
   { id: 'filmes', nome: 'Filmes', categoria: 'lazer', pronto: 'externo' },
   { id: 'series', nome: 'Séries', categoria: 'lazer', pronto: false, campos: ['Série', 'Vista', 'Data Início', 'Data Fim', 'Streaming', 'Notas'] },
   { id: 'comer', nome: 'Comer', categoria: 'lazer', pronto: false, campos: ['Nome', 'Tipo de lugar', 'Endereço', 'Já fomos?', 'Nota', 'Comentário'] },
@@ -880,6 +1153,50 @@ const estadoHabitosHoje = {};
 HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
 let lancamentosSessao = [];
 
+/* ===================== LOGIN SCREEN ===================== */
+function mostrarLoginScreen() {
+  document.getElementById('loginScreen').classList.remove('hidden');
+}
+function ocultarLoginScreen() {
+  document.getElementById('loginScreen').classList.add('hidden');
+}
+
+async function fazerLoginScreen() {
+  const email = document.getElementById('loginScreenEmail').value.trim();
+  const senha = document.getElementById('loginScreenSenha').value;
+  if (!email || !senha) { mostrarToast('Preencha e-mail e senha.'); return; }
+  try {
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password: senha });
+    if (error) { mostrarToast('Erro: ' + error.message); }
+    else {
+      ocultarLoginScreen();
+      mostrarToast('Bem-vindo! ✅');
+      carregarHabitosDoDia(hojeISO());
+      verificarSessao();
+    }
+  } catch (err) { mostrarToast('Erro inesperado: ' + err.message); }
+}
+
+async function fazerCadastroScreen() {
+  const email = document.getElementById('loginScreenEmail').value.trim();
+  const senha = document.getElementById('loginScreenSenha').value;
+  if (!email || !senha) { mostrarToast('Preencha e-mail e senha.'); return; }
+  if (senha.length < 6) { mostrarToast('A senha deve ter pelo menos 6 caracteres.'); return; }
+  try {
+    const { error } = await supabaseClient.auth.signUp({
+      email, password: senha,
+      options: { data: { nome: email.split('@')[0] } }
+    });
+    if (error) { mostrarToast('Erro: ' + error.message); }
+    else { mostrarToast('Cadastro realizado! Confirme seu e-mail. 📧'); }
+  } catch (err) { mostrarToast('Erro inesperado: ' + err.message); }
+}
+
+document.getElementById('btnLoginScreen').addEventListener('click', fazerLoginScreen);
+document.getElementById('btnCadastroScreen').addEventListener('click', fazerCadastroScreen);
+document.getElementById('loginScreenSenha').addEventListener('keydown', e => { if (e.key === 'Enter') fazerLoginScreen(); });
+document.getElementById('loginScreenEmail').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('loginScreenSenha').focus(); });
+
 /* ===================== NAVEGAÇÃO ===================== */
 function mostrarView(nome) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -889,6 +1206,7 @@ function mostrarView(nome) {
     b.classList.toggle('active', b.dataset.gotoView === nome);
   });
   if (nome === 'perfil') verificarSessao();
+  if (nome === 'processos') psCarregarTudo();
 }
 
 document.querySelectorAll('[data-goto-view]').forEach(el => {
@@ -899,23 +1217,24 @@ document.querySelectorAll('[data-goto-view]').forEach(el => {
   });
 });
 
+document.querySelectorAll('.nav-btn-area').forEach(el => {
+  el.addEventListener('click', () => abrirDominio(el.dataset.openDominio));
+});
+
 /* ===================== SHEETS ===================== */
 function abrirSheet(id) {
   document.getElementById('sheetBackdrop').classList.add('visible');
   document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open'));
   document.getElementById(id).classList.add('open');
-
   if (id === 'sheetHabitos') {
     const data = document.getElementById('habitoData').value;
     carregarHabitosDoDia(data);
   }
 }
-
 function fecharSheets() {
   document.getElementById('sheetBackdrop').classList.remove('visible');
   document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open'));
 }
-
 document.querySelectorAll('[data-open-sheet]').forEach(el => {
   el.addEventListener('click', () => abrirSheet(el.dataset.openSheet));
 });
@@ -935,17 +1254,6 @@ function mostrarToast(msg) {
   toastTimer = setTimeout(() => toast.classList.remove('visible'), 2600);
 }
 
-function toggleSenha() {
-  const input = document.getElementById('loginSenha');
-  if (!input) return;
-  const isPassword = input.type === 'password';
-  input.type = isPassword ? 'text' : 'password';
-  const icon = document.querySelector('.toggle-icon');
-  if (icon) {
-    icon.className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
-  }
-}
-
 /* ===================== AUTENTICAÇÃO ===================== */
 async function fazerLogin() {
   const email = document.getElementById('loginEmail').value.trim();
@@ -954,14 +1262,8 @@ async function fazerLogin() {
   try {
     const { error } = await supabaseClient.auth.signInWithPassword({ email, password: senha });
     if (error) mostrarToast('Erro: ' + error.message);
-    else {
-      mostrarToast('Login realizado! ✅');
-      carregarHabitosDoDia(hojeISO());
-      verificarSessao();
-    }
-  } catch (err) {
-    mostrarToast('Erro inesperado: ' + err.message);
-  }
+    else { mostrarToast('Login realizado! ✅'); carregarHabitosDoDia(hojeISO()); verificarSessao(); }
+  } catch (err) { mostrarToast('Erro inesperado: ' + err.message); }
 }
 
 async function fazerCadastro() {
@@ -971,28 +1273,19 @@ async function fazerCadastro() {
   if (senha.length < 6) { mostrarToast('A senha deve ter pelo menos 6 caracteres.'); return; }
   try {
     const { error } = await supabaseClient.auth.signUp({
-      email,
-      password: senha,
-      options: { data: { nome: email.split('@')[0] } }
+      email, password: senha, options: { data: { nome: email.split('@')[0] } }
     });
     if (error) mostrarToast('Erro: ' + error.message);
-    else {
-      mostrarToast('Cadastro realizado! Confirme seu e-mail. 📧');
-      verificarSessao();
-    }
-  } catch (err) {
-    mostrarToast('Erro inesperado: ' + err.message);
-  }
+    else { mostrarToast('Cadastro realizado! Confirme seu e-mail. 📧'); verificarSessao(); }
+  } catch (err) { mostrarToast('Erro inesperado: ' + err.message); }
 }
 
 async function verificarSessao() {
   try {
     const { data: { user } } = await supabaseClient.auth.getUser();
-    const perfilView = document.getElementById('view-perfil');
-    if (!perfilView) return;
-    const card = perfilView.querySelector('.card');
+    if (user) { ocultarLoginScreen(); } else { mostrarLoginScreen(); }
+    const card = document.getElementById('perfilCard');
     if (!card) return;
-
     if (user) {
       card.innerHTML = `
         <p style="color: var(--text-dim); margin-bottom: 8px;">✅ Logado como:</p>
@@ -1004,14 +1297,11 @@ async function verificarSessao() {
       card.innerHTML = `
         <div class="field">
           <label for="loginEmail">E-mail</label>
-          <input type="text" id="loginEmail" placeholder="voce@exemplo.com">
+          <input type="text" id="loginEmail" placeholder="voce@exemplo.com" autocomplete="email">
         </div>
-        <div class="field" style="position: relative;">
+        <div class="field">
           <label for="loginSenha">Senha</label>
-          <input type="password" id="loginSenha" placeholder="••••••••" style="padding-right: 40px;">
-          <span class="toggle-password" style="position: absolute; right: 12px; bottom: 10px; cursor: pointer; color: var(--text-faint);" onclick="toggleSenha()">
-            <i class="fas fa-eye toggle-icon"></i>
-          </span>
+          <input type="password" id="loginSenha" placeholder="••••••••" autocomplete="current-password">
         </div>
         <div style="display: flex; gap: 10px;">
           <button class="btn-secondary" id="btnLogin" style="flex:1;">Entrar</button>
@@ -1019,21 +1309,18 @@ async function verificarSessao() {
         </div>
         <p class="stat-note" style="margin-top:12px;">Login via Supabase Auth</p>
       `;
-
       document.getElementById('btnLogin').addEventListener('click', fazerLogin);
       document.getElementById('btnCadastro').addEventListener('click', fazerCadastro);
     }
-  } catch (err) {
-    console.warn('Erro ao verificar sessão:', err);
-  }
+  } catch (err) { console.warn('Erro ao verificar sessão:', err); }
 }
 
 async function fazerLogout() {
   const { error } = await supabaseClient.auth.signOut();
-  if (error) {
-    mostrarToast('Erro ao sair: ' + error.message);
-  } else {
+  if (error) { mostrarToast('Erro ao sair: ' + error.message); }
+  else {
     mostrarToast('Deslogado com sucesso! 👋');
+    mostrarLoginScreen();
     verificarSessao();
     HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
     renderHabitChips();
@@ -1041,7 +1328,7 @@ async function fazerLogout() {
   }
 }
 
-/* ===================== HÁBITOS (NÚCLEO) ===================== */
+/* ===================== HÁBITOS ===================== */
 function renderHabitChips() {
   const el = document.getElementById('habitChips');
   el.innerHTML = HABITOS_CAMPOS.map(h =>
@@ -1072,56 +1359,25 @@ async function carregarHabitosDoDia(data) {
   const { data: { user } } = await supabaseClient.auth.getUser();
   if (!user) {
     HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
-    renderHabitChips();
-    atualizarProgressoHabitos();
-    return;
+    renderHabitChips(); atualizarProgressoHabitos(); return;
   }
-
   try {
     const { data: opcoes, error: erroOpcoes } = await supabaseClient
-      .from('opcoes')
-      .select('id, valor')
-      .eq('user_id', user.id)
-      .eq('grupo', 'habitos');
-
+      .from('opcoes').select('id, valor').eq('user_id', user.id).eq('grupo', 'habitos');
     if (erroOpcoes) throw erroOpcoes;
-
     const { data: registros, error: erroRegistros } = await supabaseClient
-      .from('habitos_registros')
-      .select('habito_id')
-      .eq('user_id', user.id)
-      .eq('data', data);
-
+      .from('habitos_registros').select('habito_id').eq('user_id', user.id).eq('data', data);
     if (erroRegistros) throw erroRegistros;
-
     const idsRegistrados = registros.map(r => r.habito_id);
-
     HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
-
-    opcoes.forEach(o => {
-      if (idsRegistrados.includes(o.id)) {
-        estadoHabitosHoje[o.valor] = true;
-      }
-    });
-
+    opcoes.forEach(o => { if (idsRegistrados.includes(o.id)) estadoHabitosHoje[o.valor] = true; });
     const { data: dia, error: erroDia } = await supabaseClient
-      .from('dias')
-      .select('descricao')
-      .eq('user_id', user.id)
-      .eq('data', data)
-      .maybeSingle();
-
+      .from('dias').select('descricao').eq('user_id', user.id).eq('data', data).maybeSingle();
     if (erroDia && erroDia.code !== 'PGRST116') throw erroDia;
-    if (dia && dia.descricao) {
-      document.getElementById('habitoDescricao').value = dia.descricao;
-    } else {
-      document.getElementById('habitoDescricao').value = '';
-    }
-
-    renderHabitChips();
-    atualizarProgressoHabitos();
+    document.getElementById('habitoDescricao').value = (dia && dia.descricao) ? dia.descricao : '';
+    renderHabitChips(); atualizarProgressoHabitos();
   } catch (err) {
-    console.error('Erro ao carregar hábitos do dia:', err);
+    console.error('Erro ao carregar hábitos:', err);
     mostrarToast('Erro ao carregar hábitos: ' + err.message);
   }
 }
@@ -1129,59 +1385,29 @@ async function carregarHabitosDoDia(data) {
 document.getElementById('btnSalvarHabitos').addEventListener('click', async function() {
   const data = document.getElementById('habitoData').value;
   const descricao = document.getElementById('habitoDescricao').value.trim();
-
   const { data: { user } } = await supabaseClient.auth.getUser();
-  if (!user) {
-    mostrarToast('Faça login primeiro!');
-    return;
-  }
-
+  if (!user) { mostrarToast('Faça login primeiro!'); return; }
   try {
-    const { error: erroDia } = await supabaseClient
-      .from('dias')
-      .upsert({
-        user_id: user.id,
-        data: data,
-        descricao: descricao || null
-      }, { onConflict: 'user_id, data' });
-
+    const { error: erroDia } = await supabaseClient.from('dias')
+      .upsert({ user_id: user.id, data, descricao: descricao || null }, { onConflict: 'user_id, data' });
     if (erroDia) throw erroDia;
-
     const habitosMarcados = Object.keys(estadoHabitosHoje).filter(h => estadoHabitosHoje[h]);
-
     const { data: opcoes, error: erroOpcoes } = await supabaseClient
-      .from('opcoes')
-      .select('id, valor')
-      .eq('user_id', user.id)
-      .eq('grupo', 'habitos');
-
+      .from('opcoes').select('id, valor').eq('user_id', user.id).eq('grupo', 'habitos');
     if (erroOpcoes) throw erroOpcoes;
-
     const mapaHabitos = {};
     opcoes.forEach(o => { mapaHabitos[o.valor] = o.id; });
-
     for (const habito of habitosMarcados) {
       const habitoId = mapaHabitos[habito];
       if (!habitoId) continue;
-
-      const { error: erroRegistro } = await supabaseClient
-        .from('habitos_registros')
-        .upsert({
-          user_id: user.id,
-          habito_id: habitoId,
-          data: data
-        }, { onConflict: 'user_id, habito_id, data' });
-
+      const { error: erroRegistro } = await supabaseClient.from('habitos_registros')
+        .upsert({ user_id: user.id, habito_id: habitoId, data }, { onConflict: 'user_id, habito_id, data' });
       if (erroRegistro) throw erroRegistro;
     }
-
     mostrarToast('Dia salvo com sucesso! ✅');
     fecharSheets();
     await carregarHabitosDoDia(data);
-  } catch (err) {
-    console.error(err);
-    mostrarToast('Erro ao salvar: ' + err.message);
-  }
+  } catch (err) { console.error(err); mostrarToast('Erro ao salvar: ' + err.message); }
 });
 
 /* ===================== FINANÇAS ===================== */
@@ -1189,15 +1415,11 @@ document.getElementById('formFinancas').addEventListener('submit', function(e) {
   e.preventDefault();
   const form = e.target;
   const dado = {
-    data: form.data.value,
-    tipo: form.tipo.value,
+    data: form.data.value, tipo: form.tipo.value,
     valor: parseFloat(form.valor.value) || 0,
-    categoria: form.categoria.value,
-    conta: form.conta.value,
-    metodo: form.metodo.value,
-    local: form.local.value,
-    descricao: form.descricao.value,
-    duoGourmet: form.duoGourmet.checked
+    categoria: form.categoria.value, conta: form.conta.value,
+    metodo: form.metodo.value, local: form.local.value,
+    descricao: form.descricao.value, duoGourmet: form.duoGourmet.checked
   };
   lancamentosSessao.unshift(dado);
   renderLancamentosSessao();
@@ -1249,13 +1471,15 @@ function renderAreasPreview() {
 function abrirDominio(id) {
   if (id === 'habitos') { abrirSheet('sheetHabitos'); return; }
   if (id === 'financas') { abrirSheet('sheetFinancas'); return; }
+  if (id === 'processos') { mostrarView('processos'); return; }
   const dominio = DOMINIOS.find(d => d.id === id);
+  if (!dominio) return;
   if (dominio.pronto === 'externo') {
     mostrarToast(dominio.nome + ' já tem um app dedicado, em breve o link aqui');
     return;
   }
   document.getElementById('genericoTitulo').textContent = dominio.nome;
-  document.getElementById('genericoCampos').innerHTML = dominio.campos.map(c => `<li>${c}</li>`).join('');
+  document.getElementById('genericoCampos').innerHTML = (dominio.campos || []).map(c => `<li>${c}</li>`).join('');
   abrirSheet('sheetGenerico');
 }
 
@@ -1263,14 +1487,11 @@ function abrirDominio(id) {
 function renderAnelMes() {
   const dados = { corpo: 45, carreira: 35, lazer: 20 };
   const cores = { corpo: 'var(--cyan)', carreira: 'var(--violet)', lazer: 'var(--rose)' };
-  const r = 50;
-  const circ = 2 * Math.PI * r;
-  let acumulado = 0;
+  const r = 50; const circ = 2 * Math.PI * r; let acumulado = 0;
   const svg = document.getElementById('anelMes');
   svg.innerHTML = Object.keys(dados).map(chave => {
     const comprimento = (dados[chave] / 100) * circ;
-    const offset = -acumulado;
-    acumulado += comprimento;
+    const offset = -acumulado; acumulado += comprimento;
     return `<circle cx="60" cy="60" r="${r}" fill="none" stroke="${cores[chave]}" stroke-width="11" stroke-linecap="round" stroke-dasharray="${comprimento} ${circ - comprimento}" stroke-dashoffset="${offset}" transform="rotate(-90 60 60)"/>`;
   }).join('');
 }
@@ -1282,12 +1503,326 @@ function saudacaoPorHorario() {
   if (hora < 18) return 'Boa tarde';
   return 'Boa noite';
 }
-
 function hojeISO() {
   const d = new Date();
-  const mes = String(d.getMonth() + 1).padStart(2, '0');
-  const dia = String(d.getDate()).padStart(2, '0');
-  return d.getFullYear() + '-' + mes + '-' + dia;
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+/* ===================== PROCESSOS SELETIVOS ===================== */
+const PS_TIPO_ETAPA = [
+  { value:'triagem', label:'Triagem' },
+  { value:'primeiro_contato', label:'Primeiro contato' },
+  { value:'entrevista_rh', label:'Entrevista RH' },
+  { value:'entrevista_tecnica', label:'Entrevista técnica' },
+  { value:'teste_tecnico', label:'Teste técnico' },
+  { value:'entrevista_gestor', label:'Entrevista gestor' },
+  { value:'entrevista_socios', label:'Entrevista sócios' },
+  { value:'proposta', label:'Proposta' },
+  { value:'outra', label:'Outra' },
+];
+const PS_STATUS_LABEL = {
+  em_andamento:'Em andamento', aprovado:'Aprovado', rejeitado:'Rejeitado',
+  descontinuada_empresa:'Descontinuada', desisti:'Desisti', ghost:'Ghost',
+};
+const PS_MODALIDADE_LABEL = { presencial:'Presencial', remota:'Remota', hibrida:'Híbrida' };
+
+let ps_processos = [];
+let ps_editandoId = null;
+let ps_etapaSeq = 0;
+
+async function psCarregarTudo() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) { console.warn('Usuário não autenticado.'); return; }
+  const { data: processos, error: e1 } = await supabaseClient
+    .from('processos_seletivos').select('*').eq('user_id', user.id)
+    .order('data_primeiro_contato', { ascending: false });
+  if (e1) { console.error(e1); return; }
+  const { data: etapas, error: e2 } = await supabaseClient
+    .from('processos_etapas').select('*').eq('user_id', user.id);
+  if (e2) { console.error(e2); return; }
+  const etapasPorProcesso = {};
+  (etapas || []).forEach(et => {
+    if (!etapasPorProcesso[et.processo_id]) etapasPorProcesso[et.processo_id] = [];
+    etapasPorProcesso[et.processo_id].push(et);
+  });
+  ps_processos = (processos || []).map(p => ({
+    ...p, etapas: (etapasPorProcesso[p.id] || []).sort((a,b) => (a.data||'') < (b.data||'') ? -1 : 1)
+  }));
+  psRenderResumo(); psRenderLista(); psRenderInsights();
+}
+
+function psRenderResumo() {
+  document.getElementById('ps-sum-total').textContent = ps_processos.length;
+  document.getElementById('ps-sum-andamento').textContent = ps_processos.filter(p => p.status === 'em_andamento').length;
+  document.getElementById('ps-sum-aprovado').textContent = ps_processos.filter(p => p.status === 'aprovado').length;
+  document.getElementById('ps-sum-ghost').textContent = ps_processos.filter(p => p.status === 'ghost').length;
+}
+
+function psFmtData(d) {
+  if (!d) return null;
+  const [y,m,day] = d.split('-'); return `${day}/${m}/${y}`;
+}
+
+function psEsc(str) {
+  if (!str) return '';
+  const d = document.createElement('div'); d.textContent = str; return d.innerHTML;
+}
+
+function psRenderLista() {
+  const container = document.getElementById('ps-list');
+  if (ps_processos.length === 0) {
+    container.innerHTML = `<div class="ps-empty"><i class="fa-regular fa-folder-open"></i><p>Nenhum processo cadastrado ainda.</p></div>`;
+    return;
+  }
+  container.innerHTML = ps_processos.map(p => {
+    const meta = [];
+    if (p.empresa) meta.push(`<span><i class="fa-solid fa-building"></i>${psEsc(p.empresa)}</span>`);
+    if (p.modalidade) meta.push(`<span><i class="fa-solid fa-location-dot"></i>${PS_MODALIDADE_LABEL[p.modalidade]}</span>`);
+    if (p.data_primeiro_contato) meta.push(`<span><i class="fa-regular fa-calendar"></i>${psFmtData(p.data_primeiro_contato)}</span>`);
+    if (p.etapas.length) meta.push(`<span><i class="fa-solid fa-list-check"></i>${p.etapas.length} etapa(s)</span>`);
+    return `
+      <div class="ps-card" data-id="${p.id}">
+        <div class="ps-card-top">
+          <div>
+            <p class="ps-card-title">${psEsc(p.vaga)}</p>
+            <p class="ps-card-sub">${psEsc(p.empresa)}</p>
+          </div>
+          <span class="ps-status-pill pill-${p.status}">${PS_STATUS_LABEL[p.status] || p.status}</span>
+        </div>
+        <div class="ps-card-meta">${meta.join('')}</div>
+      </div>`;
+  }).join('');
+  container.querySelectorAll('.ps-card').forEach(card => {
+    card.addEventListener('click', () => psAbrirEdicao(Number(card.dataset.id)));
+  });
+}
+
+const psBackdrop = document.getElementById('ps-backdrop');
+
+function psAbrirNovo() {
+  ps_editandoId = null;
+  document.getElementById('ps-modal-title').textContent = 'Novo processo';
+  document.getElementById('ps-btn-excluir').style.display = 'none';
+  document.getElementById('ps-form').reset();
+  document.getElementById('ps-f-id').value = '';
+  document.getElementById('ps-f-status').value = 'em_andamento';
+  document.getElementById('ps-etapas-container').innerHTML = '';
+  ps_etapaSeq = 0;
+  psAdicionarLinhaEtapa();
+  psBackdrop.classList.add('open');
+}
+
+function psAbrirEdicao(id) {
+  const p = ps_processos.find(x => x.id === id);
+  if (!p) return;
+  ps_editandoId = id;
+  document.getElementById('ps-modal-title').textContent = 'Editar processo';
+  document.getElementById('ps-btn-excluir').style.display = 'inline-block';
+  document.getElementById('ps-f-id').value = p.id;
+  document.getElementById('ps-f-vaga').value = p.vaga || '';
+  document.getElementById('ps-f-empresa').value = p.empresa || '';
+  document.getElementById('ps-f-modalidade').value = p.modalidade || '';
+  document.getElementById('ps-f-status').value = p.status || 'em_andamento';
+  document.getElementById('ps-f-encontrado').value = p.encontrado_por || '';
+  document.getElementById('ps-f-canal').value = p.primeiro_contato_canal || '';
+  document.getElementById('ps-f-data-contato').value = p.data_primeiro_contato || '';
+  document.getElementById('ps-f-pretensao').value = p.pretensao_salarial || '';
+  document.getElementById('ps-f-narrativa').value = p.narrativa || '';
+  document.getElementById('ps-f-descricao-vaga').value = p.descricao_vaga || '';
+  document.getElementById('ps-f-feedback').value = p.feedback_recebido || '';
+  document.getElementById('ps-f-melhoria').value = p.pontos_melhoria || '';
+  document.getElementById('ps-f-nota').value = p.nota_autoavaliacao ?? '';
+  document.getElementById('ps-f-fonte').value = p.fonte_avaliacao || '';
+  const container = document.getElementById('ps-etapas-container');
+  container.innerHTML = ''; ps_etapaSeq = 0;
+  if (p.etapas.length) { p.etapas.forEach(et => psAdicionarLinhaEtapa(et)); }
+  else { psAdicionarLinhaEtapa(); }
+  psBackdrop.classList.add('open');
+}
+
+function psFechar() { psBackdrop.classList.remove('open'); }
+
+document.getElementById('ps-btn-novo').addEventListener('click', psAbrirNovo);
+document.getElementById('ps-btn-fechar').addEventListener('click', psFechar);
+document.getElementById('ps-btn-cancelar').addEventListener('click', psFechar);
+psBackdrop.addEventListener('click', e => { if (e.target === psBackdrop) psFechar(); });
+
+function psAdicionarLinhaEtapa(etapa) {
+  ps_etapaSeq++;
+  const row = document.createElement('div');
+  row.className = 'ps-etapa-row';
+  row.dataset.etapaId = etapa?.id || '';
+  const opts = PS_TIPO_ETAPA.map(o =>
+    `<option value="${o.value}" ${etapa?.tipo_etapa === o.value ? 'selected' : ''}>${o.label}</option>`
+  ).join('');
+  row.innerHTML = `
+    <select class="ps-etapa-tipo">${opts}</select>
+    <input type="date" class="ps-etapa-data" value="${etapa?.data || ''}">
+    <label class="ps-check-wrap">
+      <input type="checkbox" class="ps-etapa-realizado" ${etapa?.realizado ? 'checked' : ''}> Feita
+    </label>
+    <button type="button" class="ps-etapa-remove"><i class="fa-solid fa-trash"></i></button>
+  `;
+  row.querySelector('.ps-etapa-remove').addEventListener('click', () => row.remove());
+  document.getElementById('ps-etapas-container').appendChild(row);
+}
+
+document.getElementById('ps-btn-add-etapa').addEventListener('click', () => psAdicionarLinhaEtapa());
+
+document.getElementById('ps-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) { mostrarToast('Sessão expirada. Faça login novamente.'); return; }
+  const payload = {
+    user_id: user.id,
+    vaga: document.getElementById('ps-f-vaga').value.trim(),
+    empresa: document.getElementById('ps-f-empresa').value.trim(),
+    modalidade: document.getElementById('ps-f-modalidade').value || null,
+    status: document.getElementById('ps-f-status').value,
+    encontrado_por: document.getElementById('ps-f-encontrado').value.trim() || null,
+    primeiro_contato_canal: document.getElementById('ps-f-canal').value.trim() || null,
+    data_primeiro_contato: document.getElementById('ps-f-data-contato').value || null,
+    pretensao_salarial: document.getElementById('ps-f-pretensao').value || null,
+    narrativa: document.getElementById('ps-f-narrativa').value.trim() || null,
+    descricao_vaga: document.getElementById('ps-f-descricao-vaga').value.trim() || null,
+    feedback_recebido: document.getElementById('ps-f-feedback').value.trim() || null,
+    pontos_melhoria: document.getElementById('ps-f-melhoria').value.trim() || null,
+    nota_autoavaliacao: document.getElementById('ps-f-nota').value || null,
+    fonte_avaliacao: document.getElementById('ps-f-fonte').value || null,
+  };
+  let processoId = ps_editandoId;
+  if (processoId) {
+    const { error } = await supabaseClient.from('processos_seletivos').update(payload).eq('id', processoId);
+    if (error) { console.error(error); mostrarToast('Erro ao salvar processo.'); return; }
+  } else {
+    const { data, error } = await supabaseClient.from('processos_seletivos').insert(payload).select('id').single();
+    if (error) { console.error(error); mostrarToast('Erro ao criar processo.'); return; }
+    processoId = data.id;
+  }
+  await supabaseClient.from('processos_etapas').delete().eq('processo_id', processoId);
+  const linhas = Array.from(document.querySelectorAll('#ps-etapas-container .ps-etapa-row'));
+  const novasEtapas = linhas.map(row => ({
+    processo_id: processoId, user_id: user.id,
+    tipo_etapa: row.querySelector('.ps-etapa-tipo').value,
+    data: row.querySelector('.ps-etapa-data').value || null,
+    realizado: row.querySelector('.ps-etapa-realizado').checked,
+  })).filter(et => et.data || et.realizado);
+  if (novasEtapas.length) {
+    const { error: eEtapas } = await supabaseClient.from('processos_etapas').insert(novasEtapas);
+    if (eEtapas) console.error(eEtapas);
+  }
+  psFechar();
+  mostrarToast('Processo salvo! ✅');
+  await psCarregarTudo();
+});
+
+document.getElementById('ps-btn-excluir').addEventListener('click', async () => {
+  if (!ps_editandoId) return;
+  if (!confirm('Excluir este processo e todas as suas etapas? Essa ação não pode ser desfeita.')) return;
+  const { error } = await supabaseClient.from('processos_seletivos').delete().eq('id', ps_editandoId);
+  if (error) { console.error(error); mostrarToast('Erro ao excluir.'); return; }
+  psFechar(); await psCarregarTudo();
+});
+
+document.querySelectorAll('.ps-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.ps-tab').forEach(t => t.classList.remove('on'));
+    tab.classList.add('on');
+    const alvo = tab.dataset.tab;
+    document.getElementById('ps-tab-lista').style.display = alvo === 'lista' ? 'block' : 'none';
+    document.getElementById('ps-tab-insights').style.display = alvo === 'insights' ? 'block' : 'none';
+    if (alvo === 'insights') psRenderInsights();
+  });
+});
+
+/* --- insights --- */
+function psRenderInsights() { psRenderFunil(); psRenderTaxaPorDimensao('modalidade', PS_MODALIDADE_LABEL, 'ps-chart-modalidade'); psRenderTaxaPorDimensao('encontrado_por', null, 'ps-chart-canal'); psRenderTempoEtapas(); }
+
+function psRenderFunil() {
+  const container = document.getElementById('ps-chart-funil');
+  const total = ps_processos.length;
+  if (total === 0) { container.innerHTML = '<div class="ps-chart-empty">Cadastre processos para ver o funil.</div>'; return; }
+  const ordem = [
+    { key:'primeiro_contato', label:'Primeiro contato', count: total },
+    { key:'entrevista_rh', label:'Entrevista RH', count: ps_processos.filter(p => p.etapas.some(e => e.tipo_etapa === 'entrevista_rh')).length },
+    { key:'entrevista_tecnica', label:'Entrevista técnica', count: ps_processos.filter(p => p.etapas.some(e => e.tipo_etapa === 'entrevista_tecnica')).length },
+    { key:'teste_tecnico', label:'Teste técnico', count: ps_processos.filter(p => p.etapas.some(e => e.tipo_etapa === 'teste_tecnico' && e.realizado)).length },
+    { key:'proposta', label:'Proposta', count: ps_processos.filter(p => p.status === 'aprovado' || p.etapas.some(e => e.tipo_etapa === 'proposta')).length },
+  ];
+  const maxCount = ordem[0].count || 1;
+  container.innerHTML = ordem.map(step => {
+    const pct = maxCount ? Math.round((step.count / maxCount) * 100) : 0;
+    const zero = step.count === 0;
+    return `<div class="ps-funnel-row">
+      <div class="ps-funnel-label">${step.label}</div>
+      <div class="ps-funnel-track"><div class="ps-funnel-fill ${zero ? 'zero' : ''}" style="width:${zero ? 6 : pct}%"><span>${step.count}</span></div></div>
+      <div class="ps-funnel-pct">${pct}%</div>
+    </div>`;
+  }).join('');
+}
+
+function psRenderTaxaPorDimensao(campo, labelMap, containerId) {
+  const container = document.getElementById(containerId);
+  const comValor = ps_processos.filter(p => p[campo]);
+  if (comValor.length === 0) { container.innerHTML = '<div class="ps-chart-empty">Sem dados suficientes ainda.</div>'; return; }
+  const grupos = {};
+  comValor.forEach(p => {
+    const key = p[campo];
+    if (!grupos[key]) grupos[key] = { total:0, aprovados:0 };
+    grupos[key].total++;
+    if (p.status === 'aprovado') grupos[key].aprovados++;
+  });
+  const linhas = Object.entries(grupos).map(([key, v]) => ({
+    key, label: labelMap ? (labelMap[key] || key) : key,
+    total: v.total, aprovados: v.aprovados, taxa: v.total ? v.aprovados / v.total : 0,
+  })).filter(l => l.total >= 1).sort((a,b) => b.taxa - a.taxa || b.total - a.total).slice(0, 6);
+  const maiorTaxa = Math.max(...linhas.map(l => l.taxa), 0.0001);
+  container.innerHTML = linhas.map(l => {
+    const widthPct = Math.max((l.taxa / maiorTaxa) * 100, 4);
+    const isTop = l.taxa === maiorTaxa && l.taxa > 0;
+    return `<div class="ps-hbar-row">
+      <div class="ps-hbar-label" title="${psEsc(l.label)}">${psEsc(l.label)}</div>
+      <div class="ps-hbar-track"><div class="ps-hbar-fill ${isTop ? 'highlight' : ''}" style="width:${widthPct}%"></div></div>
+      <div class="ps-hbar-value"><b>${Math.round(l.taxa*100)}%</b> (${l.aprovados}/${l.total})</div>
+    </div>`;
+  }).join('');
+}
+
+function psDiffDias(d1, d2) {
+  return Math.round((new Date(d2) - new Date(d1)) / (1000*60*60*24));
+}
+
+function psRenderTempoEtapas() {
+  const container = document.getElementById('ps-chart-tempo');
+  const noteEl = document.getElementById('ps-chart-tempo-note');
+  const marcos = [
+    { tipo:'entrevista_rh', label:'Até a entrevista de RH', icon:'fa-comments' },
+    { tipo:'entrevista_tecnica', label:'Até a entrevista técnica', icon:'fa-laptop-code' },
+    { tipo:'teste_tecnico', label:'Até o teste técnico', icon:'fa-file-lines' },
+  ];
+  const resultados = marcos.map(m => {
+    const diffs = [];
+    ps_processos.forEach(p => {
+      if (!p.data_primeiro_contato) return;
+      const etapa = p.etapas.find(e => e.tipo_etapa === m.tipo && e.data);
+      if (etapa) { const d = psDiffDias(p.data_primeiro_contato, etapa.data); if (d >= 0) diffs.push(d); }
+    });
+    const media = diffs.length ? diffs.reduce((a,b) => a+b, 0) / diffs.length : null;
+    return { ...m, media, n: diffs.length };
+  }).filter(r => r.n > 0);
+  if (resultados.length === 0) { container.innerHTML = '<div class="ps-chart-empty">Sem etapas com datas suficientes ainda.</div>'; noteEl.textContent = ''; return; }
+  const maxMedia = Math.max(...resultados.map(r => r.media), 1);
+  container.innerHTML = resultados.map(r => {
+    const pct = Math.max((r.media / maxMedia) * 100, 6);
+    return `<div class="ps-timeline-row">
+      <div class="ps-timeline-icon"><i class="fa-solid ${r.icon}"></i></div>
+      <div class="ps-timeline-body">
+        <div class="ps-timeline-top"><span>${r.label}</span><span>${r.media.toFixed(1)} dias</span></div>
+        <div class="ps-timeline-track"><div class="ps-timeline-fill" style="width:${pct}%"></div></div>
+      </div>
+    </div>`;
+  }).join('');
+  noteEl.textContent = `Baseado em ${resultados.reduce((a,r) => Math.max(a, r.n), 0)} processo(s) com datas registradas.`;
 }
 
 /* ===================== INIT ===================== */
@@ -1304,12 +1839,7 @@ function init() {
 }
 
 init();
-
-try {
-  verificarSessao();
-} catch (e) {
-  console.warn('Erro ao verificar sessão:', e);
-}
+verificarSessao().catch(e => console.warn('Erro ao verificar sessão:', e));
 </script>
 </body>
 </html>
