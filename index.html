@@ -341,6 +341,37 @@
   .wordmark{ font-size: 20px; font-weight:800; margin-bottom: 20px; }
   .wordmark span{ font-weight:500; color: var(--text-dim); }
 
+  /* ===== SHEET: HUMOR ===== */
+  .humor-data-row{ display:flex; align-items:center; gap:10px; margin-bottom:20px; }
+  .humor-data-row label{ font-size:11.5px; color:var(--text-faint); font-weight:600; white-space:nowrap; }
+  .humor-data-row input{ flex:1; background:var(--surface-2); border:1px solid var(--border); color:var(--text); padding:10px 12px; border-radius:var(--radius-sm); font-size:14px; font-family:inherit; }
+  .humor-label{ font-size:11.5px; color:var(--text-faint); font-weight:600; margin-bottom:14px; display:block; }
+  .humor-options{ display:flex; gap:8px; margin-bottom:22px; }
+  .humor-opt{ flex:1; display:flex; flex-direction:column; align-items:center; gap:8px; cursor:pointer; }
+  .humor-opt input[type="radio"]{ display:none; }
+  .humor-face{
+    width:54px; height:54px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px; border:2px solid var(--border);
+    background:var(--surface-2);
+    transition:transform .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .humor-opt input:checked ~ .humor-face{
+    border-color:var(--humor-color);
+    background:color-mix(in srgb, var(--humor-color) 18%, transparent);
+    transform:scale(1.14);
+    box-shadow:0 0 0 3px color-mix(in srgb, var(--humor-color) 28%, transparent);
+  }
+  .humor-opt-label{ font-size:10.5px; font-weight:600; color:var(--text-faint); text-align:center; line-height:1.3; }
+  .humor-opt input:checked ~ .humor-face ~ .humor-opt-label{ color:var(--text); }
+  .humor-opt[data-nivel="5"]{ --humor-color:#3ecf8e; }
+  .humor-opt[data-nivel="4"]{ --humor-color:#4fd8e8; }
+  .humor-opt[data-nivel="3"]{ --humor-color:#f5b955; }
+  .humor-opt[data-nivel="2"]{ --humor-color:#f2789f; }
+  .humor-opt[data-nivel="1"]{ --humor-color:#f2647a; }
+  .humor-nota-label{ font-size:11.5px; color:var(--text-faint); font-weight:600; margin-bottom:6px; display:block; }
+  .humor-nota{ width:100%; background:var(--surface-2); border:1px solid var(--border); color:var(--text); padding:11px 12px; border-radius:var(--radius-sm); font-size:14px; font-family:inherit; resize:vertical; min-height:72px; margin-bottom:16px; box-sizing:border-box; }
+
   .toast{
     position: fixed; bottom: 92px; left:50%; transform: translateX(-50%) translateY(10px);
     background: var(--surface-2); border:1px solid var(--border);
@@ -692,7 +723,7 @@
 <body>
 
 <!-- ===================== TELA DE LOGIN ===================== -->
-<div id="loginScreen">
+<div id="loginScreen" class="hidden">
   <div class="login-box">
     <h1 class="login-wordmark">Life<span>OS</span></h1>
     <p class="login-subtitle">Faça login para acessar seu painel pessoal.</p>
@@ -1039,6 +1070,50 @@
       <button class="btn-primary" type="submit">Salvar lançamento</button>
     </form>
     <div class="mini-list" id="listaLancamentosSessao"></div>
+  </div>
+
+  <!-- ===================== SHEET: HUMOR ===================== -->
+  <div class="sheet" id="sheetHumor">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <h2 class="sheet-title">Como você está?</h2>
+      <button class="sheet-close" data-close-sheet><svg viewBox="0 0 24 24"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button>
+    </div>
+    <div class="humor-data-row">
+      <label for="humorData">Data</label>
+      <input type="date" id="humorData">
+    </div>
+    <span class="humor-label">Como foi o dia?</span>
+    <div class="humor-options">
+      <label class="humor-opt" data-nivel="5">
+        <input type="radio" name="humorNivel" value="5">
+        <div class="humor-face">😄</div>
+        <span class="humor-opt-label">Muito bem</span>
+      </label>
+      <label class="humor-opt" data-nivel="4">
+        <input type="radio" name="humorNivel" value="4">
+        <div class="humor-face">🙂</div>
+        <span class="humor-opt-label">Bem</span>
+      </label>
+      <label class="humor-opt" data-nivel="3">
+        <input type="radio" name="humorNivel" value="3">
+        <div class="humor-face">😐</div>
+        <span class="humor-opt-label">Regular</span>
+      </label>
+      <label class="humor-opt" data-nivel="2">
+        <input type="radio" name="humorNivel" value="2">
+        <div class="humor-face">😕</div>
+        <span class="humor-opt-label">Mal</span>
+      </label>
+      <label class="humor-opt" data-nivel="1">
+        <input type="radio" name="humorNivel" value="1">
+        <div class="humor-face">😞</div>
+        <span class="humor-opt-label">Muito mal</span>
+      </label>
+    </div>
+    <span class="humor-nota-label">Observações (opcional)</span>
+    <textarea class="humor-nota" id="humorNota" placeholder="O que marcou esse dia..."></textarea>
+    <button class="btn-primary" id="btnSalvarHumor">Salvar humor</button>
   </div>
 
   <!-- ===================== SHEET: GENÉRICO ===================== -->
@@ -1512,6 +1587,7 @@ function renderAreasPreview() {
 function abrirDominio(id) {
   if (id === 'habitos') { abrirSheet('sheetHabitos'); return; }
   if (id === 'financas') { abrirSheet('sheetFinancas'); return; }
+  if (id === 'humor') { abrirSheet('sheetHumor'); return; }
   if (id === 'processos') { mostrarView('processos'); return; }
   const dominio = DOMINIOS.find(d => d.id === id);
   if (!dominio) return;
@@ -1866,11 +1942,31 @@ function psRenderTempoEtapas() {
   noteEl.textContent = `Baseado em ${resultados.reduce((a,r) => Math.max(a, r.n), 0)} processo(s) com datas registradas.`;
 }
 
+/* ===================== HUMOR ===================== */
+document.getElementById('btnSalvarHumor').addEventListener('click', async function() {
+  const data = document.getElementById('humorData').value;
+  const nivelEl = document.querySelector('input[name="humorNivel"]:checked');
+  const nota = document.getElementById('humorNota').value.trim();
+  if (!data) { mostrarToast('Selecione uma data.'); return; }
+  if (!nivelEl) { mostrarToast('Selecione como você está.'); return; }
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) { mostrarToast('Faça login primeiro!'); return; }
+  try {
+    const { error } = await supabaseClient.from('humor')
+      .upsert({ user_id: user.id, data, nota: parseInt(nivelEl.value), observacoes: nota || null },
+               { onConflict: 'user_id, data' });
+    if (error) throw error;
+    mostrarToast('Humor salvo! ✅');
+    fecharSheets();
+  } catch (err) { console.error(err); mostrarToast('Erro ao salvar: ' + err.message); }
+});
+
 /* ===================== INIT ===================== */
 function init() {
   document.getElementById('greetingTime').textContent = saudacaoPorHorario();
   document.getElementById('habitoData').value = hojeISO();
   document.getElementById('financaData').value = hojeISO();
+  document.getElementById('humorData').value = hojeISO();
   renderHabitChips();
   atualizarProgressoHabitos();
   renderAreasGrid();
