@@ -1127,6 +1127,401 @@
     <ul class="campos-planejados" id="genericoCampos"></ul>
   </div>
 
+  <!-- ===================== HÁBITOS (VIEW) ===================== -->
+  <main id="view-habitos" class="view">
+    <div class="ps-header">
+      <div>
+        <h1>Hábitos</h1>
+        <p>Acompanhamento diário e consistência ao longo do tempo</p>
+      </div>
+      <button class="ps-new-btn" id="hb-btn-novo">
+        <i class="fa-solid fa-plus"></i> Registrar dia
+      </button>
+    </div>
+
+    <div class="ps-summary">
+      <div class="ps-summary-card active">
+        <div class="num" id="hb-sum-hoje">0/0</div>
+        <div class="lbl">Hoje</div>
+      </div>
+      <div class="ps-summary-card approved">
+        <div class="num" id="hb-sum-streak">0</div>
+        <div class="lbl">Sequência (dias)</div>
+      </div>
+      <div class="ps-summary-card">
+        <div class="num" id="hb-sum-mes">0</div>
+        <div class="lbl">Dias registrados no mês</div>
+      </div>
+      <div class="ps-summary-card ghost-card">
+        <div class="num" id="hb-sum-media">0%</div>
+        <div class="lbl">Média de conclusão (30d)</div>
+      </div>
+    </div>
+
+    <div class="ps-tabs">
+      <button class="ps-tab on" data-hbtab="lista">Histórico</button>
+      <button class="ps-tab" data-hbtab="insights">Insights</button>
+    </div>
+
+    <div id="hb-tab-lista">
+      <div class="ps-list" id="hb-list"></div>
+    </div>
+
+    <div id="hb-tab-insights" style="display:none;">
+      <div class="ps-insights-grid">
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Frequência por hábito (30 dias)</h3>
+            <p>Em quantos dos últimos 30 dias registrados cada hábito apareceu</p>
+          </div>
+          <div class="ps-hbar-group" id="hb-chart-frequencia"></div>
+        </div>
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Evolução da conclusão diária</h3>
+            <p>Percentual de hábitos concluídos por dia, últimos 14 dias com registro</p>
+          </div>
+          <div class="ps-funnel" id="hb-chart-evolucao"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================== FINANÇAS (VIEW) ===================== -->
+  <main id="view-financas-view" class="view">
+    <div class="ps-header">
+      <div>
+        <h1>Finanças</h1>
+        <p>Lançamentos, saldo do mês e para onde o dinheiro está indo</p>
+      </div>
+      <button class="ps-new-btn" id="fn-btn-novo">
+        <i class="fa-solid fa-plus"></i> Novo lançamento
+      </button>
+    </div>
+
+    <div class="ps-summary">
+      <div class="ps-summary-card approved">
+        <div class="num" id="fn-sum-saldo">R$ 0,00</div>
+        <div class="lbl">Saldo do mês</div>
+      </div>
+      <div class="ps-summary-card active">
+        <div class="num" id="fn-sum-receitas">R$ 0,00</div>
+        <div class="lbl">Receitas do mês</div>
+      </div>
+      <div class="ps-summary-card">
+        <div class="num" id="fn-sum-despesas">R$ 0,00</div>
+        <div class="lbl">Despesas do mês</div>
+      </div>
+      <div class="ps-summary-card ghost-card">
+        <div class="num" id="fn-sum-total">0</div>
+        <div class="lbl">Lançamentos no mês</div>
+      </div>
+    </div>
+
+    <div class="ps-tabs">
+      <button class="ps-tab on" data-fntab="lista">Lançamentos</button>
+      <button class="ps-tab" data-fntab="insights">Insights</button>
+    </div>
+
+    <div id="fn-tab-lista">
+      <div class="ps-list" id="fn-list"></div>
+    </div>
+
+    <div id="fn-tab-insights" style="display:none;">
+      <div class="ps-insights-grid">
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Gastos por categoria (mês atual)</h3>
+            <p>Para onde foi o dinheiro das despesas registradas</p>
+          </div>
+          <div class="ps-hbar-group" id="fn-chart-categoria"></div>
+        </div>
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Gastos por conta</h3>
+            <p>Distribuição das despesas entre suas contas</p>
+          </div>
+          <div class="ps-hbar-group" id="fn-chart-conta"></div>
+        </div>
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Método de pagamento</h3>
+            <p>Como as despesas do mês foram pagas</p>
+          </div>
+          <div class="ps-hbar-group" id="fn-chart-metodo"></div>
+        </div>
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Saldo nos últimos 6 meses</h3>
+            <p>Receitas menos despesas, mês a mês</p>
+          </div>
+          <div class="ps-funnel" id="fn-chart-evolucao"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================== CANDIDATURAS (VIEW) ===================== -->
+  <main id="view-candidaturas" class="view">
+    <div class="ps-header">
+      <div>
+        <h1>Candidaturas</h1>
+        <p>Todas as vagas em que você se candidatou, com ou sem retorno</p>
+      </div>
+      <button class="ps-new-btn" id="cd-btn-novo">
+        <i class="fa-solid fa-plus"></i> Nova candidatura
+      </button>
+    </div>
+
+    <div class="ps-summary">
+      <div class="ps-summary-card">
+        <div class="num" id="cd-sum-total">0</div>
+        <div class="lbl">Total de candidaturas</div>
+      </div>
+      <div class="ps-summary-card active">
+        <div class="num" id="cd-sum-contato">0%</div>
+        <div class="lbl">Taxa de retorno do recrutador</div>
+      </div>
+      <div class="ps-summary-card approved">
+        <div class="num" id="cd-sum-selecionado">0%</div>
+        <div class="lbl">Taxa de seleção</div>
+      </div>
+      <div class="ps-summary-card ghost-card">
+        <div class="num" id="cd-sum-mes">0</div>
+        <div class="lbl">Candidaturas no mês</div>
+      </div>
+    </div>
+
+    <div class="ps-tabs">
+      <button class="ps-tab on" data-cdtab="lista">Lista</button>
+      <button class="ps-tab" data-cdtab="insights">Insights</button>
+    </div>
+
+    <div id="cd-tab-lista">
+      <div class="ps-list" id="cd-list"></div>
+    </div>
+
+    <div id="cd-tab-insights" style="display:none;">
+      <div class="ps-insights-grid">
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Candidaturas por plataforma</h3>
+            <p>Onde você mais se candidata</p>
+          </div>
+          <div class="ps-hbar-group" id="cd-chart-plataforma"></div>
+        </div>
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Taxa de retorno por plataforma</h3>
+            <p>Proporção de candidaturas com contato do recrutador, por plataforma</p>
+          </div>
+          <div class="ps-hbar-group" id="cd-chart-retorno-plataforma"></div>
+        </div>
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Remota vs. presencial/híbrida</h3>
+            <p>Distribuição das candidaturas por modalidade de trabalho</p>
+          </div>
+          <div class="ps-hbar-group" id="cd-chart-remota"></div>
+        </div>
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Candidaturas por mês</h3>
+            <p>Volume de candidaturas enviadas, últimos 6 meses</p>
+          </div>
+          <div class="ps-funnel" id="cd-chart-evolucao"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================== SÉRIES (VIEW) ===================== -->
+  <main id="view-series" class="view">
+    <div class="ps-header">
+      <div>
+        <h1>Séries</h1>
+        <p>Lista compartilhada do casal — o que já foi visto, o que falta</p>
+      </div>
+      <button class="ps-new-btn" id="sr-btn-novo">
+        <i class="fa-solid fa-plus"></i> Nova série
+      </button>
+    </div>
+
+    <div class="ps-summary">
+      <div class="ps-summary-card">
+        <div class="num" id="sr-sum-total">0</div>
+        <div class="lbl">Total cadastradas</div>
+      </div>
+      <div class="ps-summary-card approved">
+        <div class="num" id="sr-sum-vistas">0</div>
+        <div class="lbl">Já vistas</div>
+      </div>
+      <div class="ps-summary-card active">
+        <div class="num" id="sr-sum-pendentes">0</div>
+        <div class="lbl">Na fila</div>
+      </div>
+      <div class="ps-summary-card ghost-card">
+        <div class="num" id="sr-sum-media">--</div>
+        <div class="lbl">Média das notas do casal</div>
+      </div>
+    </div>
+
+    <div class="ps-tabs">
+      <button class="ps-tab on" data-srtab="lista">Lista</button>
+      <button class="ps-tab" data-srtab="insights">Insights</button>
+    </div>
+
+    <div id="sr-tab-lista">
+      <div class="ps-list" id="sr-list"></div>
+    </div>
+
+    <div id="sr-tab-insights" style="display:none;">
+      <div class="ps-insights-grid">
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Séries por gênero</h3>
+            <p>Distribuição do catálogo cadastrado</p>
+          </div>
+          <div class="ps-hbar-group" id="sr-chart-genero"></div>
+        </div>
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Séries por streaming</h3>
+            <p>Onde estão as séries da lista</p>
+          </div>
+          <div class="ps-hbar-group" id="sr-chart-streaming"></div>
+        </div>
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Notas: Gabrielle vs. Péricles</h3>
+            <p>Comparação das notas dadas às séries já vistas por ambos</p>
+          </div>
+          <div class="ps-hbar-group" id="sr-chart-notas"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================== HUMOR (VIEW) ===================== -->
+  <main id="view-humor" class="view">
+    <div class="ps-header">
+      <div>
+        <h1>Humor</h1>
+        <p>Como você tem se sentido, dia a dia</p>
+      </div>
+      <button class="ps-new-btn" id="hm-btn-novo">
+        <i class="fa-solid fa-plus"></i> Registrar humor
+      </button>
+    </div>
+
+    <div class="ps-summary">
+      <div class="ps-summary-card active">
+        <div class="num" id="hm-sum-hoje">--</div>
+        <div class="lbl">Hoje</div>
+      </div>
+      <div class="ps-summary-card approved">
+        <div class="num" id="hm-sum-media7">--</div>
+        <div class="lbl">Média (7 dias)</div>
+      </div>
+      <div class="ps-summary-card">
+        <div class="num" id="hm-sum-media30">--</div>
+        <div class="lbl">Média (30 dias)</div>
+      </div>
+      <div class="ps-summary-card ghost-card">
+        <div class="num" id="hm-sum-total">0</div>
+        <div class="lbl">Registros no mês</div>
+      </div>
+    </div>
+
+    <div class="ps-tabs">
+      <button class="ps-tab on" data-hmtab="lista">Histórico</button>
+      <button class="ps-tab" data-hmtab="insights">Insights</button>
+    </div>
+
+    <div id="hm-tab-lista">
+      <div class="ps-list" id="hm-list"></div>
+    </div>
+
+    <div id="hm-tab-insights" style="display:none;">
+      <div class="ps-insights-grid">
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Evolução do humor</h3>
+            <p>Nota diária, últimos 14 dias registrados</p>
+          </div>
+          <div class="ps-funnel" id="hm-chart-evolucao"></div>
+        </div>
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Tags mais frequentes</h3>
+            <p>O que mais aparece nos seus registros de humor</p>
+          </div>
+          <div class="ps-hbar-group" id="hm-chart-tags"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================== VISITAR (VIEW) ===================== -->
+  <main id="view-visitar" class="view">
+    <div class="ps-header">
+      <div>
+        <h1>Visitar</h1>
+        <p>Lugares para conhecer, compartilhado entre vocês</p>
+      </div>
+      <button class="ps-new-btn" id="vs-btn-novo">
+        <i class="fa-solid fa-plus"></i> Novo lugar
+      </button>
+    </div>
+
+    <div class="ps-summary">
+      <div class="ps-summary-card">
+        <div class="num" id="vs-sum-total">0</div>
+        <div class="lbl">Total cadastrados</div>
+      </div>
+      <div class="ps-summary-card approved">
+        <div class="num" id="vs-sum-visitados">0</div>
+        <div class="lbl">Já visitados</div>
+      </div>
+      <div class="ps-summary-card active">
+        <div class="num" id="vs-sum-pendentes">0</div>
+        <div class="lbl">Na lista de desejos</div>
+      </div>
+      <div class="ps-summary-card ghost-card">
+        <div class="num" id="vs-sum-media">--</div>
+        <div class="lbl">Nota média dos visitados</div>
+      </div>
+    </div>
+
+    <div class="ps-tabs">
+      <button class="ps-tab on" data-vstab="lista">Lista</button>
+      <button class="ps-tab" data-vstab="insights">Insights</button>
+    </div>
+
+    <div id="vs-tab-lista">
+      <div class="ps-list" id="vs-list"></div>
+    </div>
+
+    <div id="vs-tab-insights" style="display:none;">
+      <div class="ps-insights-grid">
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Por tipo de passeio</h3>
+            <p>Distribuição dos lugares cadastrados</p>
+          </div>
+          <div class="ps-hbar-group" id="vs-chart-tipo"></div>
+        </div>
+        <div class="ps-chart-card">
+          <div class="ps-chart-head">
+            <h3>Por clima ideal</h3>
+            <p>Quando faz mais sentido ir a cada lugar</p>
+          </div>
+          <div class="ps-hbar-group" id="vs-chart-clima"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
   </div><!-- /main-content -->
 
   <div class="sheet-backdrop" id="sheetBackdrop"></div>
@@ -1241,6 +1636,365 @@
   </div>
 </div>
 
+<!-- ===================== MODAL: LANÇAMENTO FINANCEIRO ===================== -->
+<div class="ps-backdrop" id="fn-backdrop">
+  <div class="ps-modal">
+    <div class="ps-modal-head">
+      <h2 id="fn-modal-title">Novo lançamento</h2>
+      <button class="ps-close-btn" id="fn-btn-fechar"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form id="fn-form">
+      <input type="hidden" id="fn-f-id">
+      <div class="segmented">
+        <input type="radio" name="fn-tipo" id="fn-tipo-despesa" value="despesa" checked>
+        <label for="fn-tipo-despesa">Despesa</label>
+        <input type="radio" name="fn-tipo" id="fn-tipo-receita" value="receita">
+        <label for="fn-tipo-receita">Receita</label>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="fn-f-valor">Valor (R$)</label>
+          <input type="number" step="0.01" min="0" id="fn-f-valor" required placeholder="0,00">
+        </div>
+        <div class="ps-field">
+          <label for="fn-f-data">Data</label>
+          <input type="date" id="fn-f-data" required>
+        </div>
+      </div>
+      <div class="ps-field">
+        <label for="fn-f-categoria">Categoria</label>
+        <select id="fn-f-categoria"></select>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="fn-f-conta">Conta</label>
+          <select id="fn-f-conta">
+            <option>Nubank</option><option>Inter</option><option>Flash</option>
+            <option>Mercado Pago</option><option>Mentore Bank</option><option>Outro</option>
+          </select>
+        </div>
+        <div class="ps-field">
+          <label for="fn-f-metodo">Método</label>
+          <select id="fn-f-metodo">
+            <option>Pix</option><option>Crédito</option><option>Débito</option><option>Dinheiro</option>
+          </select>
+        </div>
+      </div>
+      <div class="ps-field">
+        <label for="fn-f-local">Local (opcional)</label>
+        <input type="text" id="fn-f-local" placeholder="Ex: iFood, posto, mercado...">
+      </div>
+      <div class="ps-field">
+        <label for="fn-f-descricao">Descrição (opcional)</label>
+        <input type="text" id="fn-f-descricao" placeholder="Detalhe rápido do lançamento">
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="fn-f-recorrente">
+        <label for="fn-f-recorrente">Lançamento recorrente</label>
+      </div>
+      <div class="ps-modal-actions">
+        <button type="button" class="ps-btn-danger-ghost" id="fn-btn-excluir" style="display:none;">Excluir</button>
+        <button type="button" class="ps-btn-secondary" id="fn-btn-cancelar">Cancelar</button>
+        <button type="submit" class="ps-btn-primary">Salvar lançamento</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===================== MODAL: CANDIDATURAS ===================== -->
+<div class="ps-backdrop" id="cd-backdrop">
+  <div class="ps-modal">
+    <div class="ps-modal-head">
+      <h2 id="cd-modal-title">Nova candidatura</h2>
+      <button class="ps-close-btn" id="cd-btn-fechar"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form id="cd-form">
+      <input type="hidden" id="cd-f-id">
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="cd-f-empresa">Empresa</label>
+          <input type="text" id="cd-f-empresa" required placeholder="Ex: Nome da empresa">
+        </div>
+        <div class="ps-field">
+          <label for="cd-f-cargo">Cargo</label>
+          <input type="text" id="cd-f-cargo" placeholder="Ex: Analista de Dados Pleno">
+        </div>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="cd-f-data">Data</label>
+          <input type="date" id="cd-f-data">
+        </div>
+        <div class="ps-field">
+          <label for="cd-f-plataforma">Plataforma</label>
+          <input type="text" id="cd-f-plataforma" placeholder="LinkedIn, Gupy, InHire...">
+        </div>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="cd-f-remota">Remota?</label>
+          <select id="cd-f-remota">
+            <option value="">Não informado</option>
+            <option value="true">Sim</option>
+            <option value="false">Não</option>
+          </select>
+        </div>
+        <div class="ps-field">
+          <label for="cd-f-internacional">Internacional?</label>
+          <select id="cd-f-internacional">
+            <option value="">Não informado</option>
+            <option value="true">Sim</option>
+            <option value="false">Não</option>
+          </select>
+        </div>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="cd-f-tempo-divulgacao">Tempo desde divulgação (horas)</label>
+          <input type="number" id="cd-f-tempo-divulgacao" step="0.1" placeholder="Ex: 2">
+        </div>
+        <div class="ps-field">
+          <label for="cd-f-applicants">Nº de candidatos (se visível)</label>
+          <input type="number" id="cd-f-applicants" placeholder="Ex: 45">
+        </div>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="cd-f-contato">Recrutador entrou em contato?</label>
+          <select id="cd-f-contato">
+            <option value="">Não informado</option>
+            <option value="true">Sim</option>
+            <option value="false">Não</option>
+          </select>
+        </div>
+        <div class="ps-field">
+          <label for="cd-f-selecionado">Foi selecionado?</label>
+          <select id="cd-f-selecionado">
+            <option value="">Não informado</option>
+            <option value="true">Sim</option>
+            <option value="false">Não</option>
+          </select>
+        </div>
+      </div>
+      <div class="ps-field">
+        <label for="cd-f-personalizada">Candidatura personalizada?</label>
+        <select id="cd-f-personalizada">
+          <option value="">Não informado</option>
+          <option value="true">Sim</option>
+          <option value="false">Não</option>
+        </select>
+      </div>
+      <div class="ps-field">
+        <label for="cd-f-obs">Observações</label>
+        <textarea id="cd-f-obs" placeholder="Qualquer detalhe relevante sobre a candidatura..."></textarea>
+      </div>
+      <div class="ps-modal-actions">
+        <button type="button" class="ps-btn-danger-ghost" id="cd-btn-excluir" style="display:none;">Excluir</button>
+        <button type="button" class="ps-btn-secondary" id="cd-btn-cancelar">Cancelar</button>
+        <button type="submit" class="ps-btn-primary">Salvar candidatura</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===================== MODAL: SÉRIES ===================== -->
+<div class="ps-backdrop" id="sr-backdrop">
+  <div class="ps-modal">
+    <div class="ps-modal-head">
+      <h2 id="sr-modal-title">Nova série</h2>
+      <button class="ps-close-btn" id="sr-btn-fechar"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form id="sr-form">
+      <input type="hidden" id="sr-f-id">
+      <div class="ps-field">
+        <label for="sr-f-serie">Nome da série</label>
+        <input type="text" id="sr-f-serie" required placeholder="Ex: Game of Thrones">
+      </div>
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="sr-f-genero">Gênero</label>
+          <input type="text" id="sr-f-genero" placeholder="Drama, Comédia, Suspense...">
+        </div>
+        <div class="ps-field">
+          <label for="sr-f-streaming">Streaming</label>
+          <input type="text" id="sr-f-streaming" placeholder="Netflix, Prime, HBO Max...">
+        </div>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="sr-f-disponivel">Disponível?</label>
+          <select id="sr-f-disponivel">
+            <option value="">Não informado</option>
+            <option value="true">Sim</option>
+            <option value="false">Não</option>
+          </select>
+        </div>
+        <div class="ps-field">
+          <label for="sr-f-vista">Já assistida?</label>
+          <select id="sr-f-vista">
+            <option value="false">Não</option>
+            <option value="true">Sim</option>
+          </select>
+        </div>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="sr-f-data-inicio">Data início</label>
+          <input type="date" id="sr-f-data-inicio">
+        </div>
+        <div class="ps-field">
+          <label for="sr-f-data-fim">Data fim</label>
+          <input type="date" id="sr-f-data-fim">
+        </div>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="sr-f-nota-gabrielle">Nota Gabrielle (0-10)</label>
+          <input type="number" id="sr-f-nota-gabrielle" min="0" max="10" step="0.5">
+        </div>
+        <div class="ps-field">
+          <label for="sr-f-nota-pericles">Nota Péricles (0-10)</label>
+          <input type="number" id="sr-f-nota-pericles" min="0" max="10" step="0.5">
+        </div>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="sr-f-vista-antes-g">Gabrielle já via antes?</label>
+          <select id="sr-f-vista-antes-g">
+            <option value="false">Não</option>
+            <option value="true">Sim</option>
+          </select>
+        </div>
+        <div class="ps-field">
+          <label for="sr-f-vista-antes-p">Péricles já via antes?</label>
+          <select id="sr-f-vista-antes-p">
+            <option value="false">Não</option>
+            <option value="true">Sim</option>
+          </select>
+        </div>
+      </div>
+      <div class="ps-modal-actions">
+        <button type="button" class="ps-btn-danger-ghost" id="sr-btn-excluir" style="display:none;">Excluir</button>
+        <button type="button" class="ps-btn-secondary" id="sr-btn-cancelar">Cancelar</button>
+        <button type="submit" class="ps-btn-primary">Salvar série</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===================== MODAL: HUMOR ===================== -->
+<div class="ps-backdrop" id="hm-backdrop">
+  <div class="ps-modal">
+    <div class="ps-modal-head">
+      <h2 id="hm-modal-title">Registrar humor</h2>
+      <button class="ps-close-btn" id="hm-btn-fechar"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form id="hm-form">
+      <input type="hidden" id="hm-f-id">
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="hm-f-data">Data</label>
+          <input type="date" id="hm-f-data" required>
+        </div>
+        <div class="ps-field">
+          <label for="hm-f-nota">Nota (1 a 5)</label>
+          <input type="number" id="hm-f-nota" min="1" max="5" required placeholder="Ex: 4">
+        </div>
+      </div>
+      <div class="ps-field">
+        <label for="hm-f-tags">Tags (separadas por vírgula)</label>
+        <input type="text" id="hm-f-tags" placeholder="Ex: cansaço, trabalho, ansiedade">
+      </div>
+      <div class="ps-field">
+        <label for="hm-f-obs">Observações</label>
+        <textarea id="hm-f-obs" placeholder="Como foi o dia, o que influenciou o humor..."></textarea>
+      </div>
+      <div class="ps-modal-actions">
+        <button type="button" class="ps-btn-danger-ghost" id="hm-btn-excluir" style="display:none;">Excluir</button>
+        <button type="button" class="ps-btn-secondary" id="hm-btn-cancelar">Cancelar</button>
+        <button type="submit" class="ps-btn-primary">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===================== MODAL: VISITAR ===================== -->
+<div class="ps-backdrop" id="vs-backdrop">
+  <div class="ps-modal">
+    <div class="ps-modal-head">
+      <h2 id="vs-modal-title">Novo lugar</h2>
+      <button class="ps-close-btn" id="vs-btn-fechar"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form id="vs-form">
+      <input type="hidden" id="vs-f-id">
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="vs-f-nome">Nome</label>
+          <input type="text" id="vs-f-nome" required placeholder="Ex: Berry's">
+        </div>
+        <div class="ps-field">
+          <label for="vs-f-tipo">Tipo de passeio</label>
+          <input type="text" id="vs-f-tipo" placeholder="Sorveteria, Parque, Museu...">
+        </div>
+      </div>
+      <div class="ps-field">
+        <label for="vs-f-endereco">Endereço</label>
+        <input type="text" id="vs-f-endereco" placeholder="Rua, número, bairro...">
+      </div>
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="vs-f-valor">Valor estimado (R$)</label>
+          <input type="number" id="vs-f-valor" step="0.01" placeholder="Ex: 50">
+        </div>
+        <div class="ps-field">
+          <label for="vs-f-clima">Clima ideal</label>
+          <input type="text" id="vs-f-clima" placeholder="Quente, Frio, Qualquer um...">
+        </div>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="vs-f-ja-visitamos">Já visitamos?</label>
+          <select id="vs-f-ja-visitamos">
+            <option value="false">Não</option>
+            <option value="true">Sim</option>
+          </select>
+        </div>
+        <div class="ps-field">
+          <label for="vs-f-precisa-reserva">Precisa de reserva?</label>
+          <select id="vs-f-precisa-reserva">
+            <option value="">Não informado</option>
+            <option value="true">Sim</option>
+            <option value="false">Não</option>
+          </select>
+        </div>
+      </div>
+      <div class="ps-row">
+        <div class="ps-field">
+          <label for="vs-f-nota">Nota (1 a 5)</label>
+          <input type="number" id="vs-f-nota" min="1" max="5" step="0.5">
+        </div>
+        <div class="ps-field">
+          <label for="vs-f-planejado">Planejado para</label>
+          <input type="date" id="vs-f-planejado">
+        </div>
+      </div>
+      <div class="ps-field">
+        <label for="vs-f-link">Link / Instagram / Site</label>
+        <input type="text" id="vs-f-link" placeholder="https://...">
+      </div>
+      <div class="ps-field">
+        <label for="vs-f-comentario">Comentário / Impressão</label>
+        <textarea id="vs-f-comentario" placeholder="O que acharam, dicas, observações..."></textarea>
+      </div>
+      <div class="ps-modal-actions">
+        <button type="button" class="ps-btn-danger-ghost" id="vs-btn-excluir" style="display:none;">Excluir</button>
+        <button type="button" class="ps-btn-secondary" id="vs-btn-cancelar">Cancelar</button>
+        <button type="submit" class="ps-btn-primary">Salvar lugar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ===================== SUPABASE ===================== */
@@ -1252,14 +2006,14 @@ const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
 const DOMINIOS = [
   { id: 'habitos', nome: 'Hábitos', categoria: 'corpo', pronto: true },
   { id: 'financas', nome: 'Finanças', categoria: 'carreira', pronto: true },
-  { id: 'humor', nome: 'Humor', categoria: 'corpo', pronto: false, campos: ['Data', 'Nota (1 a 5)', 'Tags', 'Observações'] },
+  { id: 'humor', nome: 'Humor', categoria: 'corpo', pronto: true },
   { id: 'treinos', nome: 'Treinos', categoria: 'corpo', pronto: false, campos: ['Data', 'Tipo de treino', 'Exercício', 'Carga (kg)', 'Séries', 'Repetições', 'Observações'] },
-  { id: 'candidaturas', nome: 'Candidaturas', categoria: 'carreira', pronto: false, campos: ['Empresa', 'Cargo', 'Data', 'Plataforma', 'Remota', 'Selecionado'] },
+  { id: 'candidaturas', nome: 'Candidaturas', categoria: 'carreira', pronto: true },
   { id: 'processos', nome: 'Processos Seletivos', categoria: 'carreira', pronto: true },
   { id: 'filmes', nome: 'Filmes', categoria: 'lazer', pronto: 'externo' },
-  { id: 'series', nome: 'Séries', categoria: 'lazer', pronto: false, campos: ['Série', 'Vista', 'Data Início', 'Data Fim', 'Streaming', 'Notas'] },
+  { id: 'series', nome: 'Séries', categoria: 'lazer', pronto: true },
   { id: 'comer', nome: 'Comer', categoria: 'lazer', pronto: false, campos: ['Nome', 'Tipo de lugar', 'Endereço', 'Já fomos?', 'Nota', 'Comentário'] },
-  { id: 'visitar', nome: 'Visitar', categoria: 'lazer', pronto: false, campos: ['Nome', 'Tipo de passeio', 'Endereço', 'Valor estimado', 'Nota'] },
+  { id: 'visitar', nome: 'Visitar', categoria: 'lazer', pronto: true },
   { id: 'receitas', nome: 'Receitas', categoria: 'lazer', pronto: false, campos: ['Nome', 'Ingredientes', 'Modo de preparo', 'Tempo', 'Porções'] },
   { id: 'atividades', nome: 'Atividades', categoria: 'lazer', pronto: false, campos: ['Atividade', 'Proposta por', 'Categoria', 'Feita?', 'Data'] }
 ];
@@ -1323,6 +2077,12 @@ function mostrarView(nome) {
   });
   if (nome === 'perfil') verificarSessao();
   if (nome === 'processos') psCarregarTudo();
+  if (nome === 'habitos') hbCarregarTudo();
+  if (nome === 'financas-view') fnCarregarTudo();
+  if (nome === 'candidaturas') cdCarregarTudo();
+  if (nome === 'series') srCarregarTudo();
+  if (nome === 'humor') hmCarregarTudo();
+  if (nome === 'visitar') vsCarregarTudo();
 }
 
 document.querySelectorAll('[data-goto-view]').forEach(el => {
@@ -1585,10 +2345,13 @@ function renderAreasPreview() {
 }
 
 function abrirDominio(id) {
-  if (id === 'habitos') { abrirSheet('sheetHabitos'); return; }
-  if (id === 'financas') { abrirSheet('sheetFinancas'); return; }
-  if (id === 'humor') { abrirSheet('sheetHumor'); return; }
+  if (id === 'habitos') { mostrarView('habitos'); return; }
+  if (id === 'financas') { mostrarView('financas-view'); return; }
   if (id === 'processos') { mostrarView('processos'); return; }
+  if (id === 'candidaturas') { mostrarView('candidaturas'); return; }
+  if (id === 'series') { mostrarView('series'); return; }
+  if (id === 'humor') { mostrarView('humor'); return; }
+  if (id === 'visitar') { mostrarView('visitar'); return; }
   const dominio = DOMINIOS.find(d => d.id === id);
   if (!dominio) return;
   if (dominio.pronto === 'externo') {
@@ -1959,6 +2722,1367 @@ document.getElementById('btnSalvarHumor').addEventListener('click', async functi
     mostrarToast('Humor salvo! ✅');
     fecharSheets();
   } catch (err) { console.error(err); mostrarToast('Erro ao salvar: ' + err.message); }
+});
+
+/* ===================== HÁBITOS (VIEW COMPLETA, SCHEMA REAL: tabela habitos) ===================== */
+let hb_habitosDoUsuario = [];
+let hb_diasRegistrados = [];
+
+async function hbCarregarHabitosDoUsuario(user) {
+  const { data, error } = await supabaseClient
+    .from('habitos').select('id, nome, ordem')
+    .eq('user_id', user.id).eq('ativo', true)
+    .order('ordem', { ascending: true });
+  if (error) { console.error(error); return []; }
+  return data || [];
+}
+
+async function hbCarregarTudo() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) { console.warn('Usuário não autenticado.'); return; }
+
+  hb_habitosDoUsuario = await hbCarregarHabitosDoUsuario(user);
+  const mapaIdParaNome = {};
+  hb_habitosDoUsuario.forEach(h => { mapaIdParaNome[h.id] = h.nome; });
+
+  const { data: dias, error: e2 } = await supabaseClient
+    .from('dias').select('data, descricao').eq('user_id', user.id)
+    .order('data', { ascending: false }).limit(90);
+  if (e2) { console.error(e2); return; }
+
+  const { data: registros, error: e3 } = await supabaseClient
+    .from('habitos_registros').select('data, habito_id').eq('user_id', user.id)
+    .order('data', { ascending: false }).limit(3000);
+  if (e3) { console.error(e3); return; }
+
+  const registrosPorData = {};
+  (registros || []).forEach(r => {
+    if (!registrosPorData[r.data]) registrosPorData[r.data] = [];
+    registrosPorData[r.data].push(r.habito_id);
+  });
+
+  hb_diasRegistrados = (dias || []).map(d => ({
+    data: d.data,
+    descricao: d.descricao,
+    habitoIds: registrosPorData[d.data] || [],
+    habitoNomes: (registrosPorData[d.data] || []).map(id => mapaIdParaNome[id]).filter(Boolean)
+  }));
+
+  hbRenderResumo();
+  hbRenderLista();
+  hbRenderInsights();
+}
+
+function hbRenderResumo() {
+  const total = hb_habitosDoUsuario.length || 1;
+  const feitosHoje = Object.values(estadoHabitosHoje).filter(Boolean).length;
+  document.getElementById('hb-sum-hoje').textContent = `${feitosHoje}/${hb_habitosDoUsuario.length}`;
+
+  let streak = 0;
+  const ordenado = [...hb_diasRegistrados].sort((a,b) => a.data < b.data ? 1 : -1);
+  let dataEsperada = new Date(hojeISO());
+  for (const dia of ordenado) {
+    const dIso = dataEsperada.getFullYear() + '-' + String(dataEsperada.getMonth()+1).padStart(2,'0') + '-' + String(dataEsperada.getDate()).padStart(2,'0');
+    if (dia.data === dIso && dia.habitoIds.length > 0) {
+      streak++;
+      dataEsperada.setDate(dataEsperada.getDate() - 1);
+    } else if (dia.data === dIso) {
+      break;
+    }
+  }
+  document.getElementById('hb-sum-streak').textContent = streak;
+
+  const mesAtual = hojeISO().slice(0, 7);
+  const diasNoMes = hb_diasRegistrados.filter(d => d.data.startsWith(mesAtual));
+  document.getElementById('hb-sum-mes').textContent = diasNoMes.length;
+
+  const ultimos30 = hb_diasRegistrados.slice(0, 30);
+  const mediaConclusao = ultimos30.length
+    ? Math.round(ultimos30.reduce((acc, d) => acc + (d.habitoIds.length / total), 0) / ultimos30.length * 100)
+    : 0;
+  document.getElementById('hb-sum-media').textContent = mediaConclusao + '%';
+}
+
+function hbFmtData(d) {
+  if (!d) return '';
+  const [y,m,day] = d.split('-'); return `${day}/${m}/${y}`;
+}
+
+function hbRenderLista() {
+  const container = document.getElementById('hb-list');
+  if (hb_diasRegistrados.length === 0) {
+    container.innerHTML = `<div class="ps-empty"><i class="fa-regular fa-calendar-check"></i><p>Nenhum dia registrado ainda.</p></div>`;
+    return;
+  }
+  const total = hb_habitosDoUsuario.length || 1;
+  container.innerHTML = hb_diasRegistrados.map(d => {
+    const pct = Math.round((d.habitoIds.length / total) * 100);
+    const statusClass = pct >= 70 ? 'pill-aprovado' : (pct >= 40 ? 'pill-em_andamento' : 'pill-rejeitado');
+    return `
+      <div class="ps-card" data-data="${d.data}">
+        <div class="ps-card-top">
+          <div>
+            <p class="ps-card-title">${hbFmtData(d.data)}</p>
+            <p class="ps-card-sub">${d.descricao ? psEsc(d.descricao) : 'Sem observações'}</p>
+          </div>
+          <span class="ps-status-pill ${statusClass}">${d.habitoIds.length}/${hb_habitosDoUsuario.length}</span>
+        </div>
+        <div class="ps-card-meta">
+          <span><i class="fa-solid fa-percent"></i>${pct}% concluído</span>
+        </div>
+      </div>`;
+  }).join('');
+  container.querySelectorAll('.ps-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.getElementById('habitoData').value = card.dataset.data;
+      abrirSheet('sheetHabitos');
+    });
+  });
+}
+
+function hbRenderInsights() {
+  const container = document.getElementById('hb-chart-frequencia');
+  const ultimos30 = hb_diasRegistrados.slice(0, 30);
+  if (ultimos30.length === 0 || hb_habitosDoUsuario.length === 0) {
+    container.innerHTML = '<div class="ps-chart-empty">Registre alguns dias para ver a frequência.</div>';
+  } else {
+    const contagem = {};
+    hb_habitosDoUsuario.forEach(h => contagem[h.id] = 0);
+    ultimos30.forEach(d => d.habitoIds.forEach(id => { if (contagem[id] !== undefined) contagem[id]++; }));
+    const linhas = hb_habitosDoUsuario
+      .map(h => ({ nome: h.nome, qtd: contagem[h.id], taxa: contagem[h.id] / ultimos30.length }))
+      .sort((a,b) => b.taxa - a.taxa);
+    const maiorTaxa = Math.max(...linhas.map(l => l.taxa), 0.0001);
+    container.innerHTML = linhas.map(l => {
+      const widthPct = Math.max((l.taxa / maiorTaxa) * 100, 4);
+      const isTop = l.taxa === maiorTaxa && l.taxa > 0;
+      return `<div class="ps-hbar-row">
+        <div class="ps-hbar-label" title="${psEsc(l.nome)}">${psEsc(l.nome)}</div>
+        <div class="ps-hbar-track"><div class="ps-hbar-fill ${isTop ? 'highlight' : ''}" style="width:${widthPct}%"></div></div>
+        <div class="ps-hbar-value"><b>${Math.round(l.taxa*100)}%</b> (${l.qtd}/${ultimos30.length})</div>
+      </div>`;
+    }).join('');
+  }
+
+  const evoContainer = document.getElementById('hb-chart-evolucao');
+  const ultimos14 = [...hb_diasRegistrados].slice(0, 14).reverse();
+  if (ultimos14.length === 0) {
+    evoContainer.innerHTML = '<div class="ps-chart-empty">Registre alguns dias para ver a evolução.</div>';
+    return;
+  }
+  const total = hb_habitosDoUsuario.length || 1;
+  evoContainer.innerHTML = ultimos14.map(d => {
+    const pct = Math.round((d.habitoIds.length / total) * 100);
+    const zero = d.habitoIds.length === 0;
+    return `<div class="ps-funnel-row">
+      <div class="ps-funnel-label">${hbFmtData(d.data)}</div>
+      <div class="ps-funnel-track"><div class="ps-funnel-fill ${zero ? 'zero' : ''}" style="width:${zero ? 6 : pct}%"><span>${d.habitoIds.length}/${hb_habitosDoUsuario.length}</span></div></div>
+      <div class="ps-funnel-pct">${pct}%</div>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('hb-btn-novo').addEventListener('click', () => {
+  document.getElementById('habitoData').value = hojeISO();
+  abrirSheet('sheetHabitos');
+});
+
+document.querySelectorAll('[data-hbtab]').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('[data-hbtab]').forEach(t => t.classList.remove('on'));
+    tab.classList.add('on');
+    const alvo = tab.dataset.hbtab;
+    document.getElementById('hb-tab-lista').style.display = alvo === 'lista' ? 'block' : 'none';
+    document.getElementById('hb-tab-insights').style.display = alvo === 'insights' ? 'block' : 'none';
+    if (alvo === 'insights') hbRenderInsights();
+  });
+});
+
+/* ===================== FINANÇAS (VIEW COMPLETA, SCHEMA REAL: tabela lancamentos) ===================== */
+let fn_lancamentos = [];
+let fn_categorias = [];
+let fn_editandoId = null;
+
+async function fnCarregarCategorias(user) {
+  const { data, error } = await supabaseClient
+    .from('categorias_financeiras').select('id, nome, tipo, ordem')
+    .eq('user_id', user.id).eq('ativo', true)
+    .order('tipo', { ascending: true }).order('ordem', { ascending: true });
+  if (error) { console.error(error); return []; }
+  return data || [];
+}
+
+function fnPreencherSelectCategoria(tipo) {
+  const select = document.getElementById('fn-f-categoria');
+  const opcoes = fn_categorias.filter(c => c.tipo === tipo);
+  select.innerHTML = opcoes.map(c => `<option value="${c.id}">${psEsc(c.nome)}</option>`).join('');
+}
+
+async function fnCarregarTudo() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) { console.warn('Usuário não autenticado.'); return; }
+
+  fn_categorias = await fnCarregarCategorias(user);
+
+  const { data, error } = await supabaseClient
+    .from('lancamentos')
+    .select('*, categorias_financeiras(nome)')
+    .eq('user_id', user.id)
+    .order('data', { ascending: false }).limit(500);
+  if (error) { console.error(error); return; }
+
+  fn_lancamentos = (data || []).map(l => ({
+    ...l,
+    categoria_nome: l.categorias_financeiras ? l.categorias_financeiras.nome : null
+  }));
+
+  fnRenderResumo();
+  fnRenderLista();
+  fnRenderInsights();
+}
+
+function fnMesAtualLancamentos() {
+  const mesAtual = hojeISO().slice(0, 7);
+  return fn_lancamentos.filter(l => l.data && l.data.startsWith(mesAtual));
+}
+
+function fnFmtValor(v) {
+  return 'R$ ' + Number(v).toFixed(2).replace('.', ',');
+}
+function fnFmtData(d) {
+  if (!d) return '';
+  const [y,m,day] = d.split('-'); return `${day}/${m}/${y}`;
+}
+
+function fnRenderResumo() {
+  const doMes = fnMesAtualLancamentos();
+  const receitas = doMes.filter(l => l.tipo === 'receita').reduce((a,l) => a + Number(l.valor), 0);
+  const despesas = doMes.filter(l => l.tipo === 'despesa').reduce((a,l) => a + Number(l.valor), 0);
+  const saldo = receitas - despesas;
+
+  document.getElementById('fn-sum-saldo').textContent = fnFmtValor(saldo);
+  document.getElementById('fn-sum-saldo').style.color = saldo >= 0 ? 'var(--ok)' : 'var(--danger)';
+  document.getElementById('fn-sum-receitas').textContent = fnFmtValor(receitas);
+  document.getElementById('fn-sum-despesas').textContent = fnFmtValor(despesas);
+  document.getElementById('fn-sum-total').textContent = doMes.length;
+}
+
+function fnRenderLista() {
+  const container = document.getElementById('fn-list');
+  if (fn_lancamentos.length === 0) {
+    container.innerHTML = `<div class="ps-empty"><i class="fa-solid fa-sack-dollar"></i><p>Nenhum lançamento ainda.</p></div>`;
+    return;
+  }
+  container.innerHTML = fn_lancamentos.map(l => {
+    const isReceita = l.tipo === 'receita';
+    const sinal = isReceita ? '+' : '-';
+    const pillClass = isReceita ? 'pill-aprovado' : 'pill-rejeitado';
+    const meta = [];
+    if (l.categoria_nome) meta.push(`<span><i class="fa-solid fa-tag"></i>${psEsc(l.categoria_nome)}</span>`);
+    if (l.conta) meta.push(`<span><i class="fa-solid fa-building-columns"></i>${psEsc(l.conta)}</span>`);
+    if (l.metodo) meta.push(`<span><i class="fa-solid fa-credit-card"></i>${psEsc(l.metodo)}</span>`);
+    if (l.local) meta.push(`<span><i class="fa-solid fa-location-dot"></i>${psEsc(l.local)}</span>`);
+    if (l.recorrente) meta.push(`<span><i class="fa-solid fa-rotate"></i>Recorrente</span>`);
+    return `
+      <div class="ps-card" data-id="${l.id}">
+        <div class="ps-card-top">
+          <div>
+            <p class="ps-card-title">${psEsc(l.descricao || l.categoria_nome || (isReceita ? 'Receita' : 'Despesa'))}</p>
+            <p class="ps-card-sub">${fnFmtData(l.data)}</p>
+          </div>
+          <span class="ps-status-pill ${pillClass}">${sinal} ${fnFmtValor(l.valor)}</span>
+        </div>
+        <div class="ps-card-meta">${meta.join('')}</div>
+      </div>`;
+  }).join('');
+  container.querySelectorAll('.ps-card').forEach(card => {
+    card.addEventListener('click', () => fnAbrirEdicao(Number(card.dataset.id)));
+  });
+}
+
+function fnRenderCategoriaChart() {
+  const container = document.getElementById('fn-chart-categoria');
+  const doMes = fnMesAtualLancamentos().filter(l => l.tipo === 'despesa' && l.categoria_nome);
+  if (doMes.length === 0) {
+    container.innerHTML = '<div class="ps-chart-empty">Sem dados suficientes ainda.</div>';
+    return;
+  }
+  const grupos = {};
+  doMes.forEach(l => {
+    if (!grupos[l.categoria_nome]) grupos[l.categoria_nome] = 0;
+    grupos[l.categoria_nome] += Number(l.valor);
+  });
+  const linhas = Object.entries(grupos).map(([key, total]) => ({ key, total })).sort((a,b) => b.total - a.total).slice(0, 8);
+  const maiorValor = Math.max(...linhas.map(l => l.total), 0.0001);
+  const somaTotal = linhas.reduce((a,l) => a + l.total, 0);
+  container.innerHTML = linhas.map(l => {
+    const widthPct = Math.max((l.total / maiorValor) * 100, 4);
+    const isTop = l.total === maiorValor;
+    const pctDoTotal = somaTotal ? Math.round((l.total / somaTotal) * 100) : 0;
+    return `<div class="ps-hbar-row">
+      <div class="ps-hbar-label" title="${psEsc(l.key)}">${psEsc(l.key)}</div>
+      <div class="ps-hbar-track"><div class="ps-hbar-fill ${isTop ? 'highlight' : ''}" style="width:${widthPct}%"></div></div>
+      <div class="ps-hbar-value"><b>${fnFmtValor(l.total)}</b> (${pctDoTotal}%)</div>
+    </div>`;
+  }).join('');
+}
+
+function fnAgruparEExibir(campo, containerId) {
+  const container = document.getElementById(containerId);
+  const doMes = fnMesAtualLancamentos().filter(l => l.tipo === 'despesa');
+  const comValor = doMes.filter(l => l[campo]);
+  if (comValor.length === 0) {
+    container.innerHTML = '<div class="ps-chart-empty">Sem dados suficientes ainda.</div>';
+    return;
+  }
+  const grupos = {};
+  comValor.forEach(l => {
+    const key = l[campo];
+    if (!grupos[key]) grupos[key] = 0;
+    grupos[key] += Number(l.valor);
+  });
+  const linhas = Object.entries(grupos)
+    .map(([key, total]) => ({ key, total }))
+    .sort((a,b) => b.total - a.total)
+    .slice(0, 8);
+  const maiorValor = Math.max(...linhas.map(l => l.total), 0.0001);
+  const somaTotal = linhas.reduce((a,l) => a + l.total, 0);
+  container.innerHTML = linhas.map(l => {
+    const widthPct = Math.max((l.total / maiorValor) * 100, 4);
+    const isTop = l.total === maiorValor;
+    const pctDoTotal = somaTotal ? Math.round((l.total / somaTotal) * 100) : 0;
+    return `<div class="ps-hbar-row">
+      <div class="ps-hbar-label" title="${psEsc(l.key)}">${psEsc(l.key)}</div>
+      <div class="ps-hbar-track"><div class="ps-hbar-fill ${isTop ? 'highlight' : ''}" style="width:${widthPct}%"></div></div>
+      <div class="ps-hbar-value"><b>${fnFmtValor(l.total)}</b> (${pctDoTotal}%)</div>
+    </div>`;
+  }).join('');
+}
+
+function fnRenderEvolucaoMensal() {
+  const container = document.getElementById('fn-chart-evolucao');
+  const hoje = new Date();
+  const meses = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
+    const chave = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+    meses.push({ chave, label: d.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' }) });
+  }
+  const saldosPorMes = meses.map(m => {
+    const doMes = fn_lancamentos.filter(l => l.data && l.data.startsWith(m.chave));
+    const receitas = doMes.filter(l => l.tipo === 'receita').reduce((a,l) => a + Number(l.valor), 0);
+    const despesas = doMes.filter(l => l.tipo === 'despesa').reduce((a,l) => a + Number(l.valor), 0);
+    return { ...m, saldo: receitas - despesas };
+  });
+  if (saldosPorMes.every(m => m.saldo === 0)) {
+    container.innerHTML = '<div class="ps-chart-empty">Sem lançamentos suficientes ainda.</div>';
+    return;
+  }
+  const maiorAbs = Math.max(...saldosPorMes.map(m => Math.abs(m.saldo)), 1);
+  container.innerHTML = saldosPorMes.map(m => {
+    const pct = Math.max((Math.abs(m.saldo) / maiorAbs) * 100, 4);
+    const zero = m.saldo === 0;
+    return `<div class="ps-funnel-row">
+      <div class="ps-funnel-label">${m.label}</div>
+      <div class="ps-funnel-track"><div class="ps-funnel-fill ${zero ? 'zero' : ''}" style="width:${zero ? 6 : pct}%; ${m.saldo < 0 ? 'background:linear-gradient(90deg, var(--danger), var(--rose));' : ''}"><span>${fnFmtValor(m.saldo)}</span></div></div>
+      <div class="ps-funnel-pct">${m.saldo >= 0 ? '+' : ''}${Math.round(m.saldo)}</div>
+    </div>`;
+  }).join('');
+}
+
+function fnRenderInsights() {
+  fnRenderCategoriaChart();
+  fnAgruparEExibir('conta', 'fn-chart-conta');
+  fnAgruparEExibir('metodo', 'fn-chart-metodo');
+  fnRenderEvolucaoMensal();
+}
+
+const fnBackdrop = document.getElementById('fn-backdrop');
+
+function fnAtualizarCategoriaVisivel() {
+  const tipo = document.querySelector('input[name="fn-tipo"]:checked').value;
+  fnPreencherSelectCategoria(tipo);
+}
+
+document.querySelectorAll('input[name="fn-tipo"]').forEach(r => r.addEventListener('change', fnAtualizarCategoriaVisivel));
+
+function fnAbrirNovo() {
+  fn_editandoId = null;
+  document.getElementById('fn-modal-title').textContent = 'Novo lançamento';
+  document.getElementById('fn-btn-excluir').style.display = 'none';
+  document.getElementById('fn-form').reset();
+  document.getElementById('fn-f-id').value = '';
+  document.getElementById('fn-f-data').value = hojeISO();
+  document.getElementById('fn-tipo-despesa').checked = true;
+  fnAtualizarCategoriaVisivel();
+  fnBackdrop.classList.add('open');
+}
+
+function fnAbrirEdicao(id) {
+  const l = fn_lancamentos.find(x => x.id === id);
+  if (!l) return;
+  fn_editandoId = id;
+  document.getElementById('fn-modal-title').textContent = 'Editar lançamento';
+  document.getElementById('fn-btn-excluir').style.display = 'inline-block';
+  document.getElementById('fn-f-id').value = l.id;
+  document.getElementById('fn-f-valor').value = l.valor;
+  document.getElementById('fn-f-data').value = l.data;
+  if (l.tipo === 'receita') document.getElementById('fn-tipo-receita').checked = true;
+  else document.getElementById('fn-tipo-despesa').checked = true;
+  fnAtualizarCategoriaVisivel();
+  if (l.categoria_id) document.getElementById('fn-f-categoria').value = l.categoria_id;
+  document.getElementById('fn-f-conta').value = l.conta || 'Nubank';
+  document.getElementById('fn-f-metodo').value = l.metodo || 'Pix';
+  document.getElementById('fn-f-local').value = l.local || '';
+  document.getElementById('fn-f-descricao').value = l.descricao || '';
+  document.getElementById('fn-f-recorrente').checked = !!l.recorrente;
+  fnBackdrop.classList.add('open');
+}
+
+function fnFechar() { fnBackdrop.classList.remove('open'); }
+
+document.getElementById('fn-btn-novo').addEventListener('click', fnAbrirNovo);
+document.getElementById('fn-btn-fechar').addEventListener('click', fnFechar);
+document.getElementById('fn-btn-cancelar').addEventListener('click', fnFechar);
+fnBackdrop.addEventListener('click', e => { if (e.target === fnBackdrop) fnFechar(); });
+
+document.getElementById('fn-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) { mostrarToast('Sessão expirada. Faça login novamente.'); return; }
+
+  const payload = {
+    user_id: user.id,
+    tipo: document.querySelector('input[name="fn-tipo"]:checked').value,
+    valor: parseFloat(document.getElementById('fn-f-valor').value) || 0,
+    data: document.getElementById('fn-f-data').value,
+    categoria_id: document.getElementById('fn-f-categoria').value || null,
+    conta: document.getElementById('fn-f-conta').value,
+    metodo: document.getElementById('fn-f-metodo').value,
+    local: document.getElementById('fn-f-local').value.trim() || null,
+    descricao: document.getElementById('fn-f-descricao').value.trim() || null,
+    recorrente: document.getElementById('fn-f-recorrente').checked,
+  };
+
+  if (fn_editandoId) {
+    const { error } = await supabaseClient.from('lancamentos').update(payload).eq('id', fn_editandoId);
+    if (error) { console.error(error); mostrarToast('Erro ao salvar: ' + error.message); return; }
+  } else {
+    const { error } = await supabaseClient.from('lancamentos').insert(payload);
+    if (error) { console.error(error); mostrarToast('Erro ao salvar: ' + error.message); return; }
+  }
+
+  fnFechar();
+  mostrarToast('Lançamento salvo! ✅');
+  await fnCarregarTudo();
+});
+
+document.getElementById('fn-btn-excluir').addEventListener('click', async () => {
+  if (!fn_editandoId) return;
+  if (!confirm('Excluir este lançamento?')) return;
+  const { error } = await supabaseClient.from('lancamentos').delete().eq('id', fn_editandoId);
+  if (error) { console.error(error); mostrarToast('Erro ao excluir.'); return; }
+  fnFechar();
+  await fnCarregarTudo();
+});
+
+document.querySelectorAll('[data-fntab]').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('[data-fntab]').forEach(t => t.classList.remove('on'));
+    tab.classList.add('on');
+    const alvo = tab.dataset.fntab;
+    document.getElementById('fn-tab-lista').style.display = alvo === 'lista' ? 'block' : 'none';
+    document.getElementById('fn-tab-insights').style.display = alvo === 'insights' ? 'block' : 'none';
+    if (alvo === 'insights') fnRenderInsights();
+  });
+});
+
+/* ===================== CANDIDATURAS ===================== */
+let cd_candidaturas = [];
+let cd_editandoId = null;
+
+async function cdCarregarTudo() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) { console.warn('Usuário não autenticado.'); return; }
+  const { data, error } = await supabaseClient
+    .from('candidaturas').select('*').eq('user_id', user.id)
+    .order('data', { ascending: false }).limit(1000);
+  if (error) { console.error(error); return; }
+  cd_candidaturas = data || [];
+  cdRenderResumo();
+  cdRenderLista();
+  cdRenderInsights();
+}
+
+function cdFmtData(d) {
+  if (!d) return '';
+  const [y,m,day] = d.split('-'); return `${day}/${m}/${y}`;
+}
+
+function cdRenderResumo() {
+  const total = cd_candidaturas.length;
+  document.getElementById('cd-sum-total').textContent = total;
+
+  const comContato = cd_candidaturas.filter(c => c.contato_recrutador).length;
+  const taxaContato = total ? Math.round((comContato / total) * 100) : 0;
+  document.getElementById('cd-sum-contato').textContent = taxaContato + '%';
+
+  const selecionados = cd_candidaturas.filter(c => c.selecionado).length;
+  const taxaSelecao = total ? Math.round((selecionados / total) * 100) : 0;
+  document.getElementById('cd-sum-selecionado').textContent = taxaSelecao + '%';
+
+  const mesAtual = hojeISO().slice(0, 7);
+  const doMes = cd_candidaturas.filter(c => c.data && c.data.startsWith(mesAtual));
+  document.getElementById('cd-sum-mes').textContent = doMes.length;
+}
+
+function cdRenderLista() {
+  const container = document.getElementById('cd-list');
+  if (cd_candidaturas.length === 0) {
+    container.innerHTML = `<div class="ps-empty"><i class="fa-regular fa-file-lines"></i><p>Nenhuma candidatura registrada ainda.</p></div>`;
+    return;
+  }
+  container.innerHTML = cd_candidaturas.map(c => {
+    const meta = [];
+    if (c.plataforma) meta.push(`<span><i class="fa-solid fa-globe"></i>${psEsc(c.plataforma)}</span>`);
+    if (c.remota !== null && c.remota !== undefined) meta.push(`<span><i class="fa-solid fa-location-dot"></i>${c.remota ? 'Remota' : 'Presencial/Híbrida'}</span>`);
+    if (c.data) meta.push(`<span><i class="fa-regular fa-calendar"></i>${cdFmtData(c.data)}</span>`);
+    if (c.applicants) meta.push(`<span><i class="fa-solid fa-users"></i>${c.applicants} candidatos</span>`);
+
+    let pillClass = 'pill-em_andamento';
+    let pillLabel = 'Sem retorno';
+    if (c.selecionado) { pillClass = 'pill-aprovado'; pillLabel = 'Selecionado'; }
+    else if (c.contato_recrutador) { pillClass = 'pill-descontinuada_empresa'; pillLabel = 'Teve contato'; }
+
+    return `
+      <div class="ps-card" data-id="${c.id}">
+        <div class="ps-card-top">
+          <div>
+            <p class="ps-card-title">${psEsc(c.cargo || 'Cargo não informado')}</p>
+            <p class="ps-card-sub">${psEsc(c.empresa)}</p>
+          </div>
+          <span class="ps-status-pill ${pillClass}">${pillLabel}</span>
+        </div>
+        <div class="ps-card-meta">${meta.join('')}</div>
+      </div>`;
+  }).join('');
+  container.querySelectorAll('.ps-card').forEach(card => {
+    card.addEventListener('click', () => cdAbrirEdicao(Number(card.dataset.id)));
+  });
+}
+
+function cdAgruparEExibir(campo, containerId, comoTaxaDe = null) {
+  const container = document.getElementById(containerId);
+  const comValor = cd_candidaturas.filter(c => c[campo] !== null && c[campo] !== undefined && c[campo] !== '');
+  if (comValor.length === 0) {
+    container.innerHTML = '<div class="ps-chart-empty">Sem dados suficientes ainda.</div>';
+    return;
+  }
+  const grupos = {};
+  comValor.forEach(c => {
+    const key = String(c[campo]);
+    if (!grupos[key]) grupos[key] = { total: 0, positivos: 0 };
+    grupos[key].total++;
+    if (comoTaxaDe && c[comoTaxaDe]) grupos[key].positivos++;
+  });
+  let linhas;
+  if (comoTaxaDe) {
+    linhas = Object.entries(grupos)
+      .map(([key, v]) => ({ key, total: v.total, positivos: v.positivos, valor: v.total ? v.positivos / v.total : 0 }))
+      .filter(l => l.total >= 1)
+      .sort((a,b) => b.valor - a.valor || b.total - a.total)
+      .slice(0, 8);
+  } else {
+    linhas = Object.entries(grupos)
+      .map(([key, v]) => ({ key, total: v.total, valor: v.total }))
+      .sort((a,b) => b.valor - a.valor)
+      .slice(0, 8);
+  }
+  const maior = Math.max(...linhas.map(l => l.valor), 0.0001);
+  container.innerHTML = linhas.map(l => {
+    const widthPct = Math.max((l.valor / maior) * 100, 4);
+    const isTop = l.valor === maior && l.valor > 0;
+    const valorTexto = comoTaxaDe
+      ? `<b>${Math.round(l.valor*100)}%</b> (${l.positivos}/${l.total})`
+      : `<b>${l.total}</b>`;
+    return `<div class="ps-hbar-row">
+      <div class="ps-hbar-label" title="${psEsc(l.key)}">${psEsc(l.key)}</div>
+      <div class="ps-hbar-track"><div class="ps-hbar-fill ${isTop ? 'highlight' : ''}" style="width:${widthPct}%"></div></div>
+      <div class="ps-hbar-value">${valorTexto}</div>
+    </div>`;
+  }).join('');
+}
+
+function cdRenderEvolucaoMensal() {
+  const container = document.getElementById('cd-chart-evolucao');
+  const hoje = new Date();
+  const meses = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
+    const chave = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+    meses.push({ chave, label: d.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' }) });
+  }
+  const contagens = meses.map(m => ({
+    ...m,
+    total: cd_candidaturas.filter(c => c.data && c.data.startsWith(m.chave)).length
+  }));
+  if (contagens.every(m => m.total === 0)) {
+    container.innerHTML = '<div class="ps-chart-empty">Sem candidaturas suficientes ainda.</div>';
+    return;
+  }
+  const maxTotal = Math.max(...contagens.map(m => m.total), 1);
+  container.innerHTML = contagens.map(m => {
+    const pct = Math.round((m.total / maxTotal) * 100);
+    const zero = m.total === 0;
+    return `<div class="ps-funnel-row">
+      <div class="ps-funnel-label">${m.label}</div>
+      <div class="ps-funnel-track"><div class="ps-funnel-fill ${zero ? 'zero' : ''}" style="width:${zero ? 6 : pct}%"><span>${m.total}</span></div></div>
+      <div class="ps-funnel-pct">${pct}%</div>
+    </div>`;
+  }).join('');
+}
+
+function cdRenderInsights() {
+  cdAgruparEExibir('plataforma', 'cd-chart-plataforma');
+  cdAgruparEExibir('plataforma', 'cd-chart-retorno-plataforma', 'contato_recrutador');
+
+  const remotaContainer = document.getElementById('cd-chart-remota');
+  const comValor = cd_candidaturas.filter(c => c.remota !== null && c.remota !== undefined);
+  if (comValor.length === 0) {
+    remotaContainer.innerHTML = '<div class="ps-chart-empty">Sem dados suficientes ainda.</div>';
+  } else {
+    const remotas = comValor.filter(c => c.remota).length;
+    const outras = comValor.length - remotas;
+    const maior = Math.max(remotas, outras, 1);
+    remotaContainer.innerHTML = `
+      <div class="ps-hbar-row">
+        <div class="ps-hbar-label">Remota</div>
+        <div class="ps-hbar-track"><div class="ps-hbar-fill ${remotas >= outras ? 'highlight' : ''}" style="width:${Math.max((remotas/maior)*100,4)}%"></div></div>
+        <div class="ps-hbar-value"><b>${remotas}</b></div>
+      </div>
+      <div class="ps-hbar-row">
+        <div class="ps-hbar-label">Presencial/Híbrida</div>
+        <div class="ps-hbar-track"><div class="ps-hbar-fill ${outras > remotas ? 'highlight' : ''}" style="width:${Math.max((outras/maior)*100,4)}%"></div></div>
+        <div class="ps-hbar-value"><b>${outras}</b></div>
+      </div>`;
+  }
+
+  cdRenderEvolucaoMensal();
+}
+
+const cdBackdrop = document.getElementById('cd-backdrop');
+
+function cdAbrirNovo() {
+  cd_editandoId = null;
+  document.getElementById('cd-modal-title').textContent = 'Nova candidatura';
+  document.getElementById('cd-btn-excluir').style.display = 'none';
+  document.getElementById('cd-form').reset();
+  document.getElementById('cd-f-id').value = '';
+  document.getElementById('cd-f-data').value = hojeISO();
+  cdBackdrop.classList.add('open');
+}
+
+function cdAbrirEdicao(id) {
+  const c = cd_candidaturas.find(x => x.id === id);
+  if (!c) return;
+  cd_editandoId = id;
+  document.getElementById('cd-modal-title').textContent = 'Editar candidatura';
+  document.getElementById('cd-btn-excluir').style.display = 'inline-block';
+  document.getElementById('cd-f-id').value = c.id;
+  document.getElementById('cd-f-empresa').value = c.empresa || '';
+  document.getElementById('cd-f-cargo').value = c.cargo || '';
+  document.getElementById('cd-f-data').value = c.data || '';
+  document.getElementById('cd-f-plataforma').value = c.plataforma || '';
+  document.getElementById('cd-f-remota').value = c.remota === null || c.remota === undefined ? '' : String(c.remota);
+  document.getElementById('cd-f-internacional').value = c.internacional === null || c.internacional === undefined ? '' : String(c.internacional);
+  document.getElementById('cd-f-tempo-divulgacao').value = c.tempo_divulgacao_horas ?? '';
+  document.getElementById('cd-f-applicants').value = c.applicants ?? '';
+  document.getElementById('cd-f-contato').value = c.contato_recrutador === null || c.contato_recrutador === undefined ? '' : String(c.contato_recrutador);
+  document.getElementById('cd-f-selecionado').value = c.selecionado === null || c.selecionado === undefined ? '' : String(c.selecionado);
+  document.getElementById('cd-f-personalizada').value = c.personalizada === null || c.personalizada === undefined ? '' : String(c.personalizada);
+  document.getElementById('cd-f-obs').value = c.observacoes || '';
+  cdBackdrop.classList.add('open');
+}
+
+function cdFechar() { cdBackdrop.classList.remove('open'); }
+
+document.getElementById('cd-btn-novo').addEventListener('click', cdAbrirNovo);
+document.getElementById('cd-btn-fechar').addEventListener('click', cdFechar);
+document.getElementById('cd-btn-cancelar').addEventListener('click', cdFechar);
+cdBackdrop.addEventListener('click', e => { if (e.target === cdBackdrop) cdFechar(); });
+
+function cdParseBoolSelect(valor) {
+  if (valor === 'true') return true;
+  if (valor === 'false') return false;
+  return null;
+}
+
+document.getElementById('cd-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) { mostrarToast('Sessão expirada. Faça login novamente.'); return; }
+
+  const payload = {
+    user_id: user.id,
+    empresa: document.getElementById('cd-f-empresa').value.trim(),
+    cargo: document.getElementById('cd-f-cargo').value.trim() || null,
+    data: document.getElementById('cd-f-data').value || null,
+    plataforma: document.getElementById('cd-f-plataforma').value.trim() || null,
+    remota: cdParseBoolSelect(document.getElementById('cd-f-remota').value),
+    internacional: cdParseBoolSelect(document.getElementById('cd-f-internacional').value),
+    tempo_divulgacao_horas: document.getElementById('cd-f-tempo-divulgacao').value || null,
+    applicants: document.getElementById('cd-f-applicants').value || null,
+    contato_recrutador: cdParseBoolSelect(document.getElementById('cd-f-contato').value),
+    selecionado: cdParseBoolSelect(document.getElementById('cd-f-selecionado').value),
+    personalizada: cdParseBoolSelect(document.getElementById('cd-f-personalizada').value),
+    observacoes: document.getElementById('cd-f-obs').value.trim() || null,
+  };
+
+  if (cd_editandoId) {
+    const { error } = await supabaseClient.from('candidaturas').update(payload).eq('id', cd_editandoId);
+    if (error) { console.error(error); mostrarToast('Erro ao salvar candidatura.'); return; }
+  } else {
+    const { error } = await supabaseClient.from('candidaturas').insert(payload);
+    if (error) { console.error(error); mostrarToast('Erro ao criar candidatura.'); return; }
+  }
+
+  cdFechar();
+  mostrarToast('Candidatura salva! ✅');
+  await cdCarregarTudo();
+});
+
+document.getElementById('cd-btn-excluir').addEventListener('click', async () => {
+  if (!cd_editandoId) return;
+  if (!confirm('Excluir esta candidatura? Essa ação não pode ser desfeita.')) return;
+  const { error } = await supabaseClient.from('candidaturas').delete().eq('id', cd_editandoId);
+  if (error) { console.error(error); mostrarToast('Erro ao excluir.'); return; }
+  cdFechar();
+  await cdCarregarTudo();
+});
+
+document.querySelectorAll('[data-cdtab]').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('[data-cdtab]').forEach(t => t.classList.remove('on'));
+    tab.classList.add('on');
+    const alvo = tab.dataset.cdtab;
+    document.getElementById('cd-tab-lista').style.display = alvo === 'lista' ? 'block' : 'none';
+    document.getElementById('cd-tab-insights').style.display = alvo === 'insights' ? 'block' : 'none';
+    if (alvo === 'insights') cdRenderInsights();
+  });
+});
+
+/* ===================== SÉRIES (compartilhado entre membros, dono = criado_por) ===================== */
+let sr_series = [];
+let sr_editandoId = null;
+
+async function srCarregarTudo() {
+  const { data, error } = await supabaseClient
+    .from('series').select('*').order('serie', { ascending: true }).limit(1000);
+  if (error) { console.error(error); return; }
+  sr_series = data || [];
+  srRenderResumo();
+  srRenderLista();
+  srRenderInsights();
+}
+
+function srFmtData(d) {
+  if (!d) return '';
+  const [y,m,day] = d.split('-'); return `${day}/${m}/${y}`;
+}
+
+function srRenderResumo() {
+  const total = sr_series.length;
+  document.getElementById('sr-sum-total').textContent = total;
+
+  const vistas = sr_series.filter(s => s.vista).length;
+  document.getElementById('sr-sum-vistas').textContent = vistas;
+  document.getElementById('sr-sum-pendentes').textContent = total - vistas;
+
+  const notas = [];
+  sr_series.forEach(s => {
+    if (s.nota_gabrielle !== null && s.nota_gabrielle !== undefined) notas.push(Number(s.nota_gabrielle));
+    if (s.nota_pericles !== null && s.nota_pericles !== undefined) notas.push(Number(s.nota_pericles));
+  });
+  const media = notas.length ? (notas.reduce((a,b) => a+b, 0) / notas.length) : null;
+  document.getElementById('sr-sum-media').textContent = media !== null ? media.toFixed(1) : '--';
+}
+
+function srRenderLista() {
+  const container = document.getElementById('sr-list');
+  if (sr_series.length === 0) {
+    container.innerHTML = `<div class="ps-empty"><i class="fa-solid fa-tv"></i><p>Nenhuma série cadastrada ainda.</p></div>`;
+    return;
+  }
+  container.innerHTML = sr_series.map(s => {
+    const meta = [];
+    if (s.genero) meta.push(`<span><i class="fa-solid fa-masks-theater"></i>${psEsc(s.genero)}</span>`);
+    if (s.streaming) meta.push(`<span><i class="fa-solid fa-play"></i>${psEsc(s.streaming)}</span>`);
+    if (s.data_inicio) meta.push(`<span><i class="fa-regular fa-calendar"></i>${srFmtData(s.data_inicio)}</span>`);
+    if (s.nota_gabrielle !== null && s.nota_gabrielle !== undefined) meta.push(`<span><i class="fa-solid fa-star"></i>G: ${s.nota_gabrielle}</span>`);
+    if (s.nota_pericles !== null && s.nota_pericles !== undefined) meta.push(`<span><i class="fa-solid fa-star"></i>P: ${s.nota_pericles}</span>`);
+
+    const pillClass = s.vista ? 'pill-aprovado' : 'pill-em_andamento';
+    const pillLabel = s.vista ? 'Vista' : 'Na fila';
+
+    return `
+      <div class="ps-card" data-id="${s.id}">
+        <div class="ps-card-top">
+          <div>
+            <p class="ps-card-title">${psEsc(s.serie)}</p>
+            <p class="ps-card-sub">${s.disponivel === false ? 'Indisponível no momento' : (s.streaming ? psEsc(s.streaming) : '')}</p>
+          </div>
+          <span class="ps-status-pill ${pillClass}">${pillLabel}</span>
+        </div>
+        <div class="ps-card-meta">${meta.join('')}</div>
+      </div>`;
+  }).join('');
+  container.querySelectorAll('.ps-card').forEach(card => {
+    card.addEventListener('click', () => srAbrirEdicao(Number(card.dataset.id)));
+  });
+}
+
+function srAgruparEExibir(campo, containerId) {
+  const container = document.getElementById(containerId);
+  const comValor = sr_series.filter(s => s[campo]);
+  if (comValor.length === 0) {
+    container.innerHTML = '<div class="ps-chart-empty">Sem dados suficientes ainda.</div>';
+    return;
+  }
+  const grupos = {};
+  comValor.forEach(s => {
+    const key = s[campo];
+    grupos[key] = (grupos[key] || 0) + 1;
+  });
+  const linhas = Object.entries(grupos).map(([key, total]) => ({ key, total })).sort((a,b) => b.total - a.total).slice(0, 8);
+  const maior = Math.max(...linhas.map(l => l.total), 1);
+  container.innerHTML = linhas.map(l => {
+    const widthPct = Math.max((l.total / maior) * 100, 4);
+    const isTop = l.total === maior;
+    return `<div class="ps-hbar-row">
+      <div class="ps-hbar-label" title="${psEsc(l.key)}">${psEsc(l.key)}</div>
+      <div class="ps-hbar-track"><div class="ps-hbar-fill ${isTop ? 'highlight' : ''}" style="width:${widthPct}%"></div></div>
+      <div class="ps-hbar-value"><b>${l.total}</b></div>
+    </div>`;
+  }).join('');
+}
+
+function srRenderInsights() {
+  srAgruparEExibir('genero', 'sr-chart-genero');
+  srAgruparEExibir('streaming', 'sr-chart-streaming');
+
+  const notasContainer = document.getElementById('sr-chart-notas');
+  const comAmbasNotas = sr_series.filter(s =>
+    s.nota_gabrielle !== null && s.nota_gabrielle !== undefined &&
+    s.nota_pericles !== null && s.nota_pericles !== undefined
+  );
+  if (comAmbasNotas.length === 0) {
+    notasContainer.innerHTML = '<div class="ps-chart-empty">Avaliem juntos algumas séries para ver a comparação.</div>';
+  } else {
+    const mediaG = comAmbasNotas.reduce((a,s) => a + Number(s.nota_gabrielle), 0) / comAmbasNotas.length;
+    const mediaP = comAmbasNotas.reduce((a,s) => a + Number(s.nota_pericles), 0) / comAmbasNotas.length;
+    const maior = Math.max(mediaG, mediaP, 1);
+    notasContainer.innerHTML = `
+      <div class="ps-hbar-row">
+        <div class="ps-hbar-label">Gabrielle</div>
+        <div class="ps-hbar-track"><div class="ps-hbar-fill ${mediaG >= mediaP ? 'highlight' : ''}" style="width:${Math.max((mediaG/maior)*100,4)}%"></div></div>
+        <div class="ps-hbar-value"><b>${mediaG.toFixed(1)}</b></div>
+      </div>
+      <div class="ps-hbar-row">
+        <div class="ps-hbar-label">Péricles</div>
+        <div class="ps-hbar-track"><div class="ps-hbar-fill ${mediaP > mediaG ? 'highlight' : ''}" style="width:${Math.max((mediaP/maior)*100,4)}%"></div></div>
+        <div class="ps-hbar-value"><b>${mediaP.toFixed(1)}</b></div>
+      </div>
+      <div class="ps-note">Baseado em ${comAmbasNotas.length} série(s) avaliada(s) por ambos.</div>`;
+  }
+}
+
+const srBackdrop = document.getElementById('sr-backdrop');
+
+function srParseBool(valor) {
+  if (valor === 'true') return true;
+  if (valor === 'false') return false;
+  return null;
+}
+
+function srAbrirNovo() {
+  sr_editandoId = null;
+  document.getElementById('sr-modal-title').textContent = 'Nova série';
+  document.getElementById('sr-btn-excluir').style.display = 'none';
+  document.getElementById('sr-form').reset();
+  document.getElementById('sr-f-id').value = '';
+  srBackdrop.classList.add('open');
+}
+
+function srAbrirEdicao(id) {
+  const s = sr_series.find(x => x.id === id);
+  if (!s) return;
+  sr_editandoId = id;
+  document.getElementById('sr-modal-title').textContent = 'Editar série';
+  document.getElementById('sr-btn-excluir').style.display = 'inline-block';
+  document.getElementById('sr-f-id').value = s.id;
+  document.getElementById('sr-f-serie').value = s.serie || '';
+  document.getElementById('sr-f-genero').value = s.genero || '';
+  document.getElementById('sr-f-streaming').value = s.streaming || '';
+  document.getElementById('sr-f-disponivel').value = s.disponivel === null || s.disponivel === undefined ? '' : String(s.disponivel);
+  document.getElementById('sr-f-vista').value = String(!!s.vista);
+  document.getElementById('sr-f-data-inicio').value = s.data_inicio || '';
+  document.getElementById('sr-f-data-fim').value = s.data_fim || '';
+  document.getElementById('sr-f-nota-gabrielle').value = s.nota_gabrielle ?? '';
+  document.getElementById('sr-f-nota-pericles').value = s.nota_pericles ?? '';
+  document.getElementById('sr-f-vista-antes-g').value = String(!!s.vista_antes_g);
+  document.getElementById('sr-f-vista-antes-p').value = String(!!s.vista_antes_p);
+  srBackdrop.classList.add('open');
+}
+
+function srFechar() { srBackdrop.classList.remove('open'); }
+
+document.getElementById('sr-btn-novo').addEventListener('click', srAbrirNovo);
+document.getElementById('sr-btn-fechar').addEventListener('click', srFechar);
+document.getElementById('sr-btn-cancelar').addEventListener('click', srFechar);
+srBackdrop.addEventListener('click', e => { if (e.target === srBackdrop) srFechar(); });
+
+document.getElementById('sr-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) { mostrarToast('Sessão expirada. Faça login novamente.'); return; }
+
+  const payload = {
+    criado_por: user.id,
+    serie: document.getElementById('sr-f-serie').value.trim(),
+    genero: document.getElementById('sr-f-genero').value.trim() || null,
+    streaming: document.getElementById('sr-f-streaming').value.trim() || null,
+    disponivel: srParseBool(document.getElementById('sr-f-disponivel').value),
+    vista: document.getElementById('sr-f-vista').value === 'true',
+    data_inicio: document.getElementById('sr-f-data-inicio').value || null,
+    data_fim: document.getElementById('sr-f-data-fim').value || null,
+    nota_gabrielle: document.getElementById('sr-f-nota-gabrielle').value || null,
+    nota_pericles: document.getElementById('sr-f-nota-pericles').value || null,
+    vista_antes_g: document.getElementById('sr-f-vista-antes-g').value === 'true',
+    vista_antes_p: document.getElementById('sr-f-vista-antes-p').value === 'true',
+  };
+
+  if (sr_editandoId) {
+    const { error } = await supabaseClient.from('series').update(payload).eq('id', sr_editandoId);
+    if (error) { console.error(error); mostrarToast('Erro ao salvar série.'); return; }
+  } else {
+    const { error } = await supabaseClient.from('series').insert(payload);
+    if (error) { console.error(error); mostrarToast('Erro ao criar série.'); return; }
+  }
+
+  srFechar();
+  mostrarToast('Série salva! ✅');
+  await srCarregarTudo();
+});
+
+document.getElementById('sr-btn-excluir').addEventListener('click', async () => {
+  if (!sr_editandoId) return;
+  if (!confirm('Excluir esta série da lista do casal?')) return;
+  const { error } = await supabaseClient.from('series').delete().eq('id', sr_editandoId);
+  if (error) { console.error(error); mostrarToast('Erro ao excluir.'); return; }
+  srFechar();
+  await srCarregarTudo();
+});
+
+document.querySelectorAll('[data-srtab]').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('[data-srtab]').forEach(t => t.classList.remove('on'));
+    tab.classList.add('on');
+    const alvo = tab.dataset.srtab;
+    document.getElementById('sr-tab-lista').style.display = alvo === 'lista' ? 'block' : 'none';
+    document.getElementById('sr-tab-insights').style.display = alvo === 'insights' ? 'block' : 'none';
+    if (alvo === 'insights') srRenderInsights();
+  });
+});
+
+/* ===================== HUMOR ===================== */
+let hm_registros = [];
+let hm_editandoId = null;
+
+async function hmCarregarTudo() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) { console.warn('Usuário não autenticado.'); return; }
+  const { data, error } = await supabaseClient
+    .from('humor').select('*').eq('user_id', user.id)
+    .order('data', { ascending: false }).limit(365);
+  if (error) { console.error(error); return; }
+  hm_registros = data || [];
+  hmRenderResumo();
+  hmRenderLista();
+  hmRenderInsights();
+}
+
+function hmFmtData(d) {
+  if (!d) return '';
+  const [y,m,day] = d.split('-'); return `${day}/${m}/${y}`;
+}
+
+function hmMedia(registros) {
+  const comNota = registros.filter(r => r.nota !== null && r.nota !== undefined);
+  if (comNota.length === 0) return null;
+  return comNota.reduce((a,r) => a + Number(r.nota), 0) / comNota.length;
+}
+
+function hmRenderResumo() {
+  const hoje = hojeISO();
+  const registroHoje = hm_registros.find(r => r.data === hoje);
+  document.getElementById('hm-sum-hoje').textContent = registroHoje ? registroHoje.nota : '--';
+
+  const ultimos7 = hm_registros.slice(0, 7);
+  const media7 = hmMedia(ultimos7);
+  document.getElementById('hm-sum-media7').textContent = media7 !== null ? media7.toFixed(1) : '--';
+
+  const ultimos30 = hm_registros.slice(0, 30);
+  const media30 = hmMedia(ultimos30);
+  document.getElementById('hm-sum-media30').textContent = media30 !== null ? media30.toFixed(1) : '--';
+
+  const mesAtual = hoje.slice(0, 7);
+  const doMes = hm_registros.filter(r => r.data && r.data.startsWith(mesAtual));
+  document.getElementById('hm-sum-total').textContent = doMes.length;
+}
+
+function hmCorNota(nota) {
+  if (nota >= 4) return 'pill-aprovado';
+  if (nota >= 3) return 'pill-em_andamento';
+  return 'pill-rejeitado';
+}
+
+function hmRenderLista() {
+  const container = document.getElementById('hm-list');
+  if (hm_registros.length === 0) {
+    container.innerHTML = `<div class="ps-empty"><i class="fa-regular fa-face-smile"></i><p>Nenhum registro de humor ainda.</p></div>`;
+    return;
+  }
+  container.innerHTML = hm_registros.map(r => {
+    const tags = (r.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+    const meta = tags.map(t => `<span><i class="fa-solid fa-tag"></i>${psEsc(t)}</span>`);
+    return `
+      <div class="ps-card" data-id="${r.id}">
+        <div class="ps-card-top">
+          <div>
+            <p class="ps-card-title">${hmFmtData(r.data)}</p>
+            <p class="ps-card-sub">${r.observacoes ? psEsc(r.observacoes) : 'Sem observações'}</p>
+          </div>
+          <span class="ps-status-pill ${hmCorNota(r.nota)}">${r.nota}/5</span>
+        </div>
+        <div class="ps-card-meta">${meta.join('')}</div>
+      </div>`;
+  }).join('');
+  container.querySelectorAll('.ps-card').forEach(card => {
+    card.addEventListener('click', () => hmAbrirEdicao(Number(card.dataset.id)));
+  });
+}
+
+function hmRenderInsights() {
+  const evoContainer = document.getElementById('hm-chart-evolucao');
+  const ultimos14 = [...hm_registros].slice(0, 14).reverse();
+  if (ultimos14.length === 0) {
+    evoContainer.innerHTML = '<div class="ps-chart-empty">Registre alguns dias para ver a evolução.</div>';
+  } else {
+    evoContainer.innerHTML = ultimos14.map(r => {
+      const pct = (Number(r.nota) / 5) * 100;
+      return `<div class="ps-funnel-row">
+        <div class="ps-funnel-label">${hmFmtData(r.data)}</div>
+        <div class="ps-funnel-track"><div class="ps-funnel-fill" style="width:${Math.max(pct,6)}%"><span>${r.nota}/5</span></div></div>
+        <div class="ps-funnel-pct">${r.nota}</div>
+      </div>`;
+    }).join('');
+  }
+
+  const tagsContainer = document.getElementById('hm-chart-tags');
+  const contagem = {};
+  hm_registros.forEach(r => {
+    (r.tags || '').split(',').map(t => t.trim()).filter(Boolean).forEach(t => {
+      contagem[t] = (contagem[t] || 0) + 1;
+    });
+  });
+  const linhas = Object.entries(contagem).map(([key, total]) => ({ key, total })).sort((a,b) => b.total - a.total).slice(0, 8);
+  if (linhas.length === 0) {
+    tagsContainer.innerHTML = '<div class="ps-chart-empty">Adicione tags aos registros para ver o resumo.</div>';
+  } else {
+    const maior = Math.max(...linhas.map(l => l.total), 1);
+    tagsContainer.innerHTML = linhas.map(l => {
+      const widthPct = Math.max((l.total / maior) * 100, 4);
+      const isTop = l.total === maior;
+      return `<div class="ps-hbar-row">
+        <div class="ps-hbar-label" title="${psEsc(l.key)}">${psEsc(l.key)}</div>
+        <div class="ps-hbar-track"><div class="ps-hbar-fill ${isTop ? 'highlight' : ''}" style="width:${widthPct}%"></div></div>
+        <div class="ps-hbar-value"><b>${l.total}</b></div>
+      </div>`;
+    }).join('');
+  }
+}
+
+const hmBackdrop = document.getElementById('hm-backdrop');
+
+function hmAbrirNovo() {
+  hm_editandoId = null;
+  document.getElementById('hm-modal-title').textContent = 'Registrar humor';
+  document.getElementById('hm-btn-excluir').style.display = 'none';
+  document.getElementById('hm-form').reset();
+  document.getElementById('hm-f-id').value = '';
+  document.getElementById('hm-f-data').value = hojeISO();
+  hmBackdrop.classList.add('open');
+}
+
+function hmAbrirEdicao(id) {
+  const r = hm_registros.find(x => x.id === id);
+  if (!r) return;
+  hm_editandoId = id;
+  document.getElementById('hm-modal-title').textContent = 'Editar registro de humor';
+  document.getElementById('hm-btn-excluir').style.display = 'inline-block';
+  document.getElementById('hm-f-id').value = r.id;
+  document.getElementById('hm-f-data').value = r.data;
+  document.getElementById('hm-f-nota').value = r.nota;
+  document.getElementById('hm-f-tags').value = r.tags || '';
+  document.getElementById('hm-f-obs').value = r.observacoes || '';
+  hmBackdrop.classList.add('open');
+}
+
+function hmFechar() { hmBackdrop.classList.remove('open'); }
+
+document.getElementById('hm-btn-novo').addEventListener('click', hmAbrirNovo);
+document.getElementById('hm-btn-fechar').addEventListener('click', hmFechar);
+document.getElementById('hm-btn-cancelar').addEventListener('click', hmFechar);
+hmBackdrop.addEventListener('click', e => { if (e.target === hmBackdrop) hmFechar(); });
+
+document.getElementById('hm-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) { mostrarToast('Sessão expirada. Faça login novamente.'); return; }
+
+  const payload = {
+    user_id: user.id,
+    data: document.getElementById('hm-f-data').value,
+    nota: parseInt(document.getElementById('hm-f-nota').value, 10),
+    tags: document.getElementById('hm-f-tags').value.trim() || null,
+    observacoes: document.getElementById('hm-f-obs').value.trim() || null,
+  };
+
+  if (hm_editandoId) {
+    const { error } = await supabaseClient.from('humor').update(payload).eq('id', hm_editandoId);
+    if (error) { console.error(error); mostrarToast('Erro ao salvar.'); return; }
+  } else {
+    const { error } = await supabaseClient.from('humor').insert(payload);
+    if (error) { console.error(error); mostrarToast('Erro ao salvar.'); return; }
+  }
+
+  hmFechar();
+  mostrarToast('Humor registrado! ✅');
+  await hmCarregarTudo();
+});
+
+document.getElementById('hm-btn-excluir').addEventListener('click', async () => {
+  if (!hm_editandoId) return;
+  if (!confirm('Excluir este registro de humor?')) return;
+  const { error } = await supabaseClient.from('humor').delete().eq('id', hm_editandoId);
+  if (error) { console.error(error); mostrarToast('Erro ao excluir.'); return; }
+  hmFechar();
+  await hmCarregarTudo();
+});
+
+document.querySelectorAll('[data-hmtab]').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('[data-hmtab]').forEach(t => t.classList.remove('on'));
+    tab.classList.add('on');
+    const alvo = tab.dataset.hmtab;
+    document.getElementById('hm-tab-lista').style.display = alvo === 'lista' ? 'block' : 'none';
+    document.getElementById('hm-tab-insights').style.display = alvo === 'insights' ? 'block' : 'none';
+    if (alvo === 'insights') hmRenderInsights();
+  });
+});
+
+/* ===================== VISITAR (compartilhado entre membros, dono = criado_por) ===================== */
+let vs_lugares = [];
+let vs_editandoId = null;
+
+async function vsCarregarTudo() {
+  const { data, error } = await supabaseClient
+    .from('visitar').select('*').order('nome', { ascending: true }).limit(1000);
+  if (error) { console.error(error); return; }
+  vs_lugares = data || [];
+  vsRenderResumo();
+  vsRenderLista();
+  vsRenderInsights();
+}
+
+function vsFmtData(d) {
+  if (!d) return '';
+  const [y,m,day] = d.split('-'); return `${day}/${m}/${y}`;
+}
+
+function vsRenderResumo() {
+  const total = vs_lugares.length;
+  document.getElementById('vs-sum-total').textContent = total;
+
+  const visitados = vs_lugares.filter(v => v.ja_visitamos).length;
+  document.getElementById('vs-sum-visitados').textContent = visitados;
+  document.getElementById('vs-sum-pendentes').textContent = total - visitados;
+
+  const comNota = vs_lugares.filter(v => v.ja_visitamos && v.nota !== null && v.nota !== undefined);
+  const media = comNota.length ? comNota.reduce((a,v) => a + Number(v.nota), 0) / comNota.length : null;
+  document.getElementById('vs-sum-media').textContent = media !== null ? media.toFixed(1) : '--';
+}
+
+function vsRenderLista() {
+  const container = document.getElementById('vs-list');
+  if (vs_lugares.length === 0) {
+    container.innerHTML = `<div class="ps-empty"><i class="fa-solid fa-map-location-dot"></i><p>Nenhum lugar cadastrado ainda.</p></div>`;
+    return;
+  }
+  container.innerHTML = vs_lugares.map(v => {
+    const meta = [];
+    if (v.tipo_passeio) meta.push(`<span><i class="fa-solid fa-shapes"></i>${psEsc(v.tipo_passeio)}</span>`);
+    if (v.endereco) meta.push(`<span><i class="fa-solid fa-location-dot"></i>${psEsc(v.endereco)}</span>`);
+    if (v.valor_estimado) meta.push(`<span><i class="fa-solid fa-sack-dollar"></i>R$ ${Number(v.valor_estimado).toFixed(2).replace('.', ',')}</span>`);
+    if (v.planejado_para) meta.push(`<span><i class="fa-regular fa-calendar"></i>${vsFmtData(v.planejado_para)}</span>`);
+    if (v.nota !== null && v.nota !== undefined) meta.push(`<span><i class="fa-solid fa-star"></i>${v.nota}/5</span>`);
+
+    const pillClass = v.ja_visitamos ? 'pill-aprovado' : 'pill-em_andamento';
+    const pillLabel = v.ja_visitamos ? 'Visitado' : 'Na lista';
+
+    return `
+      <div class="ps-card" data-id="${v.id}">
+        <div class="ps-card-top">
+          <div>
+            <p class="ps-card-title">${psEsc(v.nome)}</p>
+            <p class="ps-card-sub">${v.comentario ? psEsc(v.comentario) : ''}</p>
+          </div>
+          <span class="ps-status-pill ${pillClass}">${pillLabel}</span>
+        </div>
+        <div class="ps-card-meta">${meta.join('')}</div>
+      </div>`;
+  }).join('');
+  container.querySelectorAll('.ps-card').forEach(card => {
+    card.addEventListener('click', () => vsAbrirEdicao(Number(card.dataset.id)));
+  });
+}
+
+function vsAgruparEExibir(campo, containerId) {
+  const container = document.getElementById(containerId);
+  const comValor = vs_lugares.filter(v => v[campo]);
+  if (comValor.length === 0) {
+    container.innerHTML = '<div class="ps-chart-empty">Sem dados suficientes ainda.</div>';
+    return;
+  }
+  const grupos = {};
+  comValor.forEach(v => {
+    const key = v[campo];
+    grupos[key] = (grupos[key] || 0) + 1;
+  });
+  const linhas = Object.entries(grupos).map(([key, total]) => ({ key, total })).sort((a,b) => b.total - a.total).slice(0, 8);
+  const maior = Math.max(...linhas.map(l => l.total), 1);
+  container.innerHTML = linhas.map(l => {
+    const widthPct = Math.max((l.total / maior) * 100, 4);
+    const isTop = l.total === maior;
+    return `<div class="ps-hbar-row">
+      <div class="ps-hbar-label" title="${psEsc(l.key)}">${psEsc(l.key)}</div>
+      <div class="ps-hbar-track"><div class="ps-hbar-fill ${isTop ? 'highlight' : ''}" style="width:${widthPct}%"></div></div>
+      <div class="ps-hbar-value"><b>${l.total}</b></div>
+    </div>`;
+  }).join('');
+}
+
+function vsRenderInsights() {
+  vsAgruparEExibir('tipo_passeio', 'vs-chart-tipo');
+  vsAgruparEExibir('clima_ideal', 'vs-chart-clima');
+}
+
+const vsBackdrop = document.getElementById('vs-backdrop');
+
+function vsParseBool(valor) {
+  if (valor === 'true') return true;
+  if (valor === 'false') return false;
+  return null;
+}
+
+function vsAbrirNovo() {
+  vs_editandoId = null;
+  document.getElementById('vs-modal-title').textContent = 'Novo lugar';
+  document.getElementById('vs-btn-excluir').style.display = 'none';
+  document.getElementById('vs-form').reset();
+  document.getElementById('vs-f-id').value = '';
+  vsBackdrop.classList.add('open');
+}
+
+function vsAbrirEdicao(id) {
+  const v = vs_lugares.find(x => x.id === id);
+  if (!v) return;
+  vs_editandoId = id;
+  document.getElementById('vs-modal-title').textContent = 'Editar lugar';
+  document.getElementById('vs-btn-excluir').style.display = 'inline-block';
+  document.getElementById('vs-f-id').value = v.id;
+  document.getElementById('vs-f-nome').value = v.nome || '';
+  document.getElementById('vs-f-tipo').value = v.tipo_passeio || '';
+  document.getElementById('vs-f-endereco').value = v.endereco || '';
+  document.getElementById('vs-f-valor').value = v.valor_estimado ?? '';
+  document.getElementById('vs-f-clima').value = v.clima_ideal || '';
+  document.getElementById('vs-f-ja-visitamos').value = String(!!v.ja_visitamos);
+  document.getElementById('vs-f-precisa-reserva').value = v.precisa_reserva === null || v.precisa_reserva === undefined ? '' : String(v.precisa_reserva);
+  document.getElementById('vs-f-nota').value = v.nota ?? '';
+  document.getElementById('vs-f-planejado').value = v.planejado_para || '';
+  document.getElementById('vs-f-link').value = v.link || '';
+  document.getElementById('vs-f-comentario').value = v.comentario || '';
+  vsBackdrop.classList.add('open');
+}
+
+function vsFechar() { vsBackdrop.classList.remove('open'); }
+
+document.getElementById('vs-btn-novo').addEventListener('click', vsAbrirNovo);
+document.getElementById('vs-btn-fechar').addEventListener('click', vsFechar);
+document.getElementById('vs-btn-cancelar').addEventListener('click', vsFechar);
+vsBackdrop.addEventListener('click', e => { if (e.target === vsBackdrop) vsFechar(); });
+
+document.getElementById('vs-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) { mostrarToast('Sessão expirada. Faça login novamente.'); return; }
+
+  const payload = {
+    criado_por: user.id,
+    nome: document.getElementById('vs-f-nome').value.trim(),
+    tipo_passeio: document.getElementById('vs-f-tipo').value.trim() || null,
+    endereco: document.getElementById('vs-f-endereco').value.trim() || null,
+    valor_estimado: document.getElementById('vs-f-valor').value || null,
+    clima_ideal: document.getElementById('vs-f-clima').value.trim() || null,
+    ja_visitamos: document.getElementById('vs-f-ja-visitamos').value === 'true',
+    precisa_reserva: vsParseBool(document.getElementById('vs-f-precisa-reserva').value),
+    nota: document.getElementById('vs-f-nota').value || null,
+    planejado_para: document.getElementById('vs-f-planejado').value || null,
+    link: document.getElementById('vs-f-link').value.trim() || null,
+    comentario: document.getElementById('vs-f-comentario').value.trim() || null,
+  };
+
+  if (vs_editandoId) {
+    const { error } = await supabaseClient.from('visitar').update(payload).eq('id', vs_editandoId);
+    if (error) { console.error(error); mostrarToast('Erro ao salvar lugar.'); return; }
+  } else {
+    const { error } = await supabaseClient.from('visitar').insert(payload);
+    if (error) { console.error(error); mostrarToast('Erro ao criar lugar.'); return; }
+  }
+
+  vsFechar();
+  mostrarToast('Lugar salvo! ✅');
+  await vsCarregarTudo();
+});
+
+document.getElementById('vs-btn-excluir').addEventListener('click', async () => {
+  if (!vs_editandoId) return;
+  if (!confirm('Excluir este lugar da lista?')) return;
+  const { error } = await supabaseClient.from('visitar').delete().eq('id', vs_editandoId);
+  if (error) { console.error(error); mostrarToast('Erro ao excluir.'); return; }
+  vsFechar();
+  await vsCarregarTudo();
+});
+
+document.querySelectorAll('[data-vstab]').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('[data-vstab]').forEach(t => t.classList.remove('on'));
+    tab.classList.add('on');
+    const alvo = tab.dataset.vstab;
+    document.getElementById('vs-tab-lista').style.display = alvo === 'lista' ? 'block' : 'none';
+    document.getElementById('vs-tab-insights').style.display = alvo === 'insights' ? 'block' : 'none';
+    if (alvo === 'insights') vsRenderInsights();
+  });
 });
 
 /* ===================== INIT ===================== */
