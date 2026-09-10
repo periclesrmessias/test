@@ -255,10 +255,10 @@
   .nav-btn svg{ width:21px; height:21px; stroke: currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
   .nav-btn.active{ color: var(--text); }
   .nav-fab{
-    width: 50px; height: 50px; border-radius: 50%; background: var(--grad);
+    width: 44px; height: 44px; border-radius: 50%; background: var(--grad);
     display:flex; align-items:center; justify-content:center;
-    margin-top: -26px; border: 4px solid var(--bg);
-    box-shadow: 0 10px 22px rgba(139,124,246,0.4); cursor:pointer; flex-shrink: 0;
+    border: 3px solid var(--bg);
+    box-shadow: 0 6px 18px rgba(139,124,246,0.4); cursor:pointer; flex-shrink: 0;
   }
   .nav-fab svg{ width:20px; height:20px; stroke:#05070d; stroke-width:2.3; }
 
@@ -1003,7 +1003,12 @@
       <label for="habitoDescricao">Como foi o dia (opcional)</label>
       <textarea id="habitoDescricao" placeholder="Alguma observação sobre hoje..."></textarea>
     </div>
-    <button class="btn-primary" id="btnSalvarHabitos">Salvar dia</button>
+    <div style="display:flex; gap:10px;">
+      <button class="btn-primary" id="btnSalvarHabitos" style="flex:1;">Salvar dia</button>
+      <button class="btn-secondary" id="btnExcluirDia" style="width:auto; padding:13px 16px; background:none; border-color:rgba(242,100,122,.35); color:var(--danger);" title="Excluir registro deste dia">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+      </button>
+    </div>
   </div>
 
   <!-- ===================== SHEET: FINANÇAS ===================== -->
@@ -2067,6 +2072,19 @@ document.getElementById('btnCadastroScreen').addEventListener('click', fazerCada
 document.getElementById('loginScreenSenha').addEventListener('keydown', e => { if (e.key === 'Enter') fazerLoginScreen(); });
 document.getElementById('loginScreenEmail').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('loginScreenSenha').focus(); });
 
+/* ===================== ESC GLOBAL ===================== */
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  // Fechar sheets
+  if (document.getElementById('sheetBackdrop').classList.contains('visible')) { fecharSheets(); return; }
+  // Fechar modais ps-backdrop
+  const backdropIds = ['ps-backdrop','fn-backdrop','cd-backdrop','sr-backdrop','hm-backdrop','vs-backdrop'];
+  for (const id of backdropIds) {
+    const el = document.getElementById(id);
+    if (el && el.classList.contains('open')) { el.classList.remove('open'); return; }
+  }
+});
+
 /* ===================== NAVEGAÇÃO ===================== */
 function mostrarView(nome) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -2075,6 +2093,7 @@ function mostrarView(nome) {
   document.querySelectorAll('.nav-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.gotoView === nome);
   });
+  try { localStorage.setItem('lifeos_view', nome); } catch(e) {}
   if (nome === 'perfil') verificarSessao();
   if (nome === 'processos') psCarregarTudo();
   if (nome === 'habitos') hbCarregarTudo();
@@ -2158,8 +2177,20 @@ async function fazerCadastro() {
 
 async function verificarSessao() {
   try {
-    const { data: { user } } = await supabaseClient.auth.getUser();
-    if (user) { ocultarLoginScreen(); } else { mostrarLoginScreen(); }
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const user = session?.user ?? null;
+    if (user) {
+      ocultarLoginScreen();
+      // Restaurar view salva no localStorage
+      try {
+        const viewSalva = localStorage.getItem('lifeos_view');
+        if (viewSalva && viewSalva !== 'dashboard') {
+          mostrarView(viewSalva);
+        }
+      } catch(e) {}
+    } else {
+      mostrarLoginScreen();
+    }
     const card = document.getElementById('perfilCard');
     if (!card) return;
     if (user) {
@@ -2195,9 +2226,10 @@ async function fazerLogout() {
   const { error } = await supabaseClient.auth.signOut();
   if (error) { mostrarToast('Erro ao sair: ' + error.message); }
   else {
+    try { localStorage.removeItem('lifeos_view'); } catch(e) {}
     mostrarToast('Deslogado com sucesso! 👋');
     mostrarLoginScreen();
-    verificarSessao();
+    mostrarView('dashboard');
     HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
     renderHabitChips();
     atualizarProgressoHabitos();
@@ -2283,7 +2315,29 @@ document.getElementById('btnSalvarHabitos').addEventListener('click', async func
     mostrarToast('Dia salvo com sucesso! ✅');
     fecharSheets();
     await carregarHabitosDoDia(data);
+    if (typeof hbCarregarTudo === 'function') await hbCarregarTudo();
   } catch (err) { console.error(err); mostrarToast('Erro ao salvar: ' + err.message); }
+});
+
+document.getElementById('btnExcluirDia').addEventListener('click', async function() {
+  const data = document.getElementById('habitoData').value;
+  if (!data) { mostrarToast('Selecione uma data para excluir.'); return; }
+  if (!confirm(`Excluir todos os registros do dia ${data.split('-').reverse().join('/')}?`)) return;
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const user = session?.user ?? null;
+  if (!user) { mostrarToast('Faça login primeiro!'); return; }
+  try {
+    const { error: e1 } = await supabaseClient.from('habitos_registros').delete().eq('user_id', user.id).eq('data', data);
+    if (e1) throw e1;
+    const { error: e2 } = await supabaseClient.from('dias').delete().eq('user_id', user.id).eq('data', data);
+    if (e2) throw e2;
+    HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
+    renderHabitChips(); atualizarProgressoHabitos();
+    document.getElementById('habitoDescricao').value = '';
+    mostrarToast('Registro do dia excluído! 🗑️');
+    fecharSheets();
+    if (typeof hbCarregarTudo === 'function') await hbCarregarTudo();
+  } catch (err) { console.error(err); mostrarToast('Erro ao excluir: ' + err.message); }
 });
 
 /* ===================== FINANÇAS ===================== */
@@ -2551,7 +2605,8 @@ document.getElementById('ps-btn-add-etapa').addEventListener('click', () => psAd
 
 document.getElementById('ps-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const { data: { user } } = await supabaseClient.auth.getUser();
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const user = session?.user ?? null;
   if (!user) { mostrarToast('Sessão expirada. Faça login novamente.'); return; }
   const payload = {
     user_id: user.id,
@@ -2712,15 +2767,26 @@ document.getElementById('btnSalvarHumor').addEventListener('click', async functi
   const nota = document.getElementById('humorNota').value.trim();
   if (!data) { mostrarToast('Selecione uma data.'); return; }
   if (!nivelEl) { mostrarToast('Selecione como você está.'); return; }
-  const { data: { user } } = await supabaseClient.auth.getUser();
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const user = session?.user ?? null;
   if (!user) { mostrarToast('Faça login primeiro!'); return; }
   try {
-    const { error } = await supabaseClient.from('humor')
-      .upsert({ user_id: user.id, data, nota: parseInt(nivelEl.value), observacoes: nota || null },
-               { onConflict: 'user_id, data' });
+    // Verificar se já existe registro para essa data
+    const { data: existing } = await supabaseClient.from('humor')
+      .select('id').eq('user_id', user.id).eq('data', data).maybeSingle();
+    let error;
+    if (existing) {
+      ({ error } = await supabaseClient.from('humor')
+        .update({ nota: parseInt(nivelEl.value), observacoes: nota || null })
+        .eq('id', existing.id));
+    } else {
+      ({ error } = await supabaseClient.from('humor')
+        .insert({ user_id: user.id, data, nota: parseInt(nivelEl.value), observacoes: nota || null }));
+    }
     if (error) throw error;
     mostrarToast('Humor salvo! ✅');
     fecharSheets();
+    if (typeof hmCarregarTudo === 'function') await hmCarregarTudo();
   } catch (err) { console.error(err); mostrarToast('Erro ao salvar: ' + err.message); }
 });
 
@@ -4100,6 +4166,7 @@ function init() {
 }
 
 init();
+// verificarSessao também restaura a view salva se o usuário já estiver logado
 verificarSessao().catch(e => console.warn('Erro ao verificar sessão:', e));
 </script>
 </body>
