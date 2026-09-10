@@ -2095,13 +2095,25 @@ function mostrarView(nome) {
   });
   try { localStorage.setItem('lifeos_view', nome); } catch(e) {}
   if (nome === 'perfil') verificarSessao();
-  if (nome === 'processos') psCarregarTudo();
-  if (nome === 'habitos') hbCarregarTudo();
-  if (nome === 'financas-view') fnCarregarTudo();
-  if (nome === 'candidaturas') cdCarregarTudo();
-  if (nome === 'series') srCarregarTudo();
-  if (nome === 'humor') hmCarregarTudo();
-  if (nome === 'visitar') vsCarregarTudo();
+  if (nome === 'processos') safeLoad(psCarregarTudo);
+  if (nome === 'habitos') safeLoad(hbCarregarTudo);
+  if (nome === 'financas-view') safeLoad(fnCarregarTudo);
+  if (nome === 'candidaturas') safeLoad(cdCarregarTudo);
+  if (nome === 'series') safeLoad(srCarregarTudo);
+  if (nome === 'humor') safeLoad(hmCarregarTudo);
+  if (nome === 'visitar') safeLoad(vsCarregarTudo);
+}
+
+// Helper: executa função async sem deixar Promise rejeitada travar a UI
+function safeLoad(fn) {
+  try {
+    const result = fn();
+    if (result && typeof result.catch === 'function') {
+      result.catch(err => console.warn(`[safeLoad] ${fn.name}:`, err));
+    }
+  } catch(err) {
+    console.warn(`[safeLoad] ${fn.name} síncrono:`, err);
+  }
 }
 
 document.querySelectorAll('[data-goto-view]').forEach(el => {
@@ -2264,7 +2276,8 @@ function atualizarProgressoHabitos() {
 }
 
 async function carregarHabitosDoDia(data) {
-  const { data: { user } } = await supabaseClient.auth.getUser();
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const user = session?.user ?? null;
   if (!user) {
     HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
     renderHabitChips(); atualizarProgressoHabitos(); return;
@@ -2293,7 +2306,8 @@ async function carregarHabitosDoDia(data) {
 document.getElementById('btnSalvarHabitos').addEventListener('click', async function() {
   const data = document.getElementById('habitoData').value;
   const descricao = document.getElementById('habitoDescricao').value.trim();
-  const { data: { user } } = await supabaseClient.auth.getUser();
+  const { data: authData1 } = await supabaseClient.auth.getSession();
+  const user = authData1?.session?.user ?? null;
   if (!user) { mostrarToast('Faça login primeiro!'); return; }
   try {
     const { error: erroDia } = await supabaseClient.from('dias')
@@ -2323,8 +2337,8 @@ document.getElementById('btnExcluirDia').addEventListener('click', async functio
   const data = document.getElementById('habitoData').value;
   if (!data) { mostrarToast('Selecione uma data para excluir.'); return; }
   if (!confirm(`Excluir todos os registros do dia ${data.split('-').reverse().join('/')}?`)) return;
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  const user = session?.user ?? null;
+  const { data: authData2 } = await supabaseClient.auth.getSession();
+  const user = authData2?.session?.user ?? null;
   if (!user) { mostrarToast('Faça login primeiro!'); return; }
   try {
     const { error: e1 } = await supabaseClient.from('habitos_registros').delete().eq('user_id', user.id).eq('data', data);
@@ -2465,8 +2479,10 @@ let ps_editandoId = null;
 let ps_etapaSeq = 0;
 
 async function psCarregarTudo() {
-  const { data: { user } } = await supabaseClient.auth.getUser();
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const user = session?.user ?? null;
   if (!user) { console.warn('Usuário não autenticado.'); return; }
+  try {
   const { data: processos, error: e1 } = await supabaseClient
     .from('processos_seletivos').select('*').eq('user_id', user.id)
     .order('data_primeiro_contato', { ascending: false });
@@ -2483,6 +2499,7 @@ async function psCarregarTudo() {
     ...p, etapas: (etapasPorProcesso[p.id] || []).sort((a,b) => (a.data||'') < (b.data||'') ? -1 : 1)
   }));
   psRenderResumo(); psRenderLista(); psRenderInsights();
+  } catch(err) { console.error('[psCarregarTudo]', err); mostrarToast('Erro ao carregar processos: ' + err.message); }
 }
 
 function psRenderResumo() {
@@ -2767,8 +2784,8 @@ document.getElementById('btnSalvarHumor').addEventListener('click', async functi
   const nota = document.getElementById('humorNota').value.trim();
   if (!data) { mostrarToast('Selecione uma data.'); return; }
   if (!nivelEl) { mostrarToast('Selecione como você está.'); return; }
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  const user = session?.user ?? null;
+  const { data: authData3 } = await supabaseClient.auth.getSession();
+  const user = authData3?.session?.user ?? null;
   if (!user) { mostrarToast('Faça login primeiro!'); return; }
   try {
     // Verificar se já existe registro para essa data
@@ -2804,8 +2821,10 @@ async function hbCarregarHabitosDoUsuario(user) {
 }
 
 async function hbCarregarTudo() {
-  const { data: { user } } = await supabaseClient.auth.getUser();
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const user = session?.user ?? null;
   if (!user) { console.warn('Usuário não autenticado.'); return; }
+  try {
 
   hb_habitosDoUsuario = await hbCarregarHabitosDoUsuario(user);
   const mapaIdParaNome = {};
@@ -2837,6 +2856,7 @@ async function hbCarregarTudo() {
   hbRenderResumo();
   hbRenderLista();
   hbRenderInsights();
+  } catch(err) { console.error('[hbCarregarTudo]', err); mostrarToast('Erro ao carregar hábitos: ' + err.message); }
 }
 
 function hbRenderResumo() {
@@ -2985,8 +3005,10 @@ function fnPreencherSelectCategoria(tipo) {
 }
 
 async function fnCarregarTudo() {
-  const { data: { user } } = await supabaseClient.auth.getUser();
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const user = session?.user ?? null;
   if (!user) { console.warn('Usuário não autenticado.'); return; }
+  try {
 
   fn_categorias = await fnCarregarCategorias(user);
 
@@ -3005,6 +3027,7 @@ async function fnCarregarTudo() {
   fnRenderResumo();
   fnRenderLista();
   fnRenderInsights();
+  } catch(err) { console.error('[fnCarregarTudo]', err); mostrarToast('Erro ao carregar finanças: ' + err.message); }
 }
 
 function fnMesAtualLancamentos() {
@@ -3214,7 +3237,8 @@ fnBackdrop.addEventListener('click', e => { if (e.target === fnBackdrop) fnFecha
 
 document.getElementById('fn-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const { data: { user } } = await supabaseClient.auth.getUser();
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const user = session?.user ?? null;
   if (!user) { mostrarToast('Sessão expirada. Faça login novamente.'); return; }
 
   const payload = {
@@ -3268,8 +3292,10 @@ let cd_candidaturas = [];
 let cd_editandoId = null;
 
 async function cdCarregarTudo() {
-  const { data: { user } } = await supabaseClient.auth.getUser();
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const user = session?.user ?? null;
   if (!user) { console.warn('Usuário não autenticado.'); return; }
+  try {
   const { data, error } = await supabaseClient
     .from('candidaturas').select('*').eq('user_id', user.id)
     .order('data', { ascending: false }).limit(1000);
@@ -3278,6 +3304,7 @@ async function cdCarregarTudo() {
   cdRenderResumo();
   cdRenderLista();
   cdRenderInsights();
+  } catch(err) { console.error('[cdCarregarTudo]', err); mostrarToast('Erro ao carregar candidaturas: ' + err.message); }
 }
 
 function cdFmtData(d) {
@@ -3485,7 +3512,8 @@ function cdParseBoolSelect(valor) {
 
 document.getElementById('cd-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const { data: { user } } = await supabaseClient.auth.getUser();
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const user = session?.user ?? null;
   if (!user) { mostrarToast('Sessão expirada. Faça login novamente.'); return; }
 
   const payload = {
@@ -3542,6 +3570,7 @@ let sr_series = [];
 let sr_editandoId = null;
 
 async function srCarregarTudo() {
+  try {
   const { data, error } = await supabaseClient
     .from('series').select('*').order('serie', { ascending: true }).limit(1000);
   if (error) { console.error(error); return; }
@@ -3549,6 +3578,7 @@ async function srCarregarTudo() {
   srRenderResumo();
   srRenderLista();
   srRenderInsights();
+  } catch(err) { console.error('[srCarregarTudo]', err); mostrarToast('Erro ao carregar séries: ' + err.message); }
 }
 
 function srFmtData(d) {
@@ -3709,7 +3739,8 @@ srBackdrop.addEventListener('click', e => { if (e.target === srBackdrop) srFecha
 
 document.getElementById('sr-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const { data: { user } } = await supabaseClient.auth.getUser();
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const user = session?.user ?? null;
   if (!user) { mostrarToast('Sessão expirada. Faça login novamente.'); return; }
 
   const payload = {
@@ -3765,8 +3796,10 @@ let hm_registros = [];
 let hm_editandoId = null;
 
 async function hmCarregarTudo() {
-  const { data: { user } } = await supabaseClient.auth.getUser();
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const user = session?.user ?? null;
   if (!user) { console.warn('Usuário não autenticado.'); return; }
+  try {
   const { data, error } = await supabaseClient
     .from('humor').select('*').eq('user_id', user.id)
     .order('data', { ascending: false }).limit(365);
@@ -3775,6 +3808,7 @@ async function hmCarregarTudo() {
   hmRenderResumo();
   hmRenderLista();
   hmRenderInsights();
+  } catch(err) { console.error('[hmCarregarTudo]', err); mostrarToast('Erro ao carregar humor: ' + err.message); }
 }
 
 function hmFmtData(d) {
@@ -3913,7 +3947,8 @@ hmBackdrop.addEventListener('click', e => { if (e.target === hmBackdrop) hmFecha
 
 document.getElementById('hm-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const { data: { user } } = await supabaseClient.auth.getUser();
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const user = session?.user ?? null;
   if (!user) { mostrarToast('Sessão expirada. Faça login novamente.'); return; }
 
   const payload = {
@@ -3962,6 +3997,7 @@ let vs_lugares = [];
 let vs_editandoId = null;
 
 async function vsCarregarTudo() {
+  try {
   const { data, error } = await supabaseClient
     .from('visitar').select('*').order('nome', { ascending: true }).limit(1000);
   if (error) { console.error(error); return; }
@@ -3969,6 +4005,7 @@ async function vsCarregarTudo() {
   vsRenderResumo();
   vsRenderLista();
   vsRenderInsights();
+  } catch(err) { console.error('[vsCarregarTudo]', err); mostrarToast('Erro ao carregar lugares: ' + err.message); }
 }
 
 function vsFmtData(d) {
@@ -4100,7 +4137,8 @@ vsBackdrop.addEventListener('click', e => { if (e.target === vsBackdrop) vsFecha
 
 document.getElementById('vs-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const { data: { user } } = await supabaseClient.auth.getUser();
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const user = session?.user ?? null;
   if (!user) { mostrarToast('Sessão expirada. Faça login novamente.'); return; }
 
   const payload = {
