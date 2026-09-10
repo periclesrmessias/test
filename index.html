@@ -2023,9 +2023,9 @@ const DOMINIOS = [
   { id: 'atividades', nome: 'Atividades', categoria: 'lazer', pronto: false, campos: ['Atividade', 'Proposta por', 'Categoria', 'Feita?', 'Data'] }
 ];
 
-const HABITOS_CAMPOS = ['Estudar', 'Atividade Física', 'Dormir bem', 'Leitura', 'Hidratação', 'Meditação', 'Sexo', 'Trabalhar', 'Pant', 'Interação Social', 'Algo Incomum', 'Cagar', 'Fio Dental', 'Protetor Solar', 'Doente', 'Herpes'];
-const estadoHabitosHoje = {};
-HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
+// Lista de hábitos carregada dinamicamente da tabela `habitos` (por usuário)
+let HABITOS_DO_USUARIO_SHEET = []; // [{id, nome}]
+const estadoHabitosHoje = {}; // chave = habito.id (número)
 let lancamentosSessao = [];
 
 /* ===================== LOGIN SCREEN ===================== */
@@ -2045,7 +2045,6 @@ async function fazerLoginScreen() {
     if (error) { mostrarToast('Erro: ' + error.message); }
     else {
       ocultarLoginScreen();
-      mostrarToast('Bem-vindo! ✅');
       carregarHabitosDoDia(hojeISO());
       verificarSessao();
     }
@@ -2169,7 +2168,7 @@ async function fazerLogin() {
   try {
     const { error } = await supabaseClient.auth.signInWithPassword({ email, password: senha });
     if (error) mostrarToast('Erro: ' + error.message);
-    else { mostrarToast('Login realizado! ✅'); carregarHabitosDoDia(hojeISO()); verificarSessao(); }
+    else { carregarHabitosDoDia(hojeISO()); verificarSessao(); }
   } catch (err) { mostrarToast('Erro inesperado: ' + err.message); }
 }
 
@@ -2194,13 +2193,15 @@ async function verificarSessao(opts) {
     const user = session?.user ?? null;
     if (user) {
       ocultarLoginScreen();
-      // Restaurar view salva no localStorage (apenas na carga inicial da página)
+      // Restaurar view salva (apenas na carga inicial da página, e só se não for a primeira visita desta aba)
       if (restaurarView) {
         try {
+          const jaVisitouNestaAba = sessionStorage.getItem('lifeos_sessao_iniciada');
           const viewSalva = localStorage.getItem('lifeos_view');
-          if (viewSalva && viewSalva !== 'dashboard' && viewSalva !== 'perfil') {
+          if (jaVisitouNestaAba && viewSalva && viewSalva !== 'dashboard' && viewSalva !== 'perfil') {
             mostrarView(viewSalva);
           }
+          sessionStorage.setItem('lifeos_sessao_iniciada', '1');
         } catch(e) {}
       }
     } else {
@@ -2242,10 +2243,10 @@ async function fazerLogout() {
   if (error) { mostrarToast('Erro ao sair: ' + error.message); }
   else {
     try { localStorage.removeItem('lifeos_view'); } catch(e) {}
-    mostrarToast('Deslogado com sucesso! 👋');
     mostrarLoginScreen();
     mostrarView('dashboard');
-    HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
+    HABITOS_DO_USUARIO_SHEET = [];
+    Object.keys(estadoHabitosHoje).forEach(k => delete estadoHabitosHoje[k]);
     renderHabitChips();
     atualizarProgressoHabitos();
   }
@@ -2254,13 +2255,13 @@ async function fazerLogout() {
 /* ===================== HÁBITOS ===================== */
 function renderHabitChips() {
   const el = document.getElementById('habitChips');
-  el.innerHTML = HABITOS_CAMPOS.map(h =>
-    `<button type="button" class="habit-chip${estadoHabitosHoje[h] ? ' on' : ''}" data-habito="${h}">${h}</button>`
+  el.innerHTML = HABITOS_DO_USUARIO_SHEET.map(h =>
+    `<button type="button" class="habit-chip${estadoHabitosHoje[h.id] ? ' on' : ''}" data-habito-id="${h.id}">${psEsc(h.nome)}</button>`
   ).join('');
   el.querySelectorAll('.habit-chip').forEach(chip => {
     chip.addEventListener('click', function() {
-      const h = this.dataset.habito;
-      estadoHabitosHoje[h] = !estadoHabitosHoje[h];
+      const id = Number(this.dataset.habitoId);
+      estadoHabitosHoje[id] = !estadoHabitosHoje[id];
       this.classList.toggle('on');
       atualizarProgressoHabitos();
     });
@@ -2268,7 +2269,7 @@ function renderHabitChips() {
 }
 
 function atualizarProgressoHabitos() {
-  const total = HABITOS_CAMPOS.length;
+  const total = HABITOS_DO_USUARIO_SHEET.length || 1;
   const feitos = Object.values(estadoHabitosHoje).filter(Boolean).length;
   const texto = feitos + ' de ' + total + ' hábitos concluídos' + (feitos === total ? '' : ' hoje');
   const pct = (feitos / total * 100) + '%';
@@ -2282,19 +2283,22 @@ async function carregarHabitosDoDia(data) {
   const { data: { session } } = await supabaseClient.auth.getSession();
   const user = session?.user ?? null;
   if (!user) {
-    HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
+    HABITOS_DO_USUARIO_SHEET = [];
+    Object.keys(estadoHabitosHoje).forEach(k => delete estadoHabitosHoje[k]);
     renderHabitChips(); atualizarProgressoHabitos(); return;
   }
   try {
-    const { data: opcoes, error: erroOpcoes } = await supabaseClient
-      .from('opcoes').select('id, valor').eq('user_id', user.id).eq('grupo', 'habitos');
-    if (erroOpcoes) throw erroOpcoes;
+    const { data: habitosUsuario, error: erroHabitos } = await supabaseClient
+      .from('habitos').select('id, nome, ordem').eq('user_id', user.id).eq('ativo', true)
+      .order('ordem', { ascending: true });
+    if (erroHabitos) throw erroHabitos;
+    HABITOS_DO_USUARIO_SHEET = habitosUsuario || [];
     const { data: registros, error: erroRegistros } = await supabaseClient
       .from('habitos_registros').select('habito_id').eq('user_id', user.id).eq('data', data);
     if (erroRegistros) throw erroRegistros;
-    const idsRegistrados = registros.map(r => r.habito_id);
-    HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
-    opcoes.forEach(o => { if (idsRegistrados.includes(o.id)) estadoHabitosHoje[o.valor] = true; });
+    const idsRegistrados = new Set((registros || []).map(r => r.habito_id));
+    Object.keys(estadoHabitosHoje).forEach(k => delete estadoHabitosHoje[k]);
+    HABITOS_DO_USUARIO_SHEET.forEach(h => { estadoHabitosHoje[h.id] = idsRegistrados.has(h.id); });
     const { data: dia, error: erroDia } = await supabaseClient
       .from('dias').select('descricao').eq('user_id', user.id).eq('data', data).maybeSingle();
     if (erroDia && erroDia.code !== 'PGRST116') throw erroDia;
@@ -2316,18 +2320,18 @@ document.getElementById('btnSalvarHabitos').addEventListener('click', async func
     const { error: erroDia } = await supabaseClient.from('dias')
       .upsert({ user_id: user.id, data, descricao: descricao || null }, { onConflict: 'user_id, data' });
     if (erroDia) throw erroDia;
-    const habitosMarcados = Object.keys(estadoHabitosHoje).filter(h => estadoHabitosHoje[h]);
-    const { data: opcoes, error: erroOpcoes } = await supabaseClient
-      .from('opcoes').select('id, valor').eq('user_id', user.id).eq('grupo', 'habitos');
-    if (erroOpcoes) throw erroOpcoes;
-    const mapaHabitos = {};
-    opcoes.forEach(o => { mapaHabitos[o.valor] = o.id; });
-    for (const habito of habitosMarcados) {
-      const habitoId = mapaHabitos[habito];
-      if (!habitoId) continue;
+    const idsMarcados = Object.keys(estadoHabitosHoje).filter(id => estadoHabitosHoje[id]).map(Number);
+    for (const habitoId of idsMarcados) {
       const { error: erroRegistro } = await supabaseClient.from('habitos_registros')
         .upsert({ user_id: user.id, habito_id: habitoId, data }, { onConflict: 'user_id, habito_id, data' });
       if (erroRegistro) throw erroRegistro;
+    }
+    // Remove registros de hábitos que foram desmarcados
+    const idsDesmarcados = HABITOS_DO_USUARIO_SHEET.map(h => h.id).filter(id => !estadoHabitosHoje[id]);
+    if (idsDesmarcados.length) {
+      const { error: erroRemocao } = await supabaseClient.from('habitos_registros')
+        .delete().eq('user_id', user.id).eq('data', data).in('habito_id', idsDesmarcados);
+      if (erroRemocao) throw erroRemocao;
     }
     mostrarToast('Dia salvo com sucesso! ✅');
     fecharSheets();
@@ -2348,7 +2352,7 @@ document.getElementById('btnExcluirDia').addEventListener('click', async functio
     if (e1) throw e1;
     const { error: e2 } = await supabaseClient.from('dias').delete().eq('user_id', user.id).eq('data', data);
     if (e2) throw e2;
-    HABITOS_CAMPOS.forEach(h => estadoHabitosHoje[h] = false);
+    Object.keys(estadoHabitosHoje).forEach(k => estadoHabitosHoje[k] = false);
     renderHabitChips(); atualizarProgressoHabitos();
     document.getElementById('habitoDescricao').value = '';
     mostrarToast('Registro do dia excluído! 🗑️');
