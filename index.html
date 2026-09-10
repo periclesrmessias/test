@@ -2187,19 +2187,22 @@ async function fazerCadastro() {
   } catch (err) { mostrarToast('Erro inesperado: ' + err.message); }
 }
 
-async function verificarSessao() {
+async function verificarSessao(opts) {
+  const restaurarView = opts && opts.restaurarView;
   try {
     const { data: { session } } = await supabaseClient.auth.getSession();
     const user = session?.user ?? null;
     if (user) {
       ocultarLoginScreen();
-      // Restaurar view salva no localStorage
-      try {
-        const viewSalva = localStorage.getItem('lifeos_view');
-        if (viewSalva && viewSalva !== 'dashboard') {
-          mostrarView(viewSalva);
-        }
-      } catch(e) {}
+      // Restaurar view salva no localStorage (apenas na carga inicial da página)
+      if (restaurarView) {
+        try {
+          const viewSalva = localStorage.getItem('lifeos_view');
+          if (viewSalva && viewSalva !== 'dashboard' && viewSalva !== 'perfil') {
+            mostrarView(viewSalva);
+          }
+        } catch(e) {}
+      }
     } else {
       mostrarLoginScreen();
     }
@@ -4205,7 +4208,7 @@ function init() {
 
 init();
 // verificarSessao também restaura a view salva se o usuário já estiver logado
-verificarSessao().catch(e => console.warn('Erro ao verificar sessão:', e));
+verificarSessao({ restaurarView: true }).catch(e => console.warn('Erro ao verificar sessão:', e));
 </script>
 </body>
 </html>
