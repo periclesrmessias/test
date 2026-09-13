@@ -751,6 +751,67 @@
     .ps-funnel-label{ width:96px; font-size:11.5px; }
     .ps-hbar-label{ width:82px; }
   }
+
+  /* ========================================================
+     DELETE BUTTON — lixeira animada (confirmar/cancelar)
+     ======================================================== */
+  .del-btn{
+    position: relative;
+    display: inline-flex;
+    align-items: stretch;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    width: 48px;
+    transition: width .5s cubic-bezier(.32,.72,0,1);
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+  .del-btn.open{ width: 136px; }
+  .del-btn-trigger{
+    position: relative; z-index: 2;
+    display: flex; align-items: center; justify-content: center;
+    width: 48px; height: 48px; flex-shrink: 0;
+    background: none; border: none; cursor: pointer;
+    color: var(--text-dim);
+    transition: color .15s ease;
+  }
+  .del-btn-trigger:hover{ color: var(--danger); }
+  .del-btn-trigger svg{ width:19px; height:19px; overflow: visible; display: block; margin: 0 auto; }
+  .del-btn-trigger .del-lid{
+    transform-box: fill-box; transform-origin: 0% 100%;
+    transition: transform .5s cubic-bezier(.34,1.1,.64,1);
+  }
+  .del-btn.open .del-btn-trigger .del-lid{ transform: rotate(-35deg); }
+  .del-btn-trigger .del-check{
+    display: none; color: var(--danger);
+  }
+  .del-btn.status-deleted .del-btn-trigger .del-bin{ display:none; }
+  .del-btn.status-deleted .del-btn-trigger .del-check{ display:block; }
+  .del-btn-panel{
+    position: absolute; inset-block: 0; right: 0;
+    width: 88px;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    background: var(--surface-3);
+    opacity: 0; pointer-events: none;
+    transition: opacity .3s ease .1s;
+  }
+  .del-btn.open .del-btn-panel{ opacity: 1; pointer-events: auto; }
+  .del-btn-circle{
+    display: grid; place-items: center;
+    width: 26px; height: 26px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text-dim); cursor: pointer;
+    transition: transform .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .del-btn-circle:hover{ transform: scale(1.06); }
+  .del-btn-circle:active{ transform: scale(0.88); }
+  .del-btn-circle svg{ width:12px; height:12px; }
+  .del-btn-circle.confirm{ color: var(--danger); }
+  .del-btn-circle.confirm:hover{ border-color: rgba(224,104,126,.4); }
+  .del-btn-circle.cancel:hover{ border-color: var(--border-strong); color: var(--text); }
 </style>
 </head>
 <body>
@@ -1038,9 +1099,7 @@
     </div>
     <div style="display:flex; gap:10px;">
       <button class="btn-primary" id="btnSalvarHabitos" style="flex:1;">Salvar dia</button>
-      <button class="btn-secondary" id="btnExcluirDia" style="width:auto; padding:13px 16px; background:none; border-color:rgba(224,104,126,.35); color:var(--danger);" title="Excluir registro deste dia">
-        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-      </button>
+      <button id="btnExcluirDia" title="Excluir registro deste dia"></button>
     </div>
   </div>
 
@@ -1666,10 +1725,10 @@
         <i class="fa-solid fa-plus"></i> Adicionar etapa
       </button>
       <div class="ps-modal-actions">
-        <button type="button" class="ps-btn-danger-ghost" id="ps-btn-excluir" style="display:none;">Excluir</button>
         <button type="button" class="ps-btn-secondary" id="ps-btn-cancelar">Cancelar</button>
         <button type="submit" class="ps-btn-primary">Salvar processo</button>
-      </div>
+      <button type="button" id="ps-btn-excluir" title="Excluir" style="display:none;"></button>
+        </div>
     </form>
   </div>
 </div>
@@ -1731,10 +1790,10 @@
         <label for="fn-f-recorrente">Lançamento recorrente</label>
       </div>
       <div class="ps-modal-actions">
-        <button type="button" class="ps-btn-danger-ghost" id="fn-btn-excluir" style="display:none;">Excluir</button>
         <button type="button" class="ps-btn-secondary" id="fn-btn-cancelar">Cancelar</button>
         <button type="submit" class="ps-btn-primary">Salvar lançamento</button>
-      </div>
+      <button type="button" id="fn-btn-excluir" title="Excluir" style="display:none;"></button>
+        </div>
     </form>
   </div>
 </div>
@@ -1827,10 +1886,10 @@
         <textarea id="cd-f-obs" placeholder="Qualquer detalhe relevante sobre a candidatura..."></textarea>
       </div>
       <div class="ps-modal-actions">
-        <button type="button" class="ps-btn-danger-ghost" id="cd-btn-excluir" style="display:none;">Excluir</button>
         <button type="button" class="ps-btn-secondary" id="cd-btn-cancelar">Cancelar</button>
         <button type="submit" class="ps-btn-primary">Salvar candidatura</button>
-      </div>
+      <button type="button" id="cd-btn-excluir" title="Excluir" style="display:none;"></button>
+        </div>
     </form>
   </div>
 </div>
@@ -1912,10 +1971,10 @@
         </div>
       </div>
       <div class="ps-modal-actions">
-        <button type="button" class="ps-btn-danger-ghost" id="sr-btn-excluir" style="display:none;">Excluir</button>
         <button type="button" class="ps-btn-secondary" id="sr-btn-cancelar">Cancelar</button>
         <button type="submit" class="ps-btn-primary">Salvar série</button>
-      </div>
+      <button type="button" id="sr-btn-excluir" title="Excluir" style="display:none;"></button>
+        </div>
     </form>
   </div>
 </div>
@@ -1948,10 +2007,10 @@
         <textarea id="hm-f-obs" placeholder="Como foi o dia, o que influenciou o humor..."></textarea>
       </div>
       <div class="ps-modal-actions">
-        <button type="button" class="ps-btn-danger-ghost" id="hm-btn-excluir" style="display:none;">Excluir</button>
         <button type="button" class="ps-btn-secondary" id="hm-btn-cancelar">Cancelar</button>
         <button type="submit" class="ps-btn-primary">Salvar</button>
-      </div>
+      <button type="button" id="hm-btn-excluir" title="Excluir" style="display:none;"></button>
+        </div>
     </form>
   </div>
 </div>
@@ -2025,10 +2084,10 @@
         <textarea id="vs-f-comentario" placeholder="O que acharam, dicas, observações..."></textarea>
       </div>
       <div class="ps-modal-actions">
-        <button type="button" class="ps-btn-danger-ghost" id="vs-btn-excluir" style="display:none;">Excluir</button>
         <button type="button" class="ps-btn-secondary" id="vs-btn-cancelar">Cancelar</button>
         <button type="submit" class="ps-btn-primary">Salvar lugar</button>
-      </div>
+      <button type="button" id="vs-btn-excluir" title="Excluir" style="display:none;"></button>
+        </div>
     </form>
   </div>
 </div>
@@ -2191,6 +2250,59 @@ function mostrarToast(msg) {
   toast.classList.add('visible');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.classList.remove('visible'), 2600);
+}
+
+/* ===================== DELETE BUTTON (lixeira animada) =====================
+   Transforma um <button> existente no componente de exclusão com confirmação
+   inline (abre painel com ✓ confirmar / ✕ cancelar), sem usar confirm() nativo.
+   Uso: initDeleteButton(document.getElementById('meu-botao'), async () => { ...excluir... });
+   ============================================================================ */
+function initDeleteButton(btn, onConfirm) {
+  if (!btn || btn.dataset.delInit) return;
+  btn.dataset.delInit = '1';
+  btn.classList.add('del-btn');
+  btn.innerHTML = `
+    <button type="button" class="del-btn-trigger" aria-label="Excluir">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="del-bin">
+        <path d="M5 7h14"/>
+        <path d="M17 7v13a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V7"/>
+        <g class="del-lid"><path d="M9.5 7V4.5A1.5 1.5 0 0 1 11 3h2a1.5 1.5 0 0 1 1.5 1.5V7"/></g>
+      </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="del-check">
+        <path d="M4 12.5 9.5 18 20 7"/>
+      </svg>
+    </button>
+    <div class="del-btn-panel">
+      <button type="button" class="del-btn-circle confirm" aria-label="Confirmar exclusão">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 7"/></svg>
+      </button>
+      <button type="button" class="del-btn-circle cancel" aria-label="Cancelar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6 18 18M18 6 6 18"/></svg>
+      </button>
+    </div>
+  `;
+  const trigger = btn.querySelector('.del-btn-trigger');
+  const confirmBtn = btn.querySelector('.del-btn-circle.confirm');
+  const cancelBtn = btn.querySelector('.del-btn-circle.cancel');
+
+  function close() { btn.classList.remove('open'); }
+  function onEsc(e) { if (e.key === 'Escape') { close(); document.removeEventListener('keydown', onEsc); } }
+
+  trigger.addEventListener('click', () => {
+    if (btn.classList.contains('open')) { close(); return; }
+    btn.classList.remove('status-deleted');
+    btn.classList.add('open');
+    document.addEventListener('keydown', onEsc);
+  });
+  cancelBtn.addEventListener('click', () => { close(); document.removeEventListener('keydown', onEsc); });
+  confirmBtn.addEventListener('click', async () => {
+    close();
+    document.removeEventListener('keydown', onEsc);
+    btn.classList.add('status-deleted');
+    try { await onConfirm(); } finally {
+      setTimeout(() => btn.classList.remove('status-deleted'), 1000);
+    }
+  });
 }
 
 /* ===================== AUTENTICAÇÃO ===================== */
@@ -2373,10 +2485,9 @@ document.getElementById('btnSalvarHabitos').addEventListener('click', async func
   } catch (err) { console.error(err); mostrarToast('Erro ao salvar: ' + err.message); }
 });
 
-document.getElementById('btnExcluirDia').addEventListener('click', async function() {
+initDeleteButton(document.getElementById('btnExcluirDia'), async () => {
   const data = document.getElementById('habitoData').value;
   if (!data) { mostrarToast('Selecione uma data para excluir.'); return; }
-  if (!confirm(`Excluir todos os registros do dia ${data.split('-').reverse().join('/')}?`)) return;
   const { data: authData2 } = await supabaseClient.auth.getSession();
   const user = authData2?.session?.user ?? null;
   if (!user) { mostrarToast('Faça login primeiro!'); return; }
@@ -2608,7 +2719,7 @@ function psAbrirEdicao(id) {
   if (!p) return;
   ps_editandoId = id;
   document.getElementById('ps-modal-title').textContent = 'Editar processo';
-  document.getElementById('ps-btn-excluir').style.display = 'inline-block';
+  document.getElementById('ps-btn-excluir').style.display = 'inline-flex';
   document.getElementById('ps-f-id').value = p.id;
   document.getElementById('ps-f-vaga').value = p.vaga || '';
   document.getElementById('ps-f-empresa').value = p.empresa || '';
@@ -2708,9 +2819,8 @@ document.getElementById('ps-form').addEventListener('submit', async (e) => {
   await psCarregarTudo();
 });
 
-document.getElementById('ps-btn-excluir').addEventListener('click', async () => {
+initDeleteButton(document.getElementById('ps-btn-excluir'), async () => {
   if (!ps_editandoId) return;
-  if (!confirm('Excluir este processo e todas as suas etapas? Essa ação não pode ser desfeita.')) return;
   const { error } = await supabaseClient.from('processos_seletivos').delete().eq('id', ps_editandoId);
   if (error) { console.error(error); mostrarToast('Erro ao excluir.'); return; }
   psFechar(); await psCarregarTudo();
@@ -3252,7 +3362,7 @@ function fnAbrirEdicao(id) {
   if (!l) return;
   fn_editandoId = id;
   document.getElementById('fn-modal-title').textContent = 'Editar lançamento';
-  document.getElementById('fn-btn-excluir').style.display = 'inline-block';
+  document.getElementById('fn-btn-excluir').style.display = 'inline-flex';
   document.getElementById('fn-f-id').value = l.id;
   document.getElementById('fn-f-valor').value = l.valor;
   document.getElementById('fn-f-data').value = l.data;
@@ -3307,9 +3417,8 @@ document.getElementById('fn-form').addEventListener('submit', async (e) => {
   await fnCarregarTudo();
 });
 
-document.getElementById('fn-btn-excluir').addEventListener('click', async () => {
+initDeleteButton(document.getElementById('fn-btn-excluir'), async () => {
   if (!fn_editandoId) return;
-  if (!confirm('Excluir este lançamento?')) return;
   const { error } = await supabaseClient.from('lancamentos').delete().eq('id', fn_editandoId);
   if (error) { console.error(error); mostrarToast('Erro ao excluir.'); return; }
   fnFechar();
@@ -3520,7 +3629,7 @@ function cdAbrirEdicao(id) {
   if (!c) return;
   cd_editandoId = id;
   document.getElementById('cd-modal-title').textContent = 'Editar candidatura';
-  document.getElementById('cd-btn-excluir').style.display = 'inline-block';
+  document.getElementById('cd-btn-excluir').style.display = 'inline-flex';
   document.getElementById('cd-f-id').value = c.id;
   document.getElementById('cd-f-empresa').value = c.empresa || '';
   document.getElementById('cd-f-cargo').value = c.cargo || '';
@@ -3585,9 +3694,8 @@ document.getElementById('cd-form').addEventListener('submit', async (e) => {
   await cdCarregarTudo();
 });
 
-document.getElementById('cd-btn-excluir').addEventListener('click', async () => {
+initDeleteButton(document.getElementById('cd-btn-excluir'), async () => {
   if (!cd_editandoId) return;
-  if (!confirm('Excluir esta candidatura? Essa ação não pode ser desfeita.')) return;
   const { error } = await supabaseClient.from('candidaturas').delete().eq('id', cd_editandoId);
   if (error) { console.error(error); mostrarToast('Erro ao excluir.'); return; }
   cdFechar();
@@ -3754,7 +3862,7 @@ function srAbrirEdicao(id) {
   if (!s) return;
   sr_editandoId = id;
   document.getElementById('sr-modal-title').textContent = 'Editar série';
-  document.getElementById('sr-btn-excluir').style.display = 'inline-block';
+  document.getElementById('sr-btn-excluir').style.display = 'inline-flex';
   document.getElementById('sr-f-id').value = s.id;
   document.getElementById('sr-f-serie').value = s.serie || '';
   document.getElementById('sr-f-genero').value = s.genero || '';
@@ -3811,9 +3919,8 @@ document.getElementById('sr-form').addEventListener('submit', async (e) => {
   await srCarregarTudo();
 });
 
-document.getElementById('sr-btn-excluir').addEventListener('click', async () => {
+initDeleteButton(document.getElementById('sr-btn-excluir'), async () => {
   if (!sr_editandoId) return;
-  if (!confirm('Excluir esta série da lista do casal?')) return;
   const { error } = await supabaseClient.from('series').delete().eq('id', sr_editandoId);
   if (error) { console.error(error); mostrarToast('Erro ao excluir.'); return; }
   srFechar();
@@ -3969,7 +4076,7 @@ function hmAbrirEdicao(id) {
   if (!r) return;
   hm_editandoId = id;
   document.getElementById('hm-modal-title').textContent = 'Editar registro de humor';
-  document.getElementById('hm-btn-excluir').style.display = 'inline-block';
+  document.getElementById('hm-btn-excluir').style.display = 'inline-flex';
   document.getElementById('hm-f-id').value = r.id;
   document.getElementById('hm-f-data').value = r.data;
   document.getElementById('hm-f-nota').value = r.nota;
@@ -4012,9 +4119,8 @@ document.getElementById('hm-form').addEventListener('submit', async (e) => {
   await hmCarregarTudo();
 });
 
-document.getElementById('hm-btn-excluir').addEventListener('click', async () => {
+initDeleteButton(document.getElementById('hm-btn-excluir'), async () => {
   if (!hm_editandoId) return;
-  if (!confirm('Excluir este registro de humor?')) return;
   const { error } = await supabaseClient.from('humor').delete().eq('id', hm_editandoId);
   if (error) { console.error(error); mostrarToast('Erro ao excluir.'); return; }
   hmFechar();
@@ -4152,7 +4258,7 @@ function vsAbrirEdicao(id) {
   if (!v) return;
   vs_editandoId = id;
   document.getElementById('vs-modal-title').textContent = 'Editar lugar';
-  document.getElementById('vs-btn-excluir').style.display = 'inline-block';
+  document.getElementById('vs-btn-excluir').style.display = 'inline-flex';
   document.getElementById('vs-f-id').value = v.id;
   document.getElementById('vs-f-nome').value = v.nome || '';
   document.getElementById('vs-f-tipo').value = v.tipo_passeio || '';
@@ -4209,9 +4315,8 @@ document.getElementById('vs-form').addEventListener('submit', async (e) => {
   await vsCarregarTudo();
 });
 
-document.getElementById('vs-btn-excluir').addEventListener('click', async () => {
+initDeleteButton(document.getElementById('vs-btn-excluir'), async () => {
   if (!vs_editandoId) return;
-  if (!confirm('Excluir este lugar da lista?')) return;
   const { error } = await supabaseClient.from('visitar').delete().eq('id', vs_editandoId);
   if (error) { console.error(error); mostrarToast('Erro ao excluir.'); return; }
   vsFechar();
