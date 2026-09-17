@@ -756,6 +756,107 @@
   .main-content{ padding-top: 76px; }
 
   /* ========================================================
+     NOTAS — estilo Notas do iPhone
+     ======================================================== */
+  .nt-header{
+    display:flex; align-items:flex-start; justify-content:space-between;
+    gap:16px; margin-bottom:20px;
+  }
+  .nt-header h1{ font-size:22px; font-weight:700; margin:0 0 4px; letter-spacing:-0.01em; }
+  .nt-header p{ margin:0; color:var(--text-dim); font-size:14px; }
+  .nt-new-btn{
+    display:flex; align-items:center; gap:8px; background:var(--grad);
+    color:#f7fafd; border:none; padding:11px 18px; border-radius:var(--radius-sm);
+    font-weight:600; font-size:14px; cursor:pointer; white-space:nowrap;
+    box-shadow: 0 4px 16px rgba(61,111,196,0.28);
+    transition:filter .15s ease, transform .15s ease;
+  }
+  .nt-new-btn:hover{ filter: brightness(1.08); }
+  .nt-new-btn:active{ transform:scale(0.98); filter: brightness(0.97); }
+  .nt-search{
+    background: var(--surface); border:1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 16px;
+    display:flex; align-items:center; gap:9px;
+  }
+  .nt-search i{ color: var(--text-faint); font-size:13px; }
+  .nt-search input{
+    flex:1; background:none; border:none; color:var(--text);
+    font-size:14px; font-family:inherit; outline:none;
+  }
+  .nt-search input::placeholder{ color: var(--text-faint); }
+  .nt-list{ display:flex; flex-direction:column; gap:10px; }
+  .nt-empty{ text-align:center; padding:60px 20px; color:var(--text-dim); }
+  .nt-empty i{ font-size:32px; color:var(--text-faint); margin-bottom:12px; display:block; }
+  .nt-empty p{ margin:0; }
+  .nt-card{
+    position:relative;
+    background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--nt-color, var(--warn));
+    border-radius:var(--radius-md); padding:14px 16px; cursor:pointer;
+    transition:border-color .15s, background .15s;
+  }
+  .nt-card:hover{ background:var(--surface-2); border-color: var(--border-strong); }
+  .nt-card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:4px; }
+  .nt-card-title{ font-weight:600; font-size:14.5px; margin:0; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .nt-pin{ color: var(--warn); font-size:12px; flex-shrink:0; }
+  .nt-card-preview{
+    margin:0; font-size:13px; color:var(--text-dim); line-height:1.5;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .nt-card-meta{ margin-top:8px; font-size:11.5px; color:var(--text-faint); }
+
+  .nt-editor-backdrop{
+    position:fixed; inset:0; background:rgba(4,6,12,.75);
+    display:none; align-items:flex-start; justify-content:center;
+    z-index:150; overflow-y:auto; padding:32px 16px;
+  }
+  .nt-editor-backdrop.open{ display:flex; }
+  .nt-editor{
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius-lg); width:100%; max-width:640px;
+    display:flex; flex-direction:column; max-height: calc(100vh - 64px);
+    box-shadow: var(--shadow);
+  }
+  .nt-editor-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 16px 12px; border-bottom:1px solid var(--border); flex-shrink:0;
+  }
+  .nt-editor-head-actions{ display:flex; align-items:center; gap:6px; }
+  .nt-icon-btn{
+    background:var(--surface-2); border:1px solid var(--border); color:var(--text-dim);
+    width:32px; height:32px; border-radius:10px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; font-size:13px;
+    transition:color .15s, border-color .15s, background .15s;
+  }
+  .nt-icon-btn:hover{ background: var(--surface-3); border-color: var(--border-strong); }
+  .nt-icon-btn.active{ color:var(--warn); border-color:var(--warn); }
+  .nt-icon-btn.danger:hover{ color:var(--danger); border-color:rgba(224,104,126,.35); }
+  .nt-color-row{ display:flex; gap:8px; padding:12px 16px; border-bottom:1px solid var(--border); flex-shrink:0; }
+  .nt-color-dot{
+    width:22px; height:22px; border-radius:50%; cursor:pointer; border:2px solid transparent;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .nt-color-dot.on{ border-color: var(--text); }
+  .nt-color-dot i{ color:#0a0d13; font-size:10px; display:none; }
+  .nt-color-dot.on i{ display:block; }
+  .nt-editor-body{ padding:16px; overflow-y:auto; flex:1; }
+  .nt-f-titulo{
+    width:100%; background:none; border:none; color:var(--text);
+    font-family:'Manrope', sans-serif; font-size:19px; font-weight:700;
+    margin-bottom:10px; outline:none;
+  }
+  .nt-f-titulo::placeholder{ color: var(--text-faint); }
+  .nt-f-conteudo{
+    width:100%; background:none; border:none; color:var(--text);
+    font-family:inherit; font-size:14.5px; line-height:1.7; outline:none;
+    resize:none; min-height:220px;
+  }
+  .nt-f-conteudo::placeholder{ color: var(--text-faint); }
+  .nt-editor-footer{
+    padding:10px 16px; border-top:1px solid var(--border);
+    font-size:11.5px; color:var(--text-faint); flex-shrink:0;
+  }
+
+  /* ========================================================
      DESKTOP (>= 900px)
      ======================================================== */
   @media (min-width: 900px){
@@ -1054,6 +1155,10 @@
     <button class="nav-btn-area" data-open-dominio="processos">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       <span class="dot carreira"></span>Processos Seletivos
+    </button>
+    <button class="nav-btn-area" data-open-dominio="notas">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      <span class="dot carreira"></span>Notas
     </button>
 
     <div class="nav-separator"></div>
@@ -1385,6 +1490,24 @@
     <p class="em-construcao-msg">Essa área ainda não tem tela de registro. Campos planejados para quando o Supabase estiver conectado:</p>
     <ul class="campos-planejados" id="genericoCampos"></ul>
   </div>
+
+  <!-- ===================== NOTAS (VIEW) ===================== -->
+  <main id="view-notas" class="view">
+    <div class="nt-header">
+      <div>
+        <h1>Notas</h1>
+        <p>Suas anotações rápidas, do jeito do Notas do iPhone</p>
+      </div>
+      <button class="nt-new-btn" id="nt-btn-novo">
+        <i class="fa-solid fa-plus"></i> Nova nota
+      </button>
+    </div>
+    <div class="nt-search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="nt-busca" placeholder="Buscar notas...">
+    </div>
+    <div class="nt-list" id="nt-list"></div>
+  </main>
 
   <!-- ===================== HÁBITOS (VIEW) ===================== -->
   <main id="view-habitos" class="view">
@@ -2254,6 +2377,27 @@
   </div>
 </div>
 
+<!-- ===================== MODAL: NOTAS ===================== -->
+<div class="nt-editor-backdrop" id="nt-backdrop">
+  <div class="nt-editor">
+    <div class="nt-editor-head">
+      <input type="hidden" id="nt-f-id">
+      <span style="font-size:12px; color:var(--text-faint); font-weight:600;" id="nt-editor-data">Nova nota</span>
+      <div class="nt-editor-head-actions">
+        <button type="button" class="nt-icon-btn" id="nt-btn-fixar" title="Fixar nota"><i class="fa-solid fa-thumbtack"></i></button>
+        <button type="button" class="nt-icon-btn danger" id="nt-btn-excluir" title="Excluir nota" style="display:none;"><i class="fa-solid fa-trash"></i></button>
+        <button type="button" class="nt-icon-btn" id="nt-btn-fechar" title="Fechar"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+    <div class="nt-color-row" id="nt-color-row"></div>
+    <div class="nt-editor-body">
+      <input type="text" class="nt-f-titulo" id="nt-f-titulo" placeholder="Título">
+      <textarea class="nt-f-conteudo" id="nt-f-conteudo" placeholder="Comece a escrever..."></textarea>
+    </div>
+    <div class="nt-editor-footer" id="nt-editor-footer"></div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ===================== SUPABASE ===================== */
@@ -2269,6 +2413,7 @@ const DOMINIOS = [
   { id: 'treinos', nome: 'Treinos', categoria: 'corpo', pronto: false, campos: ['Data', 'Tipo de treino', 'Exercício', 'Carga (kg)', 'Séries', 'Repetições', 'Observações'] },
   { id: 'candidaturas', nome: 'Candidaturas', categoria: 'carreira', pronto: true },
   { id: 'processos', nome: 'Processos Seletivos', categoria: 'carreira', pronto: true },
+  { id: 'notas', nome: 'Notas', categoria: 'carreira', pronto: true },
   { id: 'filmes', nome: 'Filmes', categoria: 'lazer', pronto: 'externo' },
   { id: 'series', nome: 'Séries', categoria: 'lazer', pronto: true },
   { id: 'comer', nome: 'Comer', categoria: 'lazer', pronto: false, campos: ['Nome', 'Tipo de lugar', 'Endereço', 'Já fomos?', 'Nota', 'Comentário'] },
@@ -2336,6 +2481,8 @@ document.addEventListener('keydown', e => {
     const el = document.getElementById(id);
     if (el && el.classList.contains('open')) { el.classList.remove('open'); return; }
   }
+  const ntEl = document.getElementById('nt-backdrop');
+  if (ntEl && ntEl.classList.contains('open')) { ntFechar(); return; }
 });
 
 /* ===================== NAVEGAÇÃO ===================== */
@@ -2355,6 +2502,7 @@ function mostrarView(nome) {
   if (nome === 'series') safeLoad(srCarregarTudo);
   if (nome === 'humor') safeLoad(hmCarregarTudo);
   if (nome === 'visitar') safeLoad(vsCarregarTudo);
+  if (nome === 'notas') safeLoad(ntCarregarTudo);
 }
 
 // Helper: executa função async sem deixar Promise rejeitada travar a UI
@@ -2814,6 +2962,7 @@ function abrirDominio(id) {
   if (id === 'series') { mostrarView('series'); return; }
   if (id === 'humor') { mostrarView('humor'); return; }
   if (id === 'visitar') { mostrarView('visitar'); return; }
+  if (id === 'notas') { mostrarView('notas'); return; }
   const dominio = DOMINIOS.find(d => d.id === id);
   if (!dominio) return;
   if (dominio.pronto === 'externo') {
@@ -4575,6 +4724,195 @@ document.querySelectorAll('[data-vstab]').forEach(tab => {
     document.getElementById('vs-tab-insights').style.display = alvo === 'insights' ? 'block' : 'none';
     if (alvo === 'insights') vsRenderInsights();
   });
+});
+
+/* ===================== NOTAS (estilo Notas do iPhone) ===================== */
+const NT_CORES = [
+  { valor: null, hex: 'var(--warn)' },
+  { valor: 'amarelo', hex: '#d9a854' },
+  { valor: 'verde', hex: '#45c48a' },
+  { valor: 'azul', hex: '#6fb2e8' },
+  { valor: 'roxo', hex: '#4f7fd6' },
+  { valor: 'rosa', hex: '#d9819a' },
+  { valor: 'cinza', hex: '#6b7690' },
+];
+let nt_notas = [];
+let nt_editandoId = null;
+let nt_corSelecionada = null;
+let nt_fixadaAtual = false;
+let nt_buscaTexto = '';
+
+async function ntCarregarTudo() {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const user = session?.user ?? null;
+  if (!user) { console.warn('Usuário não autenticado.'); return; }
+  try {
+    const { data, error } = await supabaseClient
+      .from('notas').select('*').eq('user_id', user.id)
+      .order('fixada', { ascending: false })
+      .order('atualizado_em', { ascending: false })
+      .limit(1000);
+    if (error) { console.error(error); return; }
+    nt_notas = data || [];
+    ntRenderLista();
+  } catch (err) { console.error('[ntCarregarTudo]', err); mostrarToast('Erro ao carregar notas: ' + err.message); }
+}
+
+function ntCorHex(valor) {
+  const c = NT_CORES.find(c => c.valor === valor);
+  return c ? c.hex : NT_CORES[0].hex;
+}
+
+function ntFmtDataHora(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  const hoje = new Date();
+  const mesmodia = d.toDateString() === hoje.toDateString();
+  if (mesmodia) return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' });
+}
+
+function ntRenderLista() {
+  const container = document.getElementById('nt-list');
+  const termo = nt_buscaTexto.trim().toLowerCase();
+  const filtradas = termo
+    ? nt_notas.filter(n => (n.titulo || '').toLowerCase().includes(termo) || (n.conteudo || '').toLowerCase().includes(termo))
+    : nt_notas;
+  if (filtradas.length === 0) {
+    container.innerHTML = termo
+      ? `<div class="nt-empty"><i class="fa-solid fa-magnifying-glass"></i><p>Nenhuma nota encontrada para "${psEsc(nt_buscaTexto)}".</p></div>`
+      : `<div class="nt-empty"><i class="fa-regular fa-note-sticky"></i><p>Nenhuma nota ainda. Toque em "Nova nota" para começar.</p></div>`;
+    return;
+  }
+  container.innerHTML = filtradas.map(n => {
+    const titulo = n.titulo && n.titulo.trim() ? n.titulo : 'Sem título';
+    const preview = (n.conteudo || '').trim();
+    return `
+      <div class="nt-card" data-id="${n.id}" style="--nt-color:${ntCorHex(n.cor)}">
+        <div class="nt-card-top">
+          <p class="nt-card-title">${psEsc(titulo)}</p>
+          ${n.fixada ? '<i class="fa-solid fa-thumbtack nt-pin"></i>' : ''}
+        </div>
+        ${preview ? `<p class="nt-card-preview">${psEsc(preview)}</p>` : ''}
+        <div class="nt-card-meta">${ntFmtDataHora(n.atualizado_em)}</div>
+      </div>`;
+  }).join('');
+  container.querySelectorAll('.nt-card').forEach(card => {
+    card.addEventListener('click', () => ntAbrirEdicao(Number(card.dataset.id)));
+  });
+}
+
+document.getElementById('nt-busca').addEventListener('input', function() {
+  nt_buscaTexto = this.value;
+  ntRenderLista();
+});
+
+function ntRenderCores() {
+  const row = document.getElementById('nt-color-row');
+  row.innerHTML = NT_CORES.map(c =>
+    `<div class="nt-color-dot ${nt_corSelecionada === c.valor ? 'on' : ''}" data-cor="${c.valor || ''}" style="background:${c.hex}">
+      <i class="fa-solid fa-check"></i>
+    </div>`
+  ).join('');
+  row.querySelectorAll('.nt-color-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+      nt_corSelecionada = dot.dataset.cor || null;
+      ntRenderCores();
+    });
+  });
+}
+
+function ntAtualizarBotaoFixar() {
+  document.getElementById('nt-btn-fixar').classList.toggle('active', nt_fixadaAtual);
+}
+
+const ntBackdrop = document.getElementById('nt-backdrop');
+
+function ntAbrirNovo() {
+  nt_editandoId = null;
+  nt_corSelecionada = null;
+  nt_fixadaAtual = false;
+  document.getElementById('nt-f-id').value = '';
+  document.getElementById('nt-f-titulo').value = '';
+  document.getElementById('nt-f-conteudo').value = '';
+  document.getElementById('nt-editor-data').textContent = 'Nova nota';
+  document.getElementById('nt-editor-footer').textContent = '';
+  document.getElementById('nt-btn-excluir').style.display = 'none';
+  ntRenderCores();
+  ntAtualizarBotaoFixar();
+  ntBackdrop.classList.add('open');
+  setTimeout(() => document.getElementById('nt-f-titulo').focus(), 50);
+}
+
+function ntAbrirEdicao(id) {
+  const n = nt_notas.find(x => x.id === id);
+  if (!n) return;
+  nt_editandoId = id;
+  nt_corSelecionada = n.cor || null;
+  nt_fixadaAtual = !!n.fixada;
+  document.getElementById('nt-f-id').value = n.id;
+  document.getElementById('nt-f-titulo').value = n.titulo || '';
+  document.getElementById('nt-f-conteudo').value = n.conteudo || '';
+  document.getElementById('nt-editor-data').textContent = 'Editada em ' + new Date(n.atualizado_em).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  document.getElementById('nt-editor-footer').textContent = `Criada em ${new Date(n.criado_em).toLocaleDateString('pt-BR')}`;
+  document.getElementById('nt-btn-excluir').style.display = 'flex';
+  ntRenderCores();
+  ntAtualizarBotaoFixar();
+  ntBackdrop.classList.add('open');
+}
+
+async function ntSalvarSilencioso() {
+  const titulo = document.getElementById('nt-f-titulo').value.trim();
+  const conteudo = document.getElementById('nt-f-conteudo').value.trim();
+  if (!titulo && !conteudo) return; // nota vazia: não salva
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const user = session?.user ?? null;
+  if (!user) { mostrarToast('Sessão expirada. Faça login novamente.'); return; }
+  const payload = {
+    user_id: user.id,
+    titulo: titulo || null,
+    conteudo: conteudo || null,
+    fixada: nt_fixadaAtual,
+    cor: nt_corSelecionada,
+    atualizado_em: new Date().toISOString(),
+  };
+  try {
+    if (nt_editandoId) {
+      const { error } = await supabaseClient.from('notas').update(payload).eq('id', nt_editandoId);
+      if (error) throw error;
+    } else {
+      const { data, error } = await supabaseClient.from('notas').insert(payload).select('id').single();
+      if (error) throw error;
+      nt_editandoId = data.id;
+    }
+    await ntCarregarTudo();
+  } catch (err) { console.error(err); mostrarToast('Erro ao salvar nota: ' + err.message); }
+}
+
+async function ntFechar() {
+  await ntSalvarSilencioso();
+  ntBackdrop.classList.remove('open');
+}
+
+document.getElementById('nt-btn-novo').addEventListener('click', ntAbrirNovo);
+document.getElementById('nt-btn-fechar').addEventListener('click', ntFechar);
+ntBackdrop.addEventListener('click', e => { if (e.target === ntBackdrop) ntFechar(); });
+
+document.getElementById('nt-btn-fixar').addEventListener('click', async () => {
+  nt_fixadaAtual = !nt_fixadaAtual;
+  ntAtualizarBotaoFixar();
+  if (nt_editandoId) await ntSalvarSilencioso();
+});
+
+document.getElementById('nt-btn-excluir').addEventListener('click', async () => {
+  if (!nt_editandoId) return;
+  if (!confirm('Excluir esta nota? Essa ação não pode ser desfeita.')) return;
+  const { error } = await supabaseClient.from('notas').delete().eq('id', nt_editandoId);
+  if (error) { console.error(error); mostrarToast('Erro ao excluir.'); return; }
+  nt_editandoId = null;
+  ntBackdrop.classList.remove('open');
+  mostrarToast('Nota excluída! 🗑️');
+  await ntCarregarTudo();
 });
 
 /* ===================== INIT ===================== */
